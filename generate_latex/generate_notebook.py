@@ -102,14 +102,10 @@ def main():
     cmd = ['pdflatex', '-interaction=nonstopmode', '-halt-on-error',
            'generate_latex/notebook.tex']
     with open(os.devnull, 'w') as DEVNULL:
-        try:
+        
             subprocess.check_call(cmd, stdout=DEVNULL)
             subprocess.check_call(cmd, stdout=DEVNULL)
-        except Exception:
-            print("Erro na transformação de LaTex para pdf.")
-            print("Execute manualmente para entender o erro:")
-            print('pdflatex -interaction=nonstopmode -halt-on-error generate_latex/notebook.tex')
-            exit(1)
+        
 
     remove_aux()
     move_output()
