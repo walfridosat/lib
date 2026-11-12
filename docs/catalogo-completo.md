@@ -153,6 +153,11 @@ Estas servem para qualquer tipo de problema; teste todas antes de procurar técn
 - **Estrutura algébrica.** Operação associativa → segtree, doubling, matriz; com identidade e inversa → prefix; idempotente (min, gcd, or) → sparse table; comutativa → Mo e ordem livre.
 - **Corte na árvore de decisão.** Para limites de queries/comparações use a árvore de decisão: k respostas possíveis exigem log_b k queries; o enunciado costuma dar exatamente esse limite.
 
+*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
+
+- **Valores atingíveis andam de 2 em 2.** Se cada operação muda a quantidade em ±2 (ou preserva a paridade) e dá para ir de um extremo ao outro passo a passo, os atingíveis são todos os de \[mín, máx\] com a paridade certa: calcule só mín, máx e paridade. Ex.: CF 2114B.
+- **Operação em todos menos um.** Aplicar uma involução (negar, inverter, complementar) em n − 1 de n itens = aplicar em todos e desfazer em um: escolha o melhor item para "devolver". Ex.: CF 2218B (negar n − 1 números).
+
 ## Cadeias de pulos (gatilho → observação → técnica)
 
 Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparece em" diz em quais seções a ideia também está repetida.
@@ -472,6 +477,14 @@ Primeira pergunta: a ordem dos elementos importa? Se não, ordene.
 - **Ordenar por comparação de concatenação.** Menor/maior número formado por concatenar strings: ordene por a+b < b+a; prova por transitividade da comparação numérica.
 - **Pilha para colisões e cancelamentos** (robôs que se anulam, parênteses reduzidos, apagar pares adjacentes): o resultado final é canônico e independe da ordem.
 - **Sparse table / pré-cômputo antes do guloso**: se o guloso consulta max/min de intervalo, não reordene o array, use RMQ O(1) para manter n log n.
+
+*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
+
+- **Intervalos ocupados → olhe as lacunas.** Com k intervalos disjuntos ordenados, o espaço livre está nos k + 1 buracos: antes do primeiro, entre consecutivos e depois do último. Ex.: CF 1999C.
+- **Substituir prefixo pelo mínimo / sufixo pelo máximo.** Um elemento pode sobreviver sse é mínimo do seu prefixo ou máximo do seu sufixo (um "recorde"); marque com prefix min e suffix max. Ex.: CF 2241D.
+- **Equilibrar por transferências unitárias.** Se cada passo tira 1 de quem está acima do alvo e dá a quem está abaixo, o nº de passos é Σ max(0, a\_i − alvo). Ex.: CF 2131A.
+- **a\_i + a\_{i+1} constante ⇒ período 2.** Subtraindo duas equações vizinhas, a\_{i+2} = a\_i: o array é determinado pelos dois primeiros valores. Vale para qualquer relação em que o termo do meio se cancela. Ex.: CF 2256B.
+- **Recuperar pesos de Σ w\_j·|i − x\_j|.** Com f(i) dado em todos os inteiros, a segunda diferença f(i+1) − 2f(i) + f(i−1) = 2·(peso total em x = i); as pontas saem por substituição. Ex.: CF 2254D.
 
 Repetidas de outras seções:
 
@@ -849,6 +862,13 @@ Os limites pequenos escondidos resolvem metade dos problemas: até 10⁹ há no 
 - **Reduza expoentes por p-ádico.** Para "n mod p^k" de produtos, separe a parte p^v e a unidade; para x^n com n gigante e gcd ≠ 1 trate v_p(x)·n separado do resto coprimo.
 - **mulmod 64 bits.** __int128, ou mod 2⁶¹−1 com shifts, ou Montgomery; long double só com cuidado. Para módulo fixo primo ~10⁹ evite % em laço quente (Barrett).
 
+*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
+
+- **Precisa de um primo novo → Bertrand.** Para n ≥ 1 existe primo em (n, 2n]: um primo maior que todos os valores é coprimo com todos e cabe em 2·máx. Ex.: CF 2284C1.
+- **x·(10^d + 1) = x concatenado com x** (d = nº de dígitos de x; ex.: 123·1001 = 123123). Gatilho: construir múltiplo com poucos dígitos distintos ou com padrão repetido. Ex.: CF 2241B.
+- **Trocas a distância a ou b.** Se n ≥ a + b − gcd(a, b), as componentes das posições 0..n−1 são exatamente as classes mod gcd(a, b) (mesmo argumento de Fine–Wilf); para n menor, faça DSU. Ex.: CF 2244C.
+- **Inteiro mais próximo usando só dígitos permitidos.** Mantenha um prefixo comum com o alvo, desvie no primeiro dígito para o permitido logo acima (resto com o menor dígito permitido) ou logo abaixo (resto com o maior); teste também comprimentos ±1. São O(len) candidatos. Ex.: CF 2228C1.
+
 Repetidas de outras seções:
 
 - **"gcd de pelo menos metade"** → sorteie um elemento e teste seus divisores (aleatorização).
@@ -1175,6 +1195,11 @@ Transformações:
 - **Strings com operações e rollback** → pilha de estados (hash, nó do AC, nó da trie) em vez de recomputar; versionamento por árvore de prefixos.
 - **Palíndromo em substring com updates** → segtree com (hash direto, hash do reverso); para contagem de palíndromos/qualquer centro, Manacher não serve com updates: use hash + binária no raio.
 
+*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
+
+- **Operação troca todas as ocorrências de um símbolo.** Dá para chegar ao alvo sse o mapeamento s\_i → t\_i é função (mesmo símbolo sempre vai no mesmo alvo). Ex.: CF 1807C.
+- **Palíndromo com mudanças pontuais.** Cada par (i, n − 1 − i) é independente: custo total = Σ custo mínimo de igualar o par; o centro (n ímpar) é livre. Ex.: CF 2227D.
+
 Repetidas de outras seções:
 
 - **Tempo esperado até padrão** → Σ q^k sobre bordas do padrão (ABRACADABRA = 26¹¹ + 26⁴ + 26).
@@ -1333,6 +1358,10 @@ Pergunte: quais são os vértices de verdade? Muitas vezes o grafo útil é de e
 - **Caminho com "no máximo k vezes" um tipo de aresta** → mais eficiente: BFS em camadas por k (O(k(n + m))); para k ≈ log, estado (v, j) cabe.
 - **Grafo de duas camadas (ônibus/linhas)** → vértices de linha e de parada, entrada com custo de embarque, saída custo 0; reduz arestas de O(L²) a O(L).
 - **Teorema de Ore/Dirac para Hamilton** → grau mínimo ≥ n/2 garante ciclo hamiltoniano; construtivos com "grafo denso" costumam ter isto: a construção é por inserção de vértices e rotação de caminho (Pósa).
+
+*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
+
+- **Reconstruir o grafo a partir da alcançabilidade.** Aresta direta u → v sse u alcança v e não existe w intermediário (redução transitiva, O(n³/64) com bitset). Numa árvore enraizada, o pai de v é, entre os que alcançam v, o de menor conjunto alcançável. Ex.: CF 2208D1.
 
 Repetidas de outras seções:
 
@@ -1886,6 +1915,12 @@ Use inteiros sempre que puder: produto vetorial e escalar resolvem quase tudo se
 - **Contagem de pontos de grid dentro de círculo (Gauss).** Σ ⌊√(r² − x²)⌋ em O(r); versão sublinear existe, mas a ideia padrão é varrer x.
 - **Mínimo de x² + y² sob restrição de grid / retas inteiras.** Reduza com Euclides estendido para achar solução paramétrica (x₀ + t·b/g, y₀ − t·a/g) e minimize função convexa em t.
 - **Áreas de cruz de vetores e determinantes.** O sinal de determinante 2×2 testa dependência linear (paralelismo); em 3D o triplo produto = 0 ⇔ coplanares. Dimensão d: rank por Gauss.
+
+*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
+
+- **Diagonais de grade.** Células com mesmo i + j (antidiagonal) ou mesmo i − j (diagonal) são n + m − 1 linhas cada; soma de "bispo" = soma da diagonal + antidiagonal − a célula. Ex.: CF 1676D.
+- **Camadas concêntricas.** A camada de (i, j) num grid n×m (0-based) é min(i, j, n − 1 − i, m − 1 − j). Ex.: CF 1873C.
+- **Cortes que separam origem e destino.** Cada linha/corte que separa os dois pontos tem de ser cruzado: o nº de cortes é cota inferior; mostre que cruzar cada um uma vez basta. Ex.: CF 2148B.
 
 Repetidas de outras seções:
 

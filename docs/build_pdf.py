@@ -98,6 +98,10 @@ def main():
         ("Catálogo completo", "comp", stamp(md(comp)), "c-"),
         ("Índice da lib (técnica → arquivo)", "lib", md(lib_index_md()), "l-"),
     ]
+    freq = DOCS / "frequencias-cf.md"
+    if freq.exists():  # frequencias de tecnicas em CF Div 2/3/4 A-D
+        parts.insert(1, ("Frequências em CF (A–D)", "freq",
+                         md(re.sub(r"\A# .*\n", "", freq.read_text(encoding="utf-8"))), "f-"))
     body = []
     for title, cls, h, pre in parts:
         h = add_ids(h, pre, toc, title)
@@ -111,7 +115,7 @@ def main():
 <title>Catálogo de ideias</title><style>{CSS}</style></head><body>
 <div class="cover"><h1>Catálogo de ideias</h1>
 <div class="sub">Gatilho → ideia → técnica → código, para programação competitiva e ICPC</div>
-<div class="meta">Partes: mapa rápido · catálogo completo · índice da lib<br>
+<div class="meta">Partes: mapa rápido · frequências em CF · catálogo completo · índice da lib<br>
 Blocos marcados "adicionado … não revisado" foram gerados automaticamente e ainda não foram conferidos.</div></div>
 <section class="part"><h1>Sumário</h1><div class="toc">{''.join(toc_html)}</div></section>
 {''.join(body)}</body></html>"""
