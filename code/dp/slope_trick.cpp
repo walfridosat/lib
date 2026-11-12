@@ -1,14 +1,4 @@
-// Slope trick
-//
-// O que faz: mantem uma funcao convexa linear por partes f(x) com dois heaps (pontos de quebra a esquerda L e a direita R)
-//   e o valor minimo. Operacoes: somar max(0,x-a), max(0,a-x), |x-a|, prefix min, suffix min, shift (janela).
-// Quando usar: Catalogo > DP > "Slope trick: reconhecer", "Slope trick com translacao".
-//   dp[i][x] = min_y dp[i-1][y] + |x-a_i| com restricao em y-x; "tornar array nao-decrescente com custo |a_i-b_i|".
-// Complexidade: O(log n) por operacao.
-// Uso: SlopeTrick st; para cada i: st.prefix_min(); st.add_abs(a[i]);  st.minf = custo minimo
-//   (nao-decrescente). Para |x_i - x_{i-1}| <= d: st.shift(-d, d); st.add_abs(a[i]).
-// Cuidados: minf e o minimo global de f. f inicial = 0 (constante). topL vazio = -INF, topR vazio = +INF.
-//   Offsets addl/addr guardam shifts lazy. Para custo c*|x-a| com c grande, insira c copias (ou heap com contagem).
+// Slope trick - funcao convexa com dois heaps
 struct SlopeTrick {
     const ll INF = (ll)4e18;
     ll minf = 0, addl = 0, addr = 0;
@@ -33,3 +23,32 @@ struct SlopeTrick {
     void suffix_min(){ L = decltype(L)(); addl = 0; }       // g(x) = min_{y>=x} f(y)
     void shift(ll a, ll b){ addl += a; addr += b; }         // g(x) = min_{x-b<=y<=x-a} f(y), a<=b
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Slope trick**
+Mantem uma funcao convexa linear por partes f(x) com dois heaps (quebras a
+esquerda L e a direita R) e o valor minimo minf.
+
+Complexidade: O(log n) por operacao.
+Uso:
+  SlopeTrick st;
+  for (int i = 0; i < n; i++) { st.prefix_min(); st.add_abs(a[i]); }
+  ll custo = st.minf;   // tornar o array nao-decrescente com custo |a_i - b_i|
+  // janela: st.shift(-d, d); st.add_abs(a[i]);
+
+* Sobre o codigo:
+  add_x_minus_a(a) soma max(0, x-a), add_a_minus_x(a) soma max(0, a-x) e
+  add_abs(a) soma |x-a|. minf acompanha o minimo global. prefix_min/suffix_min
+  descartam um dos heaps; shift guarda translacoes lazy em addl/addr.
+
+* Problemas e reducoes:
+  + Tornar um array nao-decrescente com custo |a_i - b_i|.
+  + DP com |x - a_i| por passo e restricao em y-x.
+  + Aproximar pontos por uma funcao convexa minimizando soma de |.|.
+  + Janela de deslocamento por passo (shift).
+
+Cuidados: minf e o minimo global de f; f inicial = 0. topL vazio = -INF e
+  topR vazio = +INF. Offsets addl/addr sao lazy. Para custo c*|x-a| com c
+  grande, insira c copias ou use heap com contagem.
+Catalogo: DP > Slope trick.
+Digitacao: 24 linhas | media.
+*****************************LATEX_DESC_END*/

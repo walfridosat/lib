@@ -1,13 +1,4 @@
-// Fecho convexo (monotone chain)
-//
-// O que faz: convexHull(pontos) devolve o hull em ordem anti-horaria, sem pontos
-//            colineares nas arestas (usa <= 0 para remover colineares).
-// Quando usar: Catalogo > Geometria (hull). Gatilhos: "fecho convexo", area do hull,
-//            ponto dentro do hull, calipers, Minkowski.
-// Complexidade: O(n log n) (ordenacao); memoria O(n).
-// Uso: vector<P> h = convexHull(p); P = pair<int,int>; para ll use o mesmo codigo com ll.
-// Cuidados: remova duplicatas se existirem (ou aceite hull degenerado); para manter
-//            colineares troque <= 0 por < 0; compare areas com cross em ll, nao em int.
+// Fecho convexo - monotone chain (versao simples)
 using P = pair<int, int>;
 
 int cross(const P &O, const P &A, const P &B) {
@@ -37,3 +28,30 @@ vector<P> convexHull(vector<P> points) {
     hull.pop_back();
     return hull;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Fecho convexo - monotone chain (versao simples)**
+Devolve o hull em ordem anti-horaria, sem pontos colineares nas arestas, usando <= 0.
+P = pair<int,int>; a mesma ideia vale para ll.
+
+Complexidade: O(n log n); memoria O(n)
+Uso:
+  vector<P> h = convexHull(p);   // hull anti-horario
+
+* Sobre o codigo:
+  Ordena os pontos, monta a cadeia inferior e depois a superior com um laco while que remove
+  quem faz curva a direita ou e colinear (cross <= 0). O ultimo ponto repete o primeiro e e
+  removido no fim.
+
+* Problemas e reducoes:
+  + Fecho convexo de um conjunto de pontos.
+  + Area do hull: aplique shoelace no resultado.
+  + Base para calipers, Minkowski e diametro.
+  + Ponto dentro do hull: use inConvex de polygon.cpp.
+
+Cuidados: remova duplicatas antes (ou aceite hull degenerado). Para manter colineares troque
+  <= 0 por < 0. Compare areas com cross em ll, nao em int (aqui cross e int). Prefira
+  hull_andrew.cpp, que e a versao corrigida e com opcao de manter colineares.
+Catalogo: Geometria.
+Digitacao: 23 linhas | facil. Atalho: duplica hull_andrew.cpp; manter so a versao de la e
+  apagar este arquivo.
+*****************************LATEX_DESC_END*/

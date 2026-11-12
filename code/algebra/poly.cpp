@@ -1,22 +1,4 @@
-// Polinomios e series formais mod 998244353 (inv, ln, exp, sqrt, pow, divmod, multipoint, interpolacao)
-//
-// O que faz: operacoes de series formais por Newton, divisao de polinomios, avaliacao em
-//   varios pontos, interpolacao rapida, shift de Taylor, produto de muitos polinomios,
-//   numeros de Bernoulli.
-// Quando usar: "[x^n] de F(G(x))", knapsack de contagem via exp/ln, particoes, Euler transform,
-//   avaliar P em ~1e5 pontos, x^N mod f(x)
-//   (Catalogo > Algebra, polinomios e FFT: Inverso de serie, ln/exp/sqrt/potencia, Divisao,
-//   Multipoint, Interpolacao rapida, Taylor shift, Produto de muitos polinomios).
-// Complexidade: inv/ln/exp/sqrt/pow O(n log n) (exp com constante grande); divmod O(n log n);
-//   multipoint e interpolacao O(n log^2 n).
-// Uso: P = vector<int> com coef. 0-based (P[i] = coef de x^i). Todas as funcoes "mod x^n" recebem n
-//   e devolvem vetor de tamanho n.
-//   inv(a,n) ln(a,n) exp(a,n) sqrt(a,n) pw_poly(a,k,n) divmod(a,b,q,r) multipoint(f,xs)
-//   interpolate(xs,ys) taylor_shift(a,c) prod_all(vetor de polinomios) bernoulli(n)
-// Cuidados: inv exige a[0]!=0; ln exige a[0]==1; exp exige a[0]==0; sqrt exige a[0]==1
-//   (se a[0] e outro quadrado perfeito, escale; senao Tonelli-Shanks). pw_poly aceita k ate 1e18
-//   e qualquer a (fatora x^t e a0^k usando k mod (MOD-1)). divmod exige b com lider != 0.
-//   Entradas em [0, MOD). Tamanho maximo 2^23.
+// Polinomios e series formais mod 998244353
 typedef vector<int> P;
 const int MOD = 998244353, G = 3;
 ll pw(ll b, ll e) {
@@ -160,7 +142,7 @@ void divmod(P a, P b, P& q, P& r) { // a = q*b + r, grau r < grau b
     r.resize(m - 1);
     trim(r);
 }
-// ---- multipoint e interpolacao (arvore de produtos) ----
+// ---- multipoint e interpolacao ----
 vector<P> tr;
 void build(int v, int l, int r, const P& xs) { // tr[v] = prod (x - xs[i]), i em [l,r)
     if (r - l == 1) { tr[v] = {(int)((MOD - xs[l]) % MOD), 1}; return; }
@@ -190,7 +172,7 @@ P combine(int v, int l, int r, const P& c) { // sum c_i * prod_{j!=i}(x - x_j)
     int m = (l + r) / 2;
     return add(mul(combine(2 * v, l, m, c), tr[2 * v + 1]), mul(combine(2 * v + 1, m, r, c), tr[2 * v]));
 }
-P interpolate(const P& xs, const P& ys) { // polinomio de grau < n passando por (xs[i], ys[i]); xs distintos
+P interpolate(const P& xs, const P& ys) { // grau < n por (xs[i], ys[i]); xs distintos
     int n = xs.size();
     if (n == 0) return {};
     tr.assign(4 * n, P());
@@ -220,7 +202,7 @@ P taylor_shift(const P& a, ll c) { // retorna b com b(x) = a(x + c)
     for (int j = 0; j < n; j++) res[j] = C[n - 1 - j] * fi[j] % MOD;
     return res;
 }
-P prod_all(vector<P> v) { // produto de varios polinomios por D&C (pares do mesmo tamanho)
+P prod_all(vector<P> v) { // produto por D&C, pares do mesmo tamanho
     if (v.empty()) return {1};
     while (v.size() > 1) {
         vector<P> w;
@@ -242,3 +224,39 @@ P bernoulli(int n) { // B_0..B_n (B_1 = -1/2), via x / (e^x - 1)
     for (int i = 0; i <= n; i++) b[i] = b[i] * f[i] % MOD; // B_i = i! * [x^i]
     return b;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Polinomios e series formais mod 998244353**
+inv, ln, exp, sqrt_poly, pw_poly, divmod, multipoint, interpolate,
+taylor_shift, prod_all e numeros de Bernoulli. Coeficientes 0-based
+(P[i] = coef de x^i).
+
+Complexidade: inv/ln/exp/sqrt/pow O(n log n) (exp com constante grande);
+divmod O(n log n); multipoint e interpolacao O(n log^2 n).
+Uso:
+  todas as funcoes "mod x^n" recebem n e devolvem vetor de tamanho n:
+  inv(a,n) ln(a,n) exp(a,n) sqrt_poly(a,n) pw_poly(a,k,n) divmod(a,b,q,r)
+  multipoint(f,xs) interpolate(xs,ys) taylor_shift(a,c) prod_all(v)
+  bernoulli(n)
+
+* Sobre o codigo:
+  Tudo usa NTT e Newton. inv: b <- b(2 - ab). ln = integral(a'/a). exp:
+  b <- b(1 - ln b + a). sqrt: b <- (b + a/b)/2. pw_poly fatora x^t e usa
+  ln/exp com expoentes mod (MOD-1). divmod inverte o reverso. multipoint e
+  interpolacao constroem a arvore de produtos tr[] e reduzem f modulo cada no.
+
+* Problemas e reducoes:
+  + [x^n] de F(G(x)) e composicao de series.
+  + Knapsack de contagem via exp/ln; particoes e Euler transform.
+  + Avaliar P em ~1e5 pontos (multipoint) e interpolar de volta.
+  + x^N mod f(x) e potencias de polinomios.
+  + Numeros de Bernoulli para somas de potencias.
+
+Cuidados: inv exige a[0] != 0; ln exige a[0] == 1; exp exige a[0] == 0;
+  sqrt_poly exige a[0] == 1 (se a[0] e outro quadrado perfeito, escale; senao
+  use Tonelli-Shanks). pw_poly aceita k ate 1e18 e qualquer a. divmod exige b
+  com lider != 0. Entradas em [0, MOD). Tamanho maximo 2^23.
+Catalogo: Algebra, polinomios e FFT (Inverso de serie, ln/exp/sqrt/potencia,
+  Divisao, Multipoint, Interpolacao rapida, Taylor shift, Produto).
+Digitacao: 224 linhas | dificil. Atalho: as rotinas de NTT e mul sao as mesmas
+  de ntt.cpp; mantenha uma copia so e inclua-a.
+*****************************LATEX_DESC_END*/

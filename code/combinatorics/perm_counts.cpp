@@ -1,16 +1,5 @@
-// Contagens de permutacoes especiais
-//
-// O que faz: desarranjos D_n, perms com exatamente k pontos fixos, involucoes,
-//   permutacoes indecomponiveis, # perms com k inversoes (Mahoniano, tabela
-//   O(n*K) com prefix sums), zigue-zague (Entringer/Euler), Catalan de padrao evitado fica em catalan_family.
-// Quando usar: "Catalogo > Combinatoria" (Desarranjos e permutacoes especiais, Inversoes,
-//   Permutacoes indecomponiveis, Zigue-zague). Eulerianos e Stirling 1a: stirling_bell.cpp.
-// Complexidade: derange/involutions/indecomposable O(n) ou O(n^2); inversions O(n*K).
+// Permutacoes especiais - desarranjos, inversoes, zigzag
 // Requer: code/combinatorics/binom_mod.cpp (cole antes).
-// Uso: derangements(N) -> D[0..N]; fixed_points(n,k) (precisa binom_mod.cpp);
-//   involutions(N); indecomposable(N); inversions_table(n,K) -> v[k] = # perms de n com k inversoes;
-//   alternating(N) -> E[0..N] (up/down, 1,1,1,2,5,16,61...).
-// Cuidados: inversions_table devolve k=0..K (K pode ser > n(n-1)/2, termos extras = 0).
 vector<ll> derangements(int N) { // D_n = (n-1)(D_{n-1}+D_{n-2})
     vector<ll> D(max(N + 1, 2)); D[0] = 1; D[1] = 0;
     for (int n = 2; n <= N; n++) D[n] = (n - 1) * (D[n-1] + D[n-2]) % MOD;
@@ -22,7 +11,7 @@ vector<ll> involutions(int N) { // I_n = I_{n-1}+(n-1)I_{n-2}
     for (int n = 2; n <= N; n++) I[n] = (I[n-1] + (n - 1) * I[n-2]) % MOD;
     return I;
 }
-// Indecomponiveis (nenhum prefixo e permutacao de 1..j para j<n): I(n)=n!-sum_{j<n} I(j)(n-j)!
+// sem prefixo que seja permutacao de 1..j
 vector<ll> indecomposable(int N) {
     vector<ll> I(N + 1), f(N + 1); f[0] = 1;
     for (int i = 1; i <= N; i++) f[i] = f[i-1] * i % MOD;
@@ -33,7 +22,7 @@ vector<ll> indecomposable(int N) {
     }
     return I;
 }
-// v[k] = # perms de n com k inversoes: inserir i adiciona 0..i-1 inversoes -> prefix sum
+// # perms com k inversoes (prefix sums)
 vector<ll> inversions_table(int n, int K) {
     vector<ll> dp(K + 1, 0), nd(K + 1);
     dp[0] = 1;
@@ -49,7 +38,7 @@ vector<ll> inversions_table(int n, int K) {
     }
     return dp;
 }
-// Numeros alternantes (Euler zigzag) A_0..A_N via triangulo de Entringer (O(N^2))
+// Euler zigzag via triangulo de Entringer
 vector<ll> alternating(int N) {
     vector<ll> A(N + 1), row = {1}, nr;
     A[0] = 1;
@@ -60,3 +49,35 @@ vector<ll> alternating(int N) {
     }
     return A;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Permutacoes especiais**
+Desarranjos, pontos fixos, involucoes, indecomponiveis, tabela de inversoes e Euler zigzag.
+
+Complexidade: derangements/involutions/indecomposable O(n) ou O(n^2); inversions O(n K).
+Uso:
+  vector<ll> D = derangements(N);
+  ll fp = fixed_points(n, k, D);
+  vector<ll> I = involutions(N), ind = indecomposable(N);
+  vector<ll> inv = inversions_table(n, K);
+  vector<ll> A = alternating(N);
+
+* Sobre o codigo:
+  D_n = (n-1)(D_{n-1}+D_{n-2}); I_n = I_{n-1}+(n-1)I_{n-2}.
+  indecomposable subtrai as decomposicoes por prefixo. inversions_table usa
+  prefix sums porque inserir i cria 0..i-1 inversoes. alternating usa o
+  triangulo de Entringer.
+
+* Problemas e reducoes:
+  + Permutacoes sem ponto fixo -> derangements.
+  + Permutacoes com exatamente k pontos fixos -> fixed_points.
+  + Involucoes (ciclos de tamanho 1 ou 2) -> involutions.
+  + Permutacoes indecomponiveis -> indecomposable.
+  + Permutacoes com k inversoes -> inversions_table.
+  + Permutacoes alternantes (up/down) -> alternating.
+  + Numero de Euler zigzag -> alternating.
+
+Cuidados: inversions_table devolve k = 0..K (K pode passar de n(n-1)/2;
+  termos extras sao 0); fixed_points precisa de C e de D.
+Catalogo: Combinatoria.
+Digitacao: 49 linhas | media. Atalho: derangements/involutions/indecomposable repetem alocacao de vetor.
+*****************************LATEX_DESC_END*/

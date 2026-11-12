@@ -1,14 +1,4 @@
-// Bostan-Mori: [x^n] P(x)/Q(x) mod 998244353
-//
-// O que faz: n-esimo coeficiente de uma serie racional P/Q (Q[0] != 0). Para recorrencia
-//   s[i] = sum_j c[j] s[i-1-j] monta Q = 1 - sum c[j] x^(j+1), P = (s * Q) mod x^L.
-// Quando usar: recorrencia linear de ordem k >= ~50 e n enorme (1e18)
-//   (Catalogo > Algebra, polinomios e FFT: Kitamasa / Bostan-Mori).
-// Complexidade: O(k log k log n) com NTT.
-// Uso: ll v = nth_linear_rec(s, c, n);  // s = primeiros L termos, c = coef. (como em BM)
-//      ll w = bostan_mori(P, Q, n);     // P, Q vetores de int, 0-based
-// Cuidados: MOD = 998244353 (NTT). Para MOD 1e9+7 troque mul por convArb de conv_mod.cpp
-//   ou use kth de berlekamp_massey.cpp (O(k^2 log n)). Q[0] deve ser invertivel.
+// Bostan-Mori - [x^n] P(x)/Q(x) mod 998244353
 const int MOD = 998244353, G = 3;
 ll pw(ll b, ll e) {
     ll r = 1; b %= MOD; if (b < 0) b += MOD;
@@ -78,3 +68,30 @@ ll nth_linear_rec(const vector<ll>& s, const vector<ll>& c, ll n) {
         for (int j = 0; j <= i; j++) p[i] = (p[i] + (ll)(s[j] % MOD) * q[i - j]) % MOD;
     return bostan_mori(p, q, n);
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Bostan-Mori**
+[x^n] P(x)/Q(x) mod 998244353, com Q[0] != 0. Para a recorrencia
+s[i] = sum_j c[j] s[i-1-j], monta Q = 1 - sum c[j] x^(j+1) e P = (s * Q) mod x^L.
+
+Complexidade: O(k log k log n) com NTT.
+Uso:
+  ll v = nth_linear_rec(s, c, n);   // s = primeiros L termos, c como no BM
+  ll w = bostan_mori(P, Q, n);      // P, Q vetores de int, 0-based
+
+* Sobre o codigo:
+  A cada passo troca Q(x) por Q(-x) e mantem as potencias pares de P*Q(-x) e
+  Q*Q(-x); a paridade de n escolhe o numerador. Isso dobra o indice e reduz n
+  pela metade, ate n = 0. No fim basta dividir p[0] por q[0].
+
+* Problemas e reducoes:
+  + n-esimo termo de recorrencia linear com ordem k grande e n enorme.
+  + Coeficiente de serie racional / funcao geradora.
+  + Fibonacci e generalizacoes em O(log n) por passo.
+
+Cuidados: MOD = 998244353 (NTT). Para 1e9+7 troque mul por convArb de
+  conv_mod.cpp ou use kth de berlekamp_massey.cpp (O(k^2 log n)). Q[0]
+  invertivel. As funcoes ntt/mul/pw colidem com as de ntt.cpp.
+Catalogo: Algebra, polinomios e FFT (Kitamasa / Bostan-Mori).
+Digitacao: 69 linhas | dificil. Atalho: se k e pequeno, use kth do BM e evite
+  todo o NTT.
+*****************************LATEX_DESC_END*/

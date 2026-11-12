@@ -1,12 +1,4 @@
-// Hopcroft-Karp - emparelhamento bipartido maximo
-//
-// O que faz: matching maximo em bipartido L x R em fases (BFS de niveis + DFS).
-// Quando usar: bipartido grande (n, m ~ 1e5..1e6) - Catalogo > Grafos ("Fluxo em
-//   unidade", "Kuhn com heuristica"), Otimizacao > "Dinic em redes especiais".
-// Complexidade: O(E sqrt V).
-// Uso: HK h(nl, nr); h.add(l, r); int m=h.solve(); h.ml[l]=r (ou -1), h.mr[r]=l (ou -1).
-//   0-indexed. Arestas duplicadas ok.
-// Cuidados: DFS recursivo tem profundidade ate o comprimento do caminho aumentante.
+// Hopcroft-Karp - matching bipartido maximo
 struct HK {
     int nl, nr; vector<vector<int>> g; vector<int> ml, mr, d, it;
     HK(int nl, int nr) : nl(nl), nr(nr), g(nl), ml(nl, -1), mr(nr, -1), d(nl), it(nl) {}
@@ -40,3 +32,45 @@ struct HK {
         return res;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Hopcroft-Karp - matching bipartido maximo**
+Matching maximo em bipartido L x R por fases (BFS de niveis + DFS).
+0-indexed.
+
+Complexidade: O(E sqrt V).
+Uso:
+  HK h(nl, nr); h.add(l, r); int m = h.solve();
+  h.ml[l] = r (ou -1); h.mr[r] = l (ou -1).
+
+* Sobre o codigo:
+  bfs marca as camadas a partir dos L livres e indica se ha caminho
+  aumentante. dfs so anda para a camada seguinte e usa it[] para nao repetir
+  arestas na mesma fase. Cada fase aumenta o matching em varios caminhos
+  disjuntos.
+
+* Problemas e reducoes:
+  + Matching bipartido maximo: vertices = L e R, arestas = pares compativeis
+    cap 1; resposta = solve(), pares em ml[]/mr[].
+  + Matching que satura L (Hall): resposta = nl sse todos os L casam.
+  + Cobertura minima de vertices: |cover| = matching (Konig); L nao
+    alcancados + R alcancados na BFS alternada.
+  + Conjunto independente maximo: nl + nr - matching.
+  + Atribuicao um-para-um (pessoas x tarefas): bipartido pessoas-tarefas,
+    aresta = tarefa aceitavel; matching = atribuicao maxima.
+  + Atribuicao com capacidades: clone cada pessoa/tarefa em c slots cap 1 e
+    ligue os pares permitidos; matching nos slots.
+  + Torres que nao se atacam: L = linhas, R = colunas, aresta por casa livre;
+    matching = maximo de torres.
+  + Dominos em tabuleiro bipartido: L/R = cores da casa, aresta entre casas
+    vizinhas livres; matching = maximo de dominos.
+  + Cobertura de DAG por caminhos disjuntos: L = out(u), R = in(v), aresta
+    u -> v; resposta = n - matching.
+  + Maximo de pares sem conflito em bipartido (escalonamento): idem item 1.
+
+Cuidados: DFS recursivo tem profundidade ate o comprimento do caminho
+  aumentante. Arestas duplicadas ok. 0-indexed.
+Catalogo: Grafos (fluxo em unidade, Kuhn com heuristica), Otimizacao
+  (Dinic em redes especiais).
+Digitacao: 33 linhas | media. Atalho: quase identico a konig.cpp; poderia ser
+  uma struct so com flag para construir a cobertura.
+*****************************LATEX_DESC_END*/

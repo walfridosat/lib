@@ -1,14 +1,4 @@
-// LCA O(1) com sparse table sobre a ordem de DFS (n posicoes)
-//
-// O que faz: LCA em O(1) por query. Para u != v com tin[u] < tin[v], o LCA e o
-//   pai do vertice de menor tin entre as posicoes (tin[u], tin[v]]; guardamos
-//   tin do pai em cada posicao e tiramos o minimo.
-// Quando usar: muitas queries de LCA/distancia (Catalogo > Arvores, "LCA com sparse
-//   table sobre ordem de DFS").
-// Complexidade: build O(n log n), query O(1).
-// Uso: LCAS t(g, raiz); t.lca(u,v); t.dist(u,v); t.tin[v], t.tout[v] (subarvore =
-//   [tin, tout) ), t.ord[i] = vertice na posicao i. 0-based.
-// Cuidados: DFS iterativa (sem estouro de pilha). u==v tratado a parte.
+// LCA O(1) - sparse table sobre a ordem de DFS
 struct LCAS {
     int n;
     vector<int> tin, tout, ord, d, par;
@@ -45,3 +35,33 @@ struct LCAS {
     int dist(int u, int v) const { return d[u] + d[v] - 2 * d[lca(u, v)]; }
     bool anc(int u, int v) const { return tin[u] <= tin[v] && tin[v] < tout[u]; } // u e ancestral de v
 };
+/*LATEX_DESC_BEGIN***************************
+-> **LCA O(1) com sparse table**
+LCA em O(1) por query. Para u != v com tin[u] < tin[v], o LCA e o pai do
+vertice de menor tin entre as posicoes (tin[u], tin[v]]; guarda-se tin do pai
+em cada posicao e usa-se o minimo. 0-based.
+
+Complexidade: build O(n log n); query O(1)
+Uso:
+  LCAS t(g, raiz);
+  t.lca(u, v);  t.dist(u, v);  t.anc(u, v);
+  // t.tin[v], t.tout[v]: subarvore de v = [tin[v], tout[v])
+  // t.ord[i] = vertice na posicao i da ordem de DFS
+
+* Sobre o codigo:
+  DFS iterativa grava tin/tout e a ordem ord[]. sp[k][i] = minimo de tin do pai
+  no intervalo de tamanho 2^k. lca ajusta l/r, pega o minimo no intervalo e
+  devolve ord desse minimo. u == v e tratado a parte.
+
+* Problemas e reducoes:
+  + Muitas queries de LCA / distancia: O(1) cada.
+  + Ancestralidade em O(1): anc(u, v) por tin/tout.
+  + Subarvore como intervalo [tin, tout).
+  + Caminho/ancestral: combine com profundidade d[].
+  + Distancia com pesos: pref[] em ll e pref[u]+pref[v]-2*pref[lca].
+
+Cuidados: DFS iterativa, sem estouro de pilha. pos 0 da sparse table e a raiz
+  e nunca e usada; u == v tratado a parte. Usa __builtin_clz.
+Catalogo: Arvores (LCA com sparse table sobre ordem de DFS).
+Digitacao: 36 linhas | media.
+*****************************LATEX_DESC_END*/

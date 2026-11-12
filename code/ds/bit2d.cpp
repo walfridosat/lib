@@ -1,13 +1,4 @@
-// BIT 2D
-//
-// O que faz: update pontual (soma) e soma em retangulo numa grade n x m.
-// Quando usar: Catalogo > Estruturas de dados (BIT 2D, dominancia 2D,
-//   contar pontos em retangulo online). Com coordenadas esparsas grandes
-//   comprima offline ou use code/ds/seg2d.cpp (interna dinamica).
-// Complexidade: O(log n * log m) por operacao; memoria O(n*m).
-// Uso: 1-based. BIT2D b(n,m); b.add(x,y,v); b.query(x1,y1,x2,y2) (inclusivo).
-// Cuidados: memoria n*m longs (n*m <= ~2e7). Para range-add 2D precisaria
-//   de 4 BITs (nao incluido).
+// BIT 2D - soma em retangulo
 struct BIT2D {
     int n, m; vector<vector<ll>> t;
     BIT2D(int n = 0, int m = 0) : n(n), m(m), t(n + 1, vector<ll>(m + 1, 0)) {}
@@ -25,3 +16,28 @@ struct BIT2D {
         return pre(x2, y2) - pre(x1 - 1, y2) - pre(x2, y1 - 1) + pre(x1 - 1, y1 - 1);
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **BIT 2D**
+Update pontual (soma) e soma em retangulo numa grade n x m. Indexacao 1-based.
+
+Complexidade: O(log n * log m) por operacao; memoria O(n*m).
+Uso:
+  BIT2D b(n, m); b.add(x, y, v);
+  b.query(x1, y1, x2, y2)       // inclusivo
+
+* Sobre o codigo:
+  t[i][j] cobre (i-lowbit(i), i] x (j-lowbit(j), j].
+  add e pre aninhados nos dois eixos; query usa inclusao-exclusao.
+
+* Problemas e reducoes:
+  + Contar pontos em retangulo online.
+  + Soma de submatriz com updates pontuais.
+  + Dominancia 2D (contar pontos com x <= X e y <= Y).
+  + Contar pares/inversoes em duas dimensoes.
+
+Cuidados: memoria n*m longs (n*m <= ~2e7). Para range-add 2D precisaria
+  de 4 BITs (nao incluido). Coordenadas esparsas grandes: comprima offline
+  ou use code/ds/seg2d.cpp (interna dinamica).
+Catalogo: Estruturas de dados.
+Digitacao: 17 linhas | facil.
+*****************************LATEX_DESC_END*/

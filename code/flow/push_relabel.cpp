@@ -1,11 +1,4 @@
 // Push-relabel (highest label + gap) - fluxo maximo
-//
-// O que faz: fluxo maximo; alternativa ao Dinic em grafos densos / capacidades grandes.
-// Quando usar: Catalogo > Grafos (fluxo); quando Dinic estoura tempo em grafo denso.
-// Complexidade: O(V^2 sqrt E) pior caso; muito rapido na pratica.
-// Uso: PushRelabel pr(n); pr.addEdge(u,v,cap[,rcap]); ll f=pr.calc(s,t);
-//   pr.leftOfMinCut(v) = true se v esta do lado de s no corte minimo (apos calc).
-// Cuidados: baseado no KACTL. Chamar calc uma unica vez por objeto. 0-indexed.
 struct PushRelabel {
     struct Edge { int dest, back; ll f, c; };
     vector<vector<Edge>> g; vector<ll> ec; vector<Edge*> cur;
@@ -46,3 +39,55 @@ struct PushRelabel {
     }
     bool leftOfMinCut(int a) { return H[a] >= (int)g.size(); }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Push-relabel (highest label + gap)**
+Fluxo maximo s -> t; alternativa ao Dinic em grafos densos ou com
+capacidades grandes. 0-indexed.
+
+Complexidade: O(V^2 sqrt E) pior caso; muito rapido na pratica.
+Uso:
+  PushRelabel pr(n); pr.addEdge(u, v, cap[, rcap]); ll f = pr.calc(s, t);
+  pr.leftOfMinCut(v) -> v esta do lado de s no corte minimo (apos calc).
+
+* Sobre o codigo:
+  Cada vertice guarda excesso ec[] e altura H[]. Inicializa saturando as
+  arestas de s; o vertice ativo de maior altura empurra fluxo para baixo
+  (altura do destino + 1) ou e relabelado. O gap (co[H[u]] == 0) sobe para
+  V + 1 os vertices inalcancaveis, acelerando o fim.
+
+* Problemas e reducoes:
+  + Fluxo maximo / corte minimo: s, t, capacidades; resposta = calc(); lado
+    S = leftOfMinCut.
+  + Caminhos disjuntos em arestas (Menger): cap 1 em cada aresta; fluxo =
+    numero de caminhos.
+  + Caminhos disjuntos em vertices: split v_in -> v_out cap 1; arestas
+    originais cap INF; fluxo = numero de caminhos.
+  + Remover o minimo de vertices para desconectar s de t: split com cap 1
+    (ou custo do vertice) e arestas originais INF; o corte da o custo.
+  + Project selection / closure: s -> projeto (lucro), maquina -> t (custo),
+    dependencia INF; resposta = soma dos lucros - fluxo.
+  + Segmentacao binaria: s -> i cap a_i, i -> t cap b_i, i <-> j cap p_ij;
+    corte minimo = custo da melhor separacao (A = lado de s).
+  + Escolha em cadeia (x_i em 1..k, |x_i - x_j| <= d): cadeia de vertices
+    por variavel, arestas INF para tras e INF entre cadeias deslocadas de d;
+    cortar a aresta do valor paga o custo.
+  + Grid: minimo de celulas bloqueadas para separar dois pontos: split de
+    cada celula com cap 1, vizinhos com INF.
+  + Densest subgraph: com m = numero de arestas e g fixo, s -> v cap m,
+    v -> t cap m + 2g - deg(v), arestas cap 1 nos dois sentidos; o corte do
+    lado S vale m*n + 2(g|S| - e(S)), entao compare com m*n e binaria em g.
+  + Baseball elimination: s -> jogo cap jogos restantes, jogo -> os 2 times,
+    time -> t cap w_max - w_time; eliminado se o fluxo nao satura s.
+  + Atribuicao com capacidades: s -> pessoa cap c_p, pessoa -> tarefa cap 1,
+    tarefa -> t cap d_t; fluxo = pares.
+  + Matching bipartido: s -> L cap 1, L -> R cap 1, R -> t cap 1.
+  + Corte minimo global de grafo nao direcionado: fixe s e teste todos os t
+    (ou use Gomory-Hu para todos os pares).
+  + Minimo de arestas a remover para tornar o grafo desconexo: corte global.
+
+Cuidados: baseado no KACTL. Chamar calc uma unica vez por objeto. Soma de
+  varios INF pode estourar ll. 0-indexed.
+Catalogo: Grafos (fluxo).
+Digitacao: 40 linhas | dificil. Atalho: ok (implementacao ja compacta);
+  leftOfMinCut poderia ser escrito como H[a] >= n.
+*****************************LATEX_DESC_END*/

@@ -1,15 +1,4 @@
-// Cobertura minima de caminhos em DAG (disjuntos em vertices, ou com repeticao)
-//
-// O que faz: minimo de caminhos que cobrem todos os vertices de um DAG. Reconstroi os
-//   caminhos. Versao "com vertices repetidos" usa fecho transitivo antes.
-// Quando usar: "minimo de caminhoes/tarefas encadeadas", Dilworth (antichain maxima =
-//   min cadeias) - Catalogo > Grafos ("Cobertura minima de caminhos em DAG", "Dilworth").
-// Complexidade: O(E sqrt V) (+ O(V^3/64) bitset para o fecho se repeticao).
-// Uso: auto paths = dagPathCover(n, edges, false); // edges: pares (u,v) u->v, 0-indexed
-//   paths.size() = minimo; cada paths[i] e a lista de vertices em ordem.
-//   repeat=true: caminhos podem compartilhar vertices (passar por vertice ja coberto).
-// Cuidados: o grafo DEVE ser DAG (sem ciclos). Resposta = n - matching. Caso repeat:
-//   fecho transitivo O(n^3/64) com bitset <= 2000 vertices (aumente MAXB se precisar).
+// Cobertura minima de caminhos em DAG - disjuntos em vertices ou com repeticao
 vector<vector<int>> dagPathCover(int n, vector<pair<int,int>> edges, bool repeat) {
     const int MAXB = 2048;
     if (repeat) { // fecho transitivo: ordem topologica + bitset
@@ -43,3 +32,45 @@ vector<vector<int>> dagPathCover(int n, vector<pair<int,int>> edges, bool repeat
     }
     return res;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Cobertura minima de caminhos em DAG**
+Minimo de caminhos que cobrem todos os vertices de um DAG, com reconstrucao.
+repeat=true permite caminhos que compartilham vertices (usa fecho transitivo).
+0-indexed.
+
+Complexidade: O(E sqrt V) no matching (+ O(V^3/64) bitset para o fecho).
+Uso:
+  auto paths = dagPathCover(n, edges, false); // edges: pares (u,v), u -> v
+  paths.size() = minimo; paths[i] = vertices do i-esimo caminho em ordem.
+  repeat = true: fecho transitivo antes (bitset, ate MAXB vertices).
+
+* Sobre o codigo:
+  Reduz a cobertura de caminhos a matching bipartido: a copia out de u liga a
+  copia in de v para cada aresta u -> v; resposta = n - matching. Cada vertice
+  sem par de entrada inicia um caminho, seguido por ml[]. Com repeat, o fecho
+  transitivo transforma "caminho que pode repetir" em caminho disjunto.
+
+* Problemas e reducoes:
+  + Cobertura minima de DAG por caminhos disjuntos em vertices: modelo acima;
+    resposta = n - matching; caminhos reconstruidos por ml[].
+  + Cobertura com vertices repetidos: feche transitivamente e use o mesmo
+    modelo; equivale ao minimo de caminhos no DAG original.
+  + Dilworth / maior anticadeia em poset: arestas do poset (i < j) com fecho
+    transitivo; anticadeia maxima = n - matching.
+  + Decomposicao minima de poset em cadeias: mesmo matching; cada caminho e
+    uma cadeia; tamanho = n - matching.
+  + Particionar sequencia no minimo de subsequencias crescentes: poset com
+    i < j e a[i] <= a[j]; matching no bipartido das comparacoes.
+  + Minimo de cadeias para cobrir um poset (largura = anticadeia maxima).
+  + Escalonamento com precedencias: minimo de sequencias encadeadas que
+    executam todas as tarefas = n - matching no grafo de precedencias.
+  + DAG coberto por um unico caminho: matching = n - 1.
+  + Cobertura de um subconjunto: remova os demais vertices do universo e
+    aplique o mesmo modelo.
+
+Cuidados: o grafo DEVE ser DAG (sem ciclos). Resposta = n - matching.
+  repeat: bitset MAXB = 2048, ajuste para n maior. 0-indexed.
+Catalogo: Grafos (cobertura minima de caminhos em DAG, Dilworth).
+Digitacao: 33 linhas | media. Atalho: o matching interno repete o codigo de
+  kuhn.cpp; poderia incluir kuhn.cpp e chamar a struct.
+*****************************LATEX_DESC_END*/

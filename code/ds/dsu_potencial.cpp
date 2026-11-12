@@ -1,15 +1,4 @@
-// DSU com pesos / potencial (soma)
-//
-// O que faz: mantem w[x] = pot[x] - pot[raiz]. Permite restricoes do tipo
-//   pot[b] - pot[a] = c e consultar pot[b]-pot[a] se conectados.
-// Quando usar: "Catalogo > Estruturas de dados" (DSU com potencial);
-//   sistemas de diferencas, "A pesa X a mais que B", distancias relativas.
-// Complexidade: O(alfa(n)) amortizado.
-// Uso: DSUW d(n); // 0-based
-//   d.unite(a,b,c) -> pot[b]-pot[a]=c; retorna false se contradiz.
-//   d.dist(a,b) -> pot[b]-pot[a], ou LLONG_MIN se nao conectados.
-// Cuidados: overflow se pesos grandes (use ll). Para mod k troque + e - por
-//   aritmetica mod k. Para xor veja dsu_paridade.cpp.
+// DSU com potencial - diferencas pot[b]-pot[a]
 struct DSUW {
 	vector<int> p, sz; vector<ll> w; // w[x] = pot[x]-pot[p[x]]
 	DSUW(int n = 0) : p(n), sz(n, 1), w(n, 0) { iota(p.begin(), p.end(), 0); }
@@ -33,3 +22,29 @@ struct DSUW {
 		return true;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **DSU com potencial (soma)**
+Mantem w[x] = pot[x] - pot[raiz], permitindo restricoes pot[b]-pot[a] = c
+e consultar a diferenca se conectados.
+
+Complexidade: O(alfa(n)) amortizado.
+Uso:
+  DSUW d(n);                 // 0-based
+  d.unite(a, b, c) -> pot[b]-pot[a]=c; false se contradiz
+  d.dist(a, b) -> pot[b]-pot[a], ou LLONG_MIN se nao conectados
+
+* Sobre o codigo:
+  w[x] = pot[x]-pot[p[x]]; find comprime somando os pesos ate a raiz.
+  unite calcula x = c - w[b] + w[a] e pendura rb em ra com peso x.
+
+* Problemas e reducoes:
+  + Sistemas de diferencas.
+  + "A pesa X a mais que B" e distancias relativas.
+  + Restricoes de soma pot[b]-pot[a] = c.
+  + Consistencia de equacoes lineares em componentes.
+
+Cuidados: overflow se pesos grandes (use ll). Para mod k troque + e - por
+  aritmetica mod k. Para xor veja dsu_paridade.cpp.
+Catalogo: Estruturas de dados.
+Digitacao: 23 linhas | media.
+*****************************LATEX_DESC_END*/

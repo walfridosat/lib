@@ -1,12 +1,4 @@
-// Compressao de coordenadas
-//
-// O que faz: mapeia valores arbitrarios para 0..k-1 preservando a ordem.
-// Quando usar: BIT/segtree/DSU sobre valores grandes, sweep, contagem de inversoes. Catalogo > Arrays e guloso
-// Complexidade: O(n log n) construir, O(log n) por consulta
-// Uso: Comp<ll> c(v);  c.id(x) -> indice de x (0-based);  c.val(i) -> valor;  c.size();
-//      c.lb(x) = quantos valores distintos < x (serve para x que nao esta no conjunto); c.ub(x) = quantos <= x.
-//      compress(a): substitui a[i] pelo rank e devolve o vetor de valores distintos.
-// Cuidados: id(x) exige x presente (use lb se nao tiver certeza). add() so vale antes de build().
+// Compressao de coordenadas - valores arbitrarios para ranks 0..k-1
 template<class T> struct Comp {
     vector<T> v;
     Comp(vector<T> a = {}) : v(a) { build(); }
@@ -23,3 +15,26 @@ template<class T> vector<T> compress(vector<T>& a) {
     for (auto& x : a) x = lower_bound(s.begin(), s.end(), x) - s.begin();
     return s;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Compressao de Coordenadas**
+Mapeia valores arbitrarios para 0..k-1 preservando a ordem (0-indexed).
+
+Complexidade: O(n log n) para construir; O(log n) por consulta
+Uso:
+  Comp<ll> c(v); int i = c.id(x); T val = c.val(i); int k = c.size();
+  c.lb(x) -> quantos valores distintos < x; c.ub(x) -> quantos <= x
+  vector<T> vals = compress(a);  // troca a[i] pelo rank, devolve os distintos
+
+* Sobre o codigo:
+  Comp guarda os valores ordenados e unicos; busca binaria da o rank.
+  add(x) so pode ser usado antes de build(); compress reordena o vetor in-place.
+
+* Problemas e reducoes:
+  + BIT/segtree/DSU sobre valores grandes: comprima antes de indexar.
+  + Contar inversoes e sweep com coordenadas grandes.
+  + Fenwick de frequencia: id(x) e o indice da posicao.
+
+Cuidados: id(x) exige x presente (use lb se nao tiver certeza); add() so vale antes de build().
+Catalogo: Arrays e guloso
+Digitacao: 16 linhas | facil.
+*****************************LATEX_DESC_END*/

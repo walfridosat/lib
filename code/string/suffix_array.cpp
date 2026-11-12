@@ -1,20 +1,4 @@
 // Suffix array + LCP + RMQ de LCP
-//
-// O que faz: sa (sufixos ordenados), rnk, lcp[i] = LCP(sa[i-1], sa[i]) (lcp[0]=0),
-//   LCP de dois sufixos quaisquer em O(1) (sparse table), substrings distintas,
-//   k-esima substring distinta, comparacao de substrings.
-// Quando usar: Catalogo > Strings ("Substrings distintas, k-esima substring",
-//   "LCP de dois sufixos quaisquer", "SA: ...", "Maior substring comum de k strings").
-// Complexidade: O(n log n) construcao; consulta de LCP O(1).
-// Uso: SuffixArray S(s); S.sa, S.rnk, S.lcp (0-based);
-//   S.query(i, j) = LCP dos sufixos que comecam em i e j (i != j; i==j devolve n-i);
-//   S.distinct() = nro de substrings distintas;
-//   S.kth(k) = k-esima (1-based) substring distinta em ordem lexicografica (string);
-//   S.cmp(a,b,c,d) compara s[a..b) com s[c..d) (-1,0,1).
-//   Varias strings: concatene com separadores distintos (chars < ' ' ou >= 'a' livres)
-//   e limite o LCP, ou use janela deslizante sobre lcp (min da janela com todas as cores).
-// Cuidados: chars da string devem ser >= 1 (0 e o sentinela interno).
-//   Menor substring que ocorre >=k vezes etc: ver catalogo (janela de k-1 lcps).
 struct SuffixArray {
 	int n; string s;
 	vector<int> sa, rnk, lcp;
@@ -81,3 +65,42 @@ struct SuffixArray {
 		return s[a + l] < s[c + l] ? -1 : 1;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Suffix array + LCP + RMQ**
+sa = sufixos ordenados; rnk; lcp[i] = LCP(sa[i-1], sa[i]) com lcp[0] = 0;
+LCP de dois sufixos em O(1) por sparse table; substrings distintas,
+k-esima substring e comparacao de substrings. 0-indexed.
+
+Complexidade: O(n log n) construcao; consulta de LCP O(1).
+Uso:
+  SuffixArray S(s); S.sa, S.rnk, S.lcp;
+  S.query(i, j) -> LCP dos sufixos i e j (i == j devolve n - i);
+  S.distinct() -> numero de substrings distintas;
+  S.kth(k) -> k-esima (1-based) substring distinta lexicografica ("");
+  S.cmp(a, b, c, d) -> compara s[a..b) com s[c..d) (-1, 0, 1).
+  Varias strings: concatene com separadores distintos e limite o LCP, ou use
+  janela deslizante sobre lcp com todas as cores.
+
+* Sobre o codigo:
+  Doubling com counting sort (estilo KACTL), sentinela em sa2[0]. Kasai
+  calcula lcp em O(n) aproveitando o lcp anterior. A sparse table guarda o
+  minimo de lcp; query pega o intervalo entre rnk[i] e rnk[j].
+
+* Problemas e reducoes:
+  + Ordenar sufixos / buscar substrings: sa e rnk.
+  + LCP de dois sufixos: query(i, j).
+  + Substrings distintas: n(n+1)/2 - sum lcp[i].
+  + k-esima substring distinta: kth(k).
+  + Comparar substrings: cmp(a, b, c, d).
+  + Maior substring comum de k strings: concatene com separadores e use
+    janela de lcp com todas as cores.
+  + Substring que ocorre >= k vezes: janela de k-1 lcps.
+  + Menor substring que ocorre >= k vezes etc: ver catalogo.
+
+Cuidados: chars da string devem ser >= 1 (0 e o sentinela interno). Para
+  contagens, use ll. 0-indexed, intervalo [a, b).
+Catalogo: Strings (substrings distintas, k-esima substring, LCP de dois
+  sufixos quaisquer, SA: ..., maior substring comum de k strings).
+Digitacao: 66 linhas | dificil. Atalho: a sparse table poderia ser trocada
+  por segment tree (mais linhas) ou query O(log n).
+*****************************LATEX_DESC_END*/

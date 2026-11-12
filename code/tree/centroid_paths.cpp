@@ -1,15 +1,4 @@
-// Contar pares (u<v) com dist(u,v) <= K via centroide (arestas ponderadas >= 0)
-//
-// O que faz: para cada centroide junta as distancias da componente, conta pares com
-//   soma <= K por two pointers (ordenado) e subtrai os pares da mesma subarvore filha.
-// Quando usar: "caminhos com soma de peso <= K", "comprimento = k" (troque a contagem)
-//   (Catalogo > Arvores, "Contar caminhos ... via centroide").
-// Complexidade: O(n log^2 n).
-// Uso: ll r = count_paths_le(g, K); g[v] = vector<pair<int,int>> (vizinho, peso). 0-based.
-//   Para comprimento EXATO k use, no lugar de cnt(), contagem por valor: map/vetor de
-//   frequencias (cnt[d]) e some freq[k - d].
-// Cuidados: pares nao ordenados, u != v. Iterativo. Peso negativo nao pode (sem
-//   problema para a contagem, mas dist por soma e o que se pede).
+// Centroide - contar pares com distancia <= K
 static ll cnt_le(vector<ll>& a, ll K) {       // pares i<j com a[i]+a[j] <= K
     sort(a.begin(), a.end());
     ll r = 0; int j = (int)a.size() - 1;
@@ -50,7 +39,7 @@ ll count_paths_le(const vector<vector<pair<int,int>>>& g, ll K) {
                 int v = ord[i]; sub.push_back(dd[v]);
                 for (auto [x, xw] : g[v]) if (!dead[x] && x != par[v]) par[x] = v, dd[x] = dd[v] + xw, ord.push_back(x);
             }
-            ans -= cnt_le(sub, K);             // pares dentro da mesma subarvore (contados em 'all')
+            ans -= cnt_le(sub, K);             // pares da mesma subarvore (ja em all)
             all.insert(all.end(), sub.begin(), sub.end());
             st.push_back(w);
         }
@@ -58,3 +47,33 @@ ll count_paths_le(const vector<vector<pair<int,int>>>& g, ll K) {
     }
     return ans;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Contar pares com dist(u,v) <= K (centroide)**
+Para cada centroide junta as distancias da componente, conta pares com soma
+<= K por two pointers sobre o vetor ordenado e subtrai os pares da mesma
+subarvore filha. Arestas ponderadas >= 0, 0-based.
+
+Complexidade: O(n log^2 n)
+Uso:
+  // g[v] = vector<pair<int,int>> (vizinho, peso)
+  ll r = count_paths_le(g, K);   // pares nao ordenados u < v
+  // para comprimento EXATO k troque cnt_le por frequencias e some freq[k-d]
+
+* Sobre o codigo:
+  Mesma decomposicao por centroides de centroid.cpp. Em cada centroide:
+  all = distancias da componente ate ele; para cada filho, subtrai cnt_le(sub)
+  e depois soma cnt_le(all), evitando contar duas vezes pares da mesma subarvore.
+  cnt_le ordena e usa dois ponteiros.
+
+* Problemas e reducoes:
+  + Pares com distancia <= K / soma de pesos <= K: count_paths_le.
+  + Pares com distancia exata k: frequencias no lugar de two pointers.
+  + Numero de caminhos que passam por cada centroide: combine subarvores.
+  + Menor/maior distancia entre pares: adapte a comparacao.
+
+Cuidados: pares nao ordenados, u != v. Peso negativo invalida a soma como
+  distancia. Iterativo, sem recursao.
+Catalogo: Arvores (contar caminhos via centroide).
+Digitacao: 48 linhas | dificil. Atalho: a decomposicao por centroides repete
+  centroid.cpp; extraia um helper comum.
+*****************************LATEX_DESC_END*/

@@ -1,11 +1,4 @@
-// Circulo minimo envolvente (Welzl iterativo) e circuncentro
-//
-// O que faz: menor circulo contendo todos os pontos. Retorna centro e raio.
-// Quando usar: Catalogo > Geometria (circulo minimo, circuncentro).
-// Complexidade: O(n) esperado (apos embaralhar).
-// Uso: auto c = minCircle(pts); c.first = centro (Pd), c.second = raio.
-//   circumcenter(a,b,c) devolve o centro do circulo por 3 pontos (nao colineares).
-// Cuidados: embaralha internamente (mt19937 fixo). EPS relativo; coords reais.
+// Circulo minimo envolvente (Welzl) e circuncentro
 
 struct Pd {
   long double x, y;
@@ -47,3 +40,32 @@ pair<Pd, long double> minCircle(vector<Pd> p) {
   }
   return {c, r};
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Circulo minimo envolvente (Welzl) e circuncentro**
+Menor circulo que contem todos os pontos, devolvendo centro e raio. circumcenter da o centro
+do circulo por 3 pontos nao colineares.
+
+Complexidade: O(n) esperado (apos embaralhar)
+Uso:
+  auto c = minCircle(pts);       // c.first = centro (Pd), c.second = raio
+  Pd o = circumcenter(a, b, c);  // a,b,c nao colineares
+
+* Sobre o codigo:
+  Embaralha os pontos e faz o Welzl iterativo: se p[i] esta fora, reinicia com p[i] na
+  fronteira; para cada j < i fora, o circulo fica com p[i], p[j] na fronteira; para cada
+  k < j fora, usa circumcenter(p[i], p[j], p[k]).
+
+* Problemas e reducoes:
+  + Menor circulo que cobre todos os pontos.
+  + Circuncentro de tres pontos.
+  + Dado R, existe circulo de raio <= R cobrindo todos? minCircle(pts).second <= R.
+  + Menor circulo com dois pontos na fronteira (usado no proprio Welzl).
+
+Cuidados: embaralha internamente (mt19937 com semente fixa) e recebe os pontos por valor;
+  EPS relativo 1e-9; coordenadas reais. circumcenter divide por 2*cross(b,c): pontos
+  colineares dao divisao por zero.
+Catalogo: Geometria.
+Digitacao: 38 linhas | media. Atalho: comparar distancias ao quadrado dentro dos lacos e so
+  tirar sqrt no final evita sqrtl repetido.
+*****************************LATEX_DESC_END*/

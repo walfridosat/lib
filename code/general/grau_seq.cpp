@@ -1,12 +1,4 @@
-// Sequencias de graus: Erdos-Gallai, Havel-Hakimi, arvore com graus dados
-//
-// O que faz: testa se uma sequencia e grafica; constroi grafo simples com graus dados; constroi arvore com graus dados.
-// Quando usar: "construa grafo/arvore com graus d_i". Catalogo > Construtivos e interativos (Grafo com graus dados,
-//              Construir grafo com sequencia de graus, Construir arvore com graus dados)
-// Complexidade: Erdos-Gallai O(n log n); Havel-Hakimi O(n^2 log n) simples (pode ser O(n log n) com buckets)
-// Uso: isGraphic(d) -> bool.  havelHakimi(d) -> lista de arestas (indices 0-based) ou {} com flag ok=false.
-//      treeFromDegrees(d) -> arestas da arvore (n-1) ou vazio se impossivel (precisa sum = 2(n-1), todos >= 1).
-// Cuidados: grafo simples (sem lacos/multiarestas); n=1 com d=0 e arvore trivial; ids originais preservados.
+// Sequencias de graus - Erdos-Gallai, Havel-Hakimi e arvore
 bool isGraphic(vector<ll> d) {
     ll n = d.size(), s = 0; for (ll x : d) { if (x < 0 || x >= max(n, 1LL)) return n == 1 && x == 0 ? true : false; s += x; }
     if (s & 1) return false;
@@ -35,7 +27,7 @@ bool havelHakimi(const vector<ll>& d, vector<pair<int, int>>& edges) {
     }
     return true;
 }
-// arvore com graus d_i: ordena, liga folhas ao vertice nao folha com grau restante (equivalente a Prufer)
+// arvore com graus d_i (equivalente a Prufer)
 vector<pair<int, int>> treeFromDegrees(const vector<ll>& d) {
     int n = d.size(); vector<pair<int, int>> e;
     if (n == 1) return d[0] == 0 ? e : vector<pair<int, int>>{{-1, -1}};
@@ -44,10 +36,36 @@ vector<pair<int, int>> treeFromDegrees(const vector<ll>& d) {
     vector<int> leaves, inner;
     for (int i = 0; i < n; i++) (d[i] == 1 ? leaves : inner).push_back(i);
     vector<ll> rem(d.begin(), d.end());
-    // encadeia os internos e pendura folhas conforme o grau restante
+    // encadeia internos e pendura folhas
     for (size_t i = 0; i + 1 < inner.size(); i++) e.push_back({inner[i], inner[i + 1]}), rem[inner[i]]--, rem[inner[i + 1]]--;
     size_t li = 0;
     for (int v : inner) while (rem[v] > 0) { e.push_back({v, leaves[li++]}); rem[v]--; }
     if (inner.empty()) e.push_back({leaves[0], leaves[1]});   // n=2
     return e;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Sequencias de Graus**
+isGraphic testa se d e grafica; havelHakimi constroi grafo simples com graus dados;
+treeFromDegrees constroi arvore com graus dados.
+
+Complexidade: Erdos-Gallai O(n log n); Havel-Hakimi O(n^2 log n) simples
+Uso:
+  bool ok = isGraphic(d);
+  vector<pair<int,int>> e; bool ok = havelHakimi(d, e);  // arestas 0-based
+  vector<pair<int,int>> t = treeFromDegrees(d);  // {-1,-1} se impossivel
+
+* Sobre o codigo:
+  Erdos-Gallai usa prefixos e confere o sum dos k maiores <= k(k-1) + sum min(d_i, k).
+  Havel-Hakimi remove o maior grau e liga aos k maiores restantes.
+  treeFromDegrees encadeia os internos e pendura folhas no grau restante.
+
+* Problemas e reducoes:
+  + Construir grafo simples com sequencia de graus dada.
+  + Construir arvore com d_i dados: precisa sum(d) = 2(n-1) e todos >= 1.
+  + Grafo bipartido com graus dados: use Gale-Ryser.
+
+Cuidados: sem lacos nem multiarestas; n = 1 com d = 0 e arvore trivial;
+  treeFromDegrees sinaliza impossivel com a aresta {-1,-1}.
+Catalogo: Construtivos e interativos (Grafo com graus dados, Construir grafo com sequencia de graus, Construir arvore com graus dados)
+Digitacao: 44 linhas | media.
+*****************************LATEX_DESC_END*/

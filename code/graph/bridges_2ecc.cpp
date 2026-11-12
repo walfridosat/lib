@@ -1,19 +1,4 @@
-// Pontes, articulacoes e componentes 2-aresta-conexas (bridge tree)
-//
-// O que faz: acha pontes e vertices de articulacao; rotula 2-aresta-conexas; monta a
-//   arvore de pontes (bridge tree); conta pares desconectados ao remover cada vertice.
-// Quando usar: Catalogo > Grafos ("Pontes e articulacoes -> arvore de componentes 2-aresta-
-//   conexas", "Condensacao por pontes", "Articulacao != ponte para multiarestas",
-//   "Contar pares desconectados ao remover vertice v", orientacao de Robbins).
-// Complexidade: O(n + m)
-// Uso: Bridges b(n); b.add(u,v) (devolve id da aresta); b.build();
-//   b.is_bridge[id], b.is_art[v], b.cc[v] (id da 2ecc), b.C, b.tree (adj da bridge tree),
-//   b.sep[v] = pares nao ordenados {a,b} (a,b != v, mesma comp. de v) que ficam
-//   desconectados ao remover v. 0-based.
-//   Minimo de arestas p/ tornar 2-aresta-conexo = ceil(folhas/2) na bridge tree (se C>1).
-// Cuidados: DFS recursiva (profundidade n): para n ~1e6 aumente a pilha ou reescreva.
-//   Multiarestas: compara-se id da aresta pai, nao o vertice pai. Raiz e articulacao so
-//   com >= 2 filhos na DFS. Grafo pode ser desconexo.
+// Pontes, articulacoes e 2ecc - bridge tree
 struct Bridges {
     int n, timer = 0, C = 0, csz = 0;
     vector<array<int,2>> E;
@@ -48,7 +33,7 @@ struct Bridges {
         }
         if (pe == -1 && ch >= 2) art = true;
         is_art[u] = art;
-        // csz = tamanho da componente conexa de u (preenchido antes da dfs da raiz)
+        // csz: tamanho da componente de u
         ll tot = csz - 1, rest = tot - sumsz;                // rest = lado de cima de u
         sep[u] = (tot * tot - sq - rest * rest) / 2;
     }
@@ -82,3 +67,39 @@ struct Bridges {
         }
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Pontes, articulacoes e 2ecc (bridge tree)**
+Acha pontes e articulacoes, rotula componentes 2-aresta-conexas, monta a
+arvore de pontes e conta pares desconectados ao remover cada vertice. 0-based.
+
+Complexidade: O(n + m)
+Uso:
+  Bridges b(n); int id = b.add(u, v); b.build();
+  b.is_bridge[id] -> aresta e ponte;  b.is_art[v] -> articulacao
+  b.cc[v]         -> id da 2ecc de v;  b.C = numero de 2eccs
+  b.tree          -> adj da bridge tree (nos = 2eccs)
+  b.sep[v]        -> pares nao ordenados {a,b} (a,b != v, mesma componente de v)
+                     que ficam desconectados ao remover v
+  minimo de arestas para ficar 2-aresta-conexo = ceil(folhas/2) na bridge tree
+
+* Sobre o codigo:
+  DFS com tin/low e id da aresta pai (nao o vertice, para tratar multiarestas).
+  low[v] > tin[u] marca ponte; low[v] >= tin[u] marca articulacao (raiz so com
+  2+ filhos). Separa 2eccs por arestas nao-poste e condensa na bridge tree.
+  sep[v] usa sub[v] e a soma dos quadrados dos lados para contar pares.
+
+* Problemas e reducoes:
+  + Pontes: arestas marcadas em is_bridge.
+  + Componentes 2-aresta-conexas: cc[v]; condense e trabalhe na bridge tree.
+  + Articulacoes: is_art[v] (diferente de ponte em multiarestas).
+  + Pares desconectados ao remover v: sep[v].
+  + Minimo de arestas para 2-aresta-conexo: ceil(folhas/2) na bridge tree.
+  + Orientacao de Robbins: grafo sem pontes admite orientacao fortemente conexa.
+  + Remover aresta de ponte desconecta u de v; nao-ponte nunca desconecta.
+
+Cuidados: DFS recursiva (profundidade n); para n ~1e6 aumente a pilha ou
+  reescreva iterativo. Grafo pode ser desconexo. Raiz articulacao so com 2+ filhos.
+Catalogo: Grafos (pontes e articulacoes, 2ecc, bridge tree, Robbins).
+Digitacao: 68 linhas | dificil. Atalho: calcular csz dentro da propria DFS com
+  uma passada de contagem antes, sem a varredura separada.
+*****************************LATEX_DESC_END*/

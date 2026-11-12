@@ -1,17 +1,4 @@
-// Li Chao tree (minimo de retas / segmentos em x)
-//
-// O que faz: insere retas y=a*x+b (ou segmentos) e consulta o minimo em x.
-//   Dinamica (nos criados sob demanda) sobre dominio inteiro [lo, hi].
-// Quando usar: "Catalogo > Estruturas de dados" (Li Chao, CHT em arvore) e
-//   "Busca binaria e otimizacao" (CHT por busca binaria): dp[i]=min_j(dp[j]+
-//   b_j*a_i) com inclinacoes/consultas em ordem qualquer.
-// Complexidade: O(log U) por insercao e consulta; memoria O(#insercoes).
-// Uso: LiChao lc(lo, hi);  lc.add(a, b);  lc.add_seg(a, b, l, r);
-//   lc.query(x) -> minimo em x (LiChao::INF se nao ha reta).
-//   Para MAXIMO: insira (-a,-b) e negue a resposta.
-//   Rollback (CHT em arvore): lc.snap(), lc.rollback(s) desfaz inserts.
-// Cuidados: a*x+b deve caber em ll (|a|,|x| ~1e9 e b ~1e18 ja eh no limite).
-//   Se so quer pontos x inteiros pequenos, o dominio pode ser [0,n-1].
+// Li Chao - minimo de retas e segmentos em x
 struct LiChao {
 	struct L { ll a, b; ll f(ll x) const { return a * x + b; } };
 	struct Nd { L ln; int l = -1, r = -1; };
@@ -66,3 +53,32 @@ struct LiChao {
 		return res;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Li Chao - Minimo de Retas**
+Estrutura dinamica sobre [lo, hi] que insere retas y = a*x + b (ou segmentos)
+e devolve o minimo em qualquer x inteiro.
+
+Complexidade: O(log U) por insercao e consulta; memoria O(#insercoes).
+Uso:
+  LiChao lc(lo, hi); lc.add(a, b); lc.add_seg(a, b, l, r);
+  ll mn = lc.query(x);               // LiChao::INF se nao ha reta
+  int s = lc.snap(); lc.rollback(s); // desfaz inserts desde s
+
+* Sobre o codigo:
+  Cada no guarda uma reta; ins compara as duas no meio m, mantem a melhor em m
+  e empurra a perdedora para o lado onde ela ainda pode vencer. query desce da
+  raiz ate a folha de x pegando o minimo. hist guarda estados para rollback.
+
+* Problemas e reducoes:
+  + DP com transicao linear dp[i] = min_j (dp[j] + b_j * a_i): a reta de j tem
+    a = b_j, b = dp[j]; consulte em a_i.
+  + Menor valor de um conjunto de retas em x quaisquer, online ou offline.
+  + Maximo: insira (-a, -b) e negue o resultado do query.
+  + Reta valida so num subintervalo de x: add_seg(a, b, l, r).
+  + CHT em arvore / DSU on tree: snap() e rollback() desfazem insercoes.
+
+Cuidados: a*x + b deve caber em ll (|a|,|x| ~1e9 e b ~1e18 ja no limite).
+  Dominio pequeno pode ser [0, n-1]; rollback deixa nos orfaos, inofensivos.
+Catalogo: Estruturas de dados; Busca binaria e otimizacao (CHT).
+Digitacao: 54 linhas | media. Atalho: empty() pode checar t[i].ln.b == INF.
+*****************************LATEX_DESC_END*/

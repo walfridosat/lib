@@ -1,16 +1,4 @@
-// BCC (componentes biconexas por vertices) e Block-Cut Tree
-//
-// O que faz: separa o grafo em blocos (BCCs). Constroi a block-cut tree: vertices
-//   originais 0..n-1 + um no por bloco (n..n+B-1); bloco ligado a cada vertice seu.
-// Quando usar: Catalogo > Grafos ("Block-cut tree", "u e v separados se remover w",
-//   "Pontes e articulacoes"). Vertice de corte = vertice original com grau >= 2 na arvore.
-// Complexidade: O(n + m)
-// Uso: BlockCut bc(n); bc.add(u,v); bc.build();  bc.T = adj da arvore (tamanho n+B),
-//   bc.blocks[b] = vertices do bloco b, bc.B = #blocos. Um vertice isolado vira um bloco
-//   com so ele. 0-based.
-//   "w separa u de v?" => w e vertice de corte no caminho u..v da arvore (use LCA/DFS).
-// Cuidados: DFS recursiva. Multiarestas e self-loops sao inofensivos aqui (sem
-//   ids de aresta o pai e pulado por vertice, o que nao muda a biconexao por vertices).
+// Block-Cut Tree - biconexas por vertices
 struct BlockCut {
     int n, B = 0, timer = 0;
     vector<vector<int>> g, T, blocks;
@@ -50,3 +38,33 @@ struct BlockCut {
             for (int v : blocks[b]) T[n + b].push_back(v), T[v].push_back(n + b);
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Block-Cut Tree / BCC (biconexas por vertices)**
+Separa o grafo em blocos (BCCs) e constroi a arvore: vertices 0..n-1 mais um
+no por bloco (n..n+B-1), cada bloco ligado a todos os seus vertices. 0-based.
+
+Complexidade: O(n + m)
+Uso:
+  BlockCut bc(n); bc.add(u, v); bc.build();
+  bc.T         -> adj da block-cut tree (tamanho n + bc.B)
+  bc.blocks[b] -> vertices do bloco b;  bc.B = numero de blocos
+  vertice de corte = original com grau >= 2 na arvore
+  "w separa u de v?" -> w esta no caminho u..v da arvore (use LCA/DFS)
+
+* Sobre o codigo:
+  DFS com tin/low e pilha de vertices: low[v] >= tin[u] abre um bloco novo.
+  Vertice isolado vira um bloco com so ele. T e montada ao final unindo
+  cada bloco aos seus vertices.
+
+* Problemas e reducoes:
+  + Articulacoes: vertices originais com grau >= 2 na block-cut tree.
+  + Pontes: blocos com exatamente 2 vertices (sem multiarestas).
+  + u e v ficam desconectados ao remover w sse w esta no caminho u..v da arvore.
+  + Componentes 2-vertices-conexas: os blocos da block-cut tree.
+  + Blocos por aresta (2-aresta-conexas) usam pilha de arestas; aqui e por vertices.
+
+Cuidados: DFS recursiva (profundidade O(n)); multiarestas e self-loops sao
+  inofensivos (pai pulado por vertice, sem ids de aresta).
+Catalogo: Grafos (block-cut tree, articulacoes e pontes).
+Digitacao: 39 linhas | media. Atalho: montar T dentro do dfs ao fechar cada bloco.
+*****************************LATEX_DESC_END*/

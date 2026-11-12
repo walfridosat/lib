@@ -1,12 +1,4 @@
-// SCC (Kosaraju iterativo)
-//
-// O que faz: componentes fortemente conexas; comp[v] numeradas em ORDEM TOPOLOGICA
-//   (comp 0 = fonte: se u->v entre comps distintas, comp[u] < comp[v]).
-// Quando usar: Catalogo > Grafos ("Direcionado com ciclos -> condense em SCC"). Alternativa
-//   ao Tarjan quando se quer ordem topologica direta.
-// Complexidade: O(n + m)
-// Uso: vector<int> comp; int C = kosaraju(n, g, comp); g[u] = lista de vizinhos, 0-based.
-// Cuidados: constroi o grafo reverso internamente. Iterativo.
+// Kosaraju - SCC em ordem topologica (iterativo)
 int kosaraju(int n, const vector<vector<int>>& g, vector<int>& comp) {
     vector<vector<int>> rg(n);
     for (int u = 0; u < n; u++) for (int v : g[u]) rg[v].push_back(u);
@@ -37,3 +29,31 @@ int kosaraju(int n, const vector<vector<int>>& g, vector<int>& comp) {
     }
     return C;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Kosaraju - SCC e condensacao**
+Componentes fortemente conexas; comp[v] numeradas em ORDEM TOPOLOGICA
+(comp 0 = fonte: se u->v entre comps distintas, comp[u] < comp[v]). 0-based.
+
+Complexidade: O(n + m)
+Uso:
+  vector<int> comp;
+  int C = kosaraju(n, g, comp);   // g[u] = vizinhos, dirigido
+
+* Sobre o codigo:
+  1a passada: DFS iterativa guarda a ordem de saida. 2a passada: percorre o
+  grafo reverso na ordem de saida decrescente, rotulando cada SCC. O grafo
+  reverso e construido internamente. Tudo iterativo.
+
+* Problemas e reducoes:
+  + Condensar grafo dirigido com ciclos em DAG de SCCs.
+  + Ordem topologica das componentes pronta em comp[].
+  + DP em DAG: percorra comps em ordem crescente (fontes primeiro) ou inverta
+    a ordem conforme a direcao das arestas.
+  + 2-SAT: x verdadeiro sse comp[x] > comp[!x] (comp 0 = fonte).
+  + Alcancabilidade: u alcanca v e comp[u] <= comp[v] e ha caminho no DAG.
+
+Cuidados: constroi o grafo reverso internamente (memoria O(n + m)). Iterativo,
+  sem risco de estouro de pilha.
+Catalogo: Grafos (SCC, condensacao, ordem topologica).
+Digitacao: 30 linhas | media.
+*****************************LATEX_DESC_END*/

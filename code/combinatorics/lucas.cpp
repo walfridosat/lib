@@ -1,12 +1,4 @@
-// Lucas e Kummer
-//
-// O que faz: C(n,k) mod p para p primo PEQUENO (p ate ~1e6) e n,k ate 1e18;
-//   v_p(C(n,k)) por Kummer (numero de vai-uns ao somar k e n-k na base p).
-// Quando usar: "Catalogo > Combinatoria" (Lucas para C(n,k) mod p pequeno; Kummer).
-//   Se o modulo e composto/potencia de primo veja binom_general.cpp.
-// Complexidade: pre-calc O(p); consulta O(log_p n).
-// Uso: Lucas L(p); L.C(n,k). kummer(n,k,p) (devolve -1 se C=0).
-// Cuidados: p tem de ser primo. Pre-calculo ocupa 2 arrays de tamanho p.
+// Lucas e Kummer - C(n,k) mod p pequeno
 struct Lucas {
     ll p; vector<ll> f, fi;
     ll pw(ll b, ll e) { ll r = 1; b %= p; for (; e; e >>= 1, b = b * b % p) if (e & 1) r = r * b % p; return r; }
@@ -27,7 +19,7 @@ struct Lucas {
         return r;
     }
 };
-// expoente de p em C(n,k) = numero de vai-uns em k + (n-k) na base p
+// v_p(C(n,k)) por Kummer
 ll kummer(ll n, ll k, ll p) {
     if (k < 0 || k > n) return -1;
     ll c = 0, carry = 0, a = k, b = n - k;
@@ -38,3 +30,30 @@ ll kummer(ll n, ll k, ll p) {
     }
     return c;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Lucas e Kummer**
+C(n,k) mod p para p primo pequeno e n,k ate 1e18; v_p(C(n,k)) por Kummer.
+
+Complexidade: pre-calculo O(p); consulta O(log_p n).
+Uso:
+  Lucas L(p);
+  ll c = L.C(n, k);
+  ll v = kummer(n, k, p);       // -1 se C = 0
+
+* Sobre o codigo:
+  Lucas pre-calcula fatoriais e inversos ate p-1 e multiplica os binomiais
+  dos digitos de n e k na base p. Kummer conta os vai-uns ao somar k e n-k.
+
+* Problemas e reducoes:
+  + C(n,k) mod p com p pequeno e n grande -> Lucas.
+  + Decidir se p divide C(n,k) -> kummer > 0.
+  + Expoente de p em C(n,k) -> kummer.
+  + C(n,k) mod p^e -> binom_general.cpp.
+  + Coeficientes de (1+x)^n mod p -> L.C(n,k).
+  + Contar caminhos mod p pequeno -> Lucas.
+
+Cuidados: p tem de ser primo; o pre-calculo ocupa 2 arrays de tamanho p;
+  se o modulo e composto ou potencia de primo use binom_general.cpp.
+Catalogo: Combinatoria.
+Digitacao: 31 linhas | facil. Atalho: pw local duplica outros arquivos; use pw_mod.
+*****************************LATEX_DESC_END*/

@@ -1,14 +1,4 @@
 // Soma de Minkowski de poligonos convexos
-//
-// O que faz: A + B = {a+b}. Retorna o poligono convexo (CCW). Tambem testa interseção de dois
-//   convexos (origem em A + (-B)).
-// Quando usar: Catalogo > Geometria (Minkowski, colisao por translacao, zonotopo, distancia
-//   entre convexos).
-// Complexidade: O(n + m).
-// Uso: vector<P> c = minkowski(A, B);  A, B em ordem CCW (qualquer ponto inicial).
-//   Para A - B: negue as coordenadas de B (continua CCW apos reverter? ver negPoly).
-//   Colisao: convexosInter(A,B) usa inConvex-like generico O(n+m) por area (veja abaixo).
-// Cuidados: pode gerar vertices colineares; nao remove. Poligonos com >=1 vertice.
 
 struct P {
   ll x, y;
@@ -19,7 +9,7 @@ struct P {
 };
 ll cross(P a, P b) { return a.x * b.y - a.y * b.x; }
 
-void reorder(vector<P> &g) {  // comeca pelo vertice mais baixo (e mais a esquerda)
+void reorder(vector<P> &g) {  // comeca pelo vertice mais baixo
   rotate(g.begin(), min_element(g.begin(), g.end()), g.end());
 }
 
@@ -44,7 +34,7 @@ vector<P> negPoly(vector<P> g) {  // -g (rotacao de 180 graus: continua CCW)
   return g;
 }
 
-// origem dentro (ou na borda) do convexo CCW c (pode ter colineares)? O(n)
+// origem dentro/borda do convexo CCW? O(n)
 bool originIn(const vector<P> &c) {
   int n = c.size();
   for (int i = 0; i < n; i++)
@@ -59,3 +49,34 @@ bool convexInter(const vector<P> &A, const vector<P> &B) {
   }
   return originIn(c);
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Soma de Minkowski de poligonos convexos**
+A + B = {a + b}, devolvido como poligono convexo CCW. Tambem testa se dois convexos se
+intersectam (origem dentro de A + (-B)).
+
+Complexidade: O(n + m)
+Uso:
+  vector<P> c = minkowski(A, B);   // A e B em ordem CCW, qualquer ponto inicial
+  vector<P> nb = negPoly(B);       // -B (continua CCW)
+  bool inter = convexInter(A, B);  // inclui toque
+
+* Sobre o codigo:
+  reorder poe o vertice mais baixo primeiro e duplica dois sentinelas. Os dois ponteiros i,j
+  percorrem as arestas; cross das arestas decide qual avanca (empate avanca os dois), o que
+  mantem a ordem angular. originIn testa se a origem esta a esquerda de todas as arestas.
+
+* Problemas e reducoes:
+  + Soma de Minkowski de dois convexos.
+  + Colisao de dois convexos por translacao: A + (-B) contem a origem.
+  + Intersecao de dois poligonos convexos: convexInter.
+  + Zonotopo / soma de segmentos e translacoes.
+  + Diferenca de Minkowski: minkowski(A, negPoly(B)).
+
+Cuidados: entrada deve estar em CCW. Pode gerar vertices colineares; a funcao nao remove.
+  Poligonos com >= 1 vertice; convexInter com resultado degenerado (< 3 vertices) devolve
+  false sem tratar o caso.
+Catalogo: Geometria.
+Digitacao: 45 linhas | media. Atalho: negPoly, originIn e convexInter sao parte opcional;
+  separar em arquivo proprio deixa o minkowski puro bem menor.
+*****************************LATEX_DESC_END*/

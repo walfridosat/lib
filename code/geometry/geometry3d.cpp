@@ -1,16 +1,4 @@
-// Geometria 3D basica + fecho convexo 3D (incremental O(n^2))
-//
-// O que faz: struct P3 (cross, dot), volume de tetraedro (produto misto), distancia ponto-plano,
-//   interseção reta-plano, e fecho convexo 3D (lista de faces triangulares orientadas p/ fora).
-// Quando usar: Catalogo > Geometria (geometria 3D: produto misto, fecho convexo 3D).
-// Complexidade: hull3d O(n^2).
-// Uso: P3 a(x,y,z); cross(a,b); dot(a,b); vol6(a,b,c,d) = 6*volume sinalizado;
-//   distPlane(p, a, b, c); linePlane(p, d, a, b, c, out) (reta p + t d);
-//   vector<F> fs = hull3d(pts); cada F tem indices a,b,c (CCW visto de fora) e normal q.
-//   Area da superficie = sum |q|/2; volume = sum vol6(O, a, b, c)/6 em torno de qualquer ponto.
-// Cuidados: hull3d exige n >= 4, SEM 4 pontos coplanares no inicio (e, em geral, posicao geral:
-//   faces coplanares podem gerar triangulacao arbitraria da face, sem erro se nao houver
-//   pontos duplicados). Pontos duplicados quebram. Use double com EPS ou inteiros exatos.
+// Geometria 3D - primitivas e fecho convexo incremental
 
 typedef double db;
 struct P3 {
@@ -82,3 +70,38 @@ vector<F> hull3d(const vector<P3> &A) {
     if (dot(cross(A[it.b] - A[it.a], A[it.c] - A[it.a]), it.q) <= 0) swap(it.c, it.b);
   return FS;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Geometria 3D - primitivas e fecho convexo incremental**
+Struct P3 com cross/dot, volume de tetraedro por produto misto, distancia ponto-plano,
+intersecao reta-plano e hull 3D como faces triangulares orientadas para fora.
+
+Complexidade: hull3d O(n^2)
+Uso:
+  P3 a(x,y,z);
+  P3 n = cross(a, b); db d = dot(a, b);
+  db v6 = vol6(a, b, c, d);                 // 6 * volume sinalizado
+  db dp = distPlane(p, a, b, c);
+  bool ok = linePlane(p, d, a, b, c, out);  // reta p + t*d, false se paralela
+  vector<F> fs = hull3d(pts);               // F tem a,b,c e normal q
+
+* Sobre o codigo:
+  vol6 = dot(b-a, cross(c-a, d-a)). O hull comeca com o tetraedro dos 4 primeiros pontos;
+  para cada ponto novo remove as faces visiveis e fecha o buraco com faces ligando ao ponto.
+  E[a][b] guarda as duas faces adjacentes a aresta dirigida a->b.
+
+* Problemas e reducoes:
+  + Volume de tetraedro/poliedro: produto misto / 6.
+  + Area da superficie do hull: sum |q|/2.
+  + Volume do hull: sum vol6(O, a, b, c)/6 em torno de qualquer ponto.
+  + Distancia de ponto a plano e intersecao reta-plano.
+  + Fecho convexo 3D / triangulacao de faces.
+
+Cuidados: hull3d exige n >= 4 e SEM 4 pontos coplanares no inicio (posicao geral). Faces
+  coplanares podem gerar triangulacao arbitraria, sem erro se nao houver duplicatas; pontos
+  duplicados quebram. Use double com EPS ou inteiros exatos. Volume/area do hull podem perder
+  precisao com double.
+Catalogo: Geometria.
+Digitacao: 67 linhas | dificil. Atalho: PR pode virar array<int,2> com helpers estaticos,
+  eliminando os metodos ins/rem/cnt.
+*****************************LATEX_DESC_END*/

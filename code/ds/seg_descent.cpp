@@ -1,16 +1,4 @@
-// Segtree com descida: primeiro i>=l com a[i]>=x, ultimo i<=r, k-esimo 1
-//
-// O que faz: segtree de max (point update) com first_ge/last_ge em O(log n),
-//   mais segtree de soma com k-esimo (kth) por descida.
-// Quando usar: Catalogo > Estruturas de dados (Segtree com descida em vez
-//   de binaria+query; "primeiro i>=l com a_i>=x"; k-esimo 1; primeiro
-//   prefixo <= 0; salto com condicao; MEX).
-// Complexidade: O(log n) por operacao.
-// Uso: SegMax s(n); s.set(i,v) 0-based; s.first_ge(l,x) -> menor i>=l com
-//   a[i]>=x ou -1; s.last_ge(r,x) -> maior i<=r com a[i]>=x ou -1.
-//   SegSum t(n); t.add(i,v); t.kth(k) -> menor i com soma[0..i] >= k (k>=1,
-//   valores >=0) ou -1. Para min troque max por min e >= por <=.
-// Cuidados: tamanho interno e potencia de 2; folhas extras = -INF/0.
+// Segtree com descida - first_ge, last_ge e kth
 struct SegMax {
     int n, N; vector<ll> t;
     SegMax(int n) : n(n) { N = 1; while (N < n) N <<= 1; t.assign(2 * N, LLONG_MIN); }
@@ -43,3 +31,33 @@ struct SegSum {
         return o - N;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree com Descida**
+Segtree de maximo com update de ponto e buscas first_ge/last_ge por descida;
+segunda arvore de soma com k-esimo. Tudo O(log n), 0-based.
+
+Complexidade: O(log n) por operacao.
+Uso:
+  SegMax s(n); s.set(i, v);
+  int a = s.first_ge(l, x);  // menor i >= l com a[i] >= x, ou -1
+  int b = s.last_ge(r, x);   // maior i <= r com a[i] >= x, ou -1
+  SegSum t(n); t.add(i, v);
+  int k = t.kth(k);          // menor i com soma[0..i] >= k (k >= 1), ou -1
+
+* Sobre o codigo:
+  fg desce pela esquerda quando o no tem maximo >= x e o intervalo alcanca l;
+  lg faz o espelho pela direita. kth desce a arvore de soma comparando o filho
+  esquerdo com o restante k.
+
+* Problemas e reducoes:
+  + Primeiro i >= l com a[i] >= x (first_ge).
+  + Ultimo i <= r com a[i] >= x (last_ge).
+  + K-esimo prefixo com soma >= k (kth).
+  + Primeiro prefixo <= 0: adapte a descida para o minimo.
+  + MEX: marque presencas e ache o primeiro zero.
+
+Cuidados: tamanho interno potencia de 2; folhas extras valem -INF/0. Para min
+  troque max por min e >= por <=.
+Catalogo: Estruturas de dados.
+Digitacao: 32 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

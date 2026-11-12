@@ -1,14 +1,4 @@
-// Arvore de Gomory-Hu (Gusfield) - corte minimo entre todos os pares
-//
-// O que faz: dado grafo NAO direcionado com capacidades, constroi arvore com n-1 arestas
-//   tal que o corte minimo (= fluxo maximo) entre u e v e o MENOR peso no caminho u-v.
-// Quando usar: "corte minimo entre todos os pares", "quantos pares tem mincut >= k"
-//   (Catalogo > Otimizacao > "Corte minimo global", Grafos).
-// Complexidade: n-1 fluxos (Dinic).
-// Uso: GomoryHu gh(n); gh.add(u,v,c); gh.build(); depois gh.par[i], gh.w[i] (aresta
-//   i--par[i] com peso w[i], i>=1; no 0 e raiz); gh.mincuts() devolve matriz n x n de mincuts.
-// Cuidados: grafo nao direcionado apenas. A arvore e flow-equivalent (valores corretos
-//   por caminho); os cortes em si nao sao necessariamente os da arvore. 0-indexed.
+// Gomory-Hu (Gusfield) - corte minimo entre todos os pares
 struct GomoryHu {
     struct E { int to; ll cap, orig; };
     int n; vector<E> e; vector<vector<int>> g; vector<int> lvl, it, par; vector<ll> w;
@@ -65,3 +55,48 @@ struct GomoryHu {
         return r;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Gomory-Hu (Gusfield) - min cut entre todos os pares**
+Grafo nao direcionado com capacidades; constroi uma arvore com n - 1 arestas
+em que o corte minimo (fluxo maximo) entre u e v e o menor peso no caminho
+u-v. 0-indexed.
+
+Complexidade: n - 1 fluxos (Dinic).
+Uso:
+  GomoryHu gh(n); gh.add(u, v, c); gh.build();
+  gh.par[i], gh.w[i] -> aresta i--par[i] de peso w[i] (i >= 1; 0 e raiz);
+  auto mc = gh.mincuts(); // matriz n x n de min cuts.
+
+* Sobre o codigo:
+  Para cada i >= 1 restaura as capacidades e calcula o fluxo maximo entre i e
+  par[i]. O valor vira w[i]; o lado de i no residual (lvl >= 0) reparenta os
+  vertices j > i que ainda apontavam para par[i]. mincuts sobe a arvore com
+  DFS guardando o minimo das arestas no caminho.
+
+* Problemas e reducoes:
+  + Corte minimo entre todos os pares: monte a arvore; mincut(u, v) = minimo
+    das arestas no caminho u-v da arvore.
+  + Par com maior corte minimo: maximize mincut(u, v) sobre todos os pares,
+    usando a matriz ou o caminho na arvore.
+  + Corte minimo global (menor aresta de corte): menor peso entre as n - 1
+    arestas da arvore (n >= 2).
+  + Conectividade de arestas (edge connectivity): igual ao corte minimo
+    global; a arvore da o valor sem testar pares.
+  + Quantos pares tem mincut >= k: conte pares cujo caminho na arvore tem
+    todas as arestas >= k.
+  + Separar um vertice u de ao menos um vertice de S: minimo de mincut(u, v)
+    sobre v em S.
+  + Fluxo maximo entre todos os pares: mesma resposta do corte, pois o grafo
+    e nao direcionado (max flow = min cut).
+  + Min cuts de um vertice para todos os outros: a linha correspondente de
+    mincuts() traz os n valores em O(n).
+  + Testar se o mincut de um par e exatamente K: caminho na arvore e menor
+    aresta.
+
+Cuidados: grafo NAO direcionado apenas. A arvore e flow-equivalent (valores
+  corretos por caminho); os cortes em si nao sao necessariamente os da arvore.
+  0-indexed.
+Catalogo: Otimizacao (corte minimo global), Grafos.
+Digitacao: 56 linhas | dificil. Atalho: o Dinic interno duplica dinic.cpp;
+  poderia incluir dinic.cpp e reusar a struct.
+*****************************LATEX_DESC_END*/

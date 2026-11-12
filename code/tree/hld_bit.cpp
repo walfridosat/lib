@@ -1,14 +1,4 @@
-// HLD com BIT range-add / range-sum (soma e add em caminho e subarvore)
-//
-// O que faz: add x em todos os vertices de um caminho / subarvore e soma sobre
-//   caminho / subarvore, usando dois Fenwicks (add em intervalo, soma em intervalo).
-// Quando usar: "adicione x no caminho, some caminho" (Catalogo > Arvores,
-//   "HLD offline com 2 Fenwicks"). Mais leve que segtree lazy.
-// Complexidade: O(log^2 n) por caminho, O(log n) por subarvore.
-// Uso: HLDBit h(g, raiz); h.path_add(u,v,x); h.path_sum(u,v); h.sub_add(v,x);
-//   h.sub_sum(v); h.pt_add(v,x). Valores iniciais 0. 0-based.
-// Cuidados: valores nos vertices. Para arestas guarde no filho e exclua o LCA
-//   (use pos[lca]+1 no ultimo trecho). Overflow: ll.
+// HLD + BIT - add e soma em caminho e subarvore
 struct HLDBit {
     int n;
     vector<int> par, dep, sz, heavy, head, pos;
@@ -53,3 +43,34 @@ struct HLDBit {
         return s + sum(pos[u], pos[v]);
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **HLD + BIT (range-add / range-sum)**
+Add x em todos os vertices de um caminho ou subarvore e soma sobre caminho
+ou subarvore, com dois Fenwicks (add em intervalo, soma em intervalo).
+Valores iniciais 0, nos vertices. 0-based.
+
+Complexidade: O(log^2 n) por caminho; O(log n) por subarvore
+Uso:
+  HLDBit h(g, raiz);
+  h.path_add(u, v, x);   h.path_sum(u, v);
+  h.sub_add(v, x);       h.sub_sum(v);
+  h.pt_add(v, x);
+
+* Sobre o codigo:
+  b1/b2 implementam add(l,r,x) e sum(l,r) via duas arvores de Fenwick
+  (upd guarda x e x*(i-1)). pos[] vem da HLD; caminho sobe pelas cadeias
+  somando intervalos, subarvore e [pos[v], pos[v]+sz[v]-1].
+
+* Problemas e reducoes:
+  + Add em caminho e soma de caminho (offline, sem lazy).
+  + Add em subarvore e soma de subarvore.
+  + Ponto: pt_add e some com sum(pos[v], pos[v]).
+  + Pesos de aresta: guarde no filho e exclua o LCA (pos[lca]+1).
+  + Mais leve que uma segtree lazy quando a operacao e so soma.
+
+Cuidados: valores nos vertices; para arestas ajuste o ultimo trecho. Use ll
+  para evitar overflow. Nao suporta min/max em intervalo.
+Catalogo: Arvores (HLD offline com 2 Fenwicks).
+Digitacao: 44 linhas | media. Atalho: path_add e path_sum diferem so na
+  operacao aplicada; una com uma lambda.
+*****************************LATEX_DESC_END*/

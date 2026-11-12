@@ -1,21 +1,4 @@
-// Aho-Corasick
-//
-// O que faz: automato de varios padroes. Cada no tem transicao completa go[v][c],
-//   link (maior sufixo proprio que e prefixo de algum padrao), dict link (proximo
-//   terminal na cadeia de links), contagem de ocorrencias de cada padrao no texto.
-// Quando usar: Catalogo > Strings ("muitos padroes -> Aho-Corasick", "AC: link tree",
-//   "AC em DP", "AC com ganhos", "Dict link").
-// Complexidade: O(Soma|p|*26 + |T|).
-// Uso: AhoCorasick ac; id = ac.add(p) (0-based, indice do padrao); ac.build();
-//   ac.count(t) -> vector<ll> occ[i] = ocorrencias do padrao i em t (padroes iguais
-//   compartilham no, cada id recebe o mesmo valor);
-//   ac.go[v][c] para DP no automato (no 0 = raiz); ac.bad[v] = v ou algum ancestral
-//   de link e terminal (string que passa por v contem algum padrao);
-//   ac.val[v] = soma dos ganhos dos padroes que sao sufixo de v (apos build, se
-//   voce preencher ganhos em val[no do padrao] ANTES do build).
-//   Para listar padroes terminando numa posicao: for(u=term(v)?v:dict[v]; u>0; u=dict[u]).
-// Cuidados: alfabeto 'a'..'z' (mude K). build() obrigatorio antes de usar go.
-//   Padroes vazios nao sao suportados.
+// Aho-Corasick - automato de varios padroes
 struct AhoCorasick {
 	static const int K = 26;
 	vector<array<int, K>> go;
@@ -74,3 +57,36 @@ struct AhoCorasick {
 		return r;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Aho-Corasick - automato de varios padroes**
+Automato de varios padroes. Cada no tem transicao completa go[v][c], link
+(maior sufixo proprio que e prefixo de algum padrao), dict link (proximo
+terminal na cadeia de links) e contagem de ocorrencias. 0-indexed.
+
+Complexidade: O(Soma|p| * 26 + |T|).
+Uso:
+  AhoCorasick ac; int id = ac.add(p); ac.build();
+  vector<ll> occ = ac.count(t); // occ[i] = ocorrencias do padrao i
+  ac.go[v][c], ac.bad[v], ac.val[v];
+  listar padroes terminando em v: for (u = term(v) ? v : dict[v]; u > 0; u = dict[u]).
+  Padroes iguais compartilham no; cada id recebe o mesmo valor.
+
+* Sobre o codigo:
+  add insere na trie e guarda pid[]. build faz BFS: preenche transicoes que
+  faltam com go[link[v]][c] e propaga dict, bad e val pelo link. count anda
+  no texto e soma as ocorrencias pela link tree em ordem BFS inversa.
+
+* Problemas e reducoes:
+  + Muitos padroes em um texto: automato; occ[i] por padrao.
+  + DP em automato: go[v][c] como transicao, bad[v] proibe estados que
+    contem algum padrao, val[v] soma ganhos dos sufixos.
+  + Link tree / contar ocorrencias: soma de cnt na arvore de links.
+  + Dict link: pular direto para o proximo padrao que termina no sufixo.
+  + Substituicao/filtro de palavras: teste bad[v] ao andar no texto.
+
+Cuidados: alfabeto 'a'..'z' (mude K). build() obrigatorio antes de usar go.
+  Padroes vazios nao sao suportados. 0-indexed.
+Catalogo: Strings (muitos padroes -> Aho-Corasick, AC: link tree, AC em DP,
+  AC com ganhos, dict link).
+Digitacao: 58 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

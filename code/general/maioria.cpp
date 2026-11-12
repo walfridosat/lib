@@ -1,12 +1,4 @@
-// Elemento majoritario: Boyer-Moore, > n/k, e versao aleatorizada
-//
-// O que faz: acha candidatos a elemento com frequencia > n/k em O(1)·k de memoria; versao aleatoria para "aparece em >= metade".
-// Quando usar: "elemento > n/2", "gcd de pelo menos metade", "resposta compartilhada por muitos".
-//              Catalogo > Arrays e guloso (Boyer-Moore), Aleatorizacao (Elemento frequente)
-// Complexidade: O(n k) / O(iter * n)
-// Uso: majority(a) -> valor ou -1 se nao ha (> n/2). heavyHitters(a, k) -> valores com freq > n/k.
-//      majorityRandom(a, iter=30): sorteia candidatos (acerta c.p. >= 1/2 por tentativa se existe).
-// Cuidados: SEMPRE confirmar o candidato com segunda passada (aqui ja confirmamos); valores usados como int/ll.
+// Elemento majoritario - Boyer-Moore, > n/k e aleatorizado
 ll majority(const vector<ll>& a) {
     ll cand = 0; int cnt = 0;
     for (ll x : a) { if (cnt == 0) cand = x, cnt = 1; else cnt += (x == cand) ? 1 : -1; }
@@ -32,3 +24,28 @@ ll majorityRandom(const vector<ll>& a, int iter = 30) {
     }
     return -1;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Elemento Majoritario**
+Candidatos com frequencia > n/k em O(k) de memoria; versao aleatoria para >= metade.
+
+Complexidade: O(n k); O(iter * n) na aleatoria
+Uso:
+  ll m = majority(a);                 // -1 se nao ha > n/2
+  vector<ll> h = heavyHitters(a, k);  // freq > n/k
+  ll r = majorityRandom(a, 30);
+
+* Sobre o codigo:
+  majority cancela pares diferentes (Boyer-Moore) e confirma em segunda passada.
+  heavyHitters mantem no maximo k contadores e remove 1 de cada quando enche.
+  majorityRandom sorteia candidatos e confirma por contagem.
+
+* Problemas e reducoes:
+  + Elemento que aparece mais de n/2 vezes: majority.
+  + Elementos com frequencia > n/k: heavyHitters.
+  + gcd/valor compartilhado por muitos: majorityRandom.
+
+Cuidados: SEMPRE confirme o candidato com segunda passada (aqui ja confirmamos);
+  valores tratados como int/ll.
+Catalogo: Arrays e guloso (Boyer-Moore), Aleatorizacao (Elemento frequente)
+Digitacao: 25 linhas | facil.
+*****************************LATEX_DESC_END*/

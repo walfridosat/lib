@@ -1,16 +1,4 @@
-// Segtree persistente (contagem) - k-esimo em [l,r] e contagem <= x
-//
-// O que faz: versao i = prefixo a[0..i] inserido numa segtree sobre os valores
-//   comprimidos. Query em [l,r] = versao r - versao l-1 (no aditivo).
-// Quando usar: Catalogo > Estruturas de dados (Segtree persistente = versoes
-//   por prefixo; k-esimo menor em [l,r]; contar a_i <= x em [l,r] online;
-//   Combinacoes: "k-esimo menor em [l, r]").
-// Complexidade: build O(n log n) tempo e memoria; query O(log n).
-// Uso: PST p(a) (vector<ll>, 0-based); p.kth(l,r,k) -> k-esimo menor (k=1 e o
-//   menor) em a[l..r] inclusivo; p.cnt_le(l,r,x) -> #{i in [l,r] : a[i] <= x}.
-// Cuidados: para persistencia com update de ponto generico use o mesmo
-//   esquema (path copy: novo no por nivel). Para lazy persistente use tag
-//   permanente sem push-down (query soma tags dos ancestrais).
+// Segtree persistente - k-esimo e contagem em [l,r]
 struct PST {
     int n, m; vector<ll> vs; vector<int> L, R, C, root;
     int newnode(int l, int r, int c) { L.push_back(l); R.push_back(r); C.push_back(c); return L.size() - 1; }
@@ -57,3 +45,31 @@ struct PST {
         return res;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree Persistente**
+Versao i = prefixo a[0..i] inserido numa segtree sobre os valores comprimidos.
+Query em [l,r] = versao r - versao l-1 (o no e aditivo). 0-based.
+
+Complexidade: build O(n log n) tempo e memoria; query O(log n).
+Uso:
+  PST p(a);                       // vector<ll>, 0-based
+  ll x = p.kth(l, r, k);          // k-esimo menor (k = 1 e o menor)
+  int c = p.cnt_le(l, r, x);      // #{i in [l,r] : a[i] <= x}
+
+* Sobre o codigo:
+  ins copia o caminho do no (path copy) somando 1 em p; root[i+1] e a versao
+  apos inserir a[i]. A query compara duas raizes e desce pelas contagens de
+  zeros para achar o k-esimo.
+
+* Problemas e reducoes:
+  + k-esimo menor em [l, r] inclusivo.
+  + Contar a_i <= x em [l, r].
+  + Mediana e quantis de subarray.
+  + Versoes por prefixo para consultas em intervalos.
+
+Cuidados: para update de ponto generico use o mesmo path copy. Para lazy
+  persistente use tag permanente sem push-down (some tags dos ancestrais).
+  Intervalo de kth/cnt_le e inclusivo [l, r].
+Catalogo: Estruturas de dados (Segtree persistente).
+Digitacao: 46 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

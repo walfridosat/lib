@@ -1,16 +1,4 @@
 // CRT geral (modulos nao coprimos) e Garner
-//
-// O que faz: crt_merge combina x=a1 (m1) e x=a2 (m2) em x=r (lcm); crt_all
-//   combina varias; garner reconstroi x mod M a partir de residuos em modulos
-//   primos entre si (sem bigint).
-// Quando usar: Catalogo > Teoria dos numeros (sistema de congruencias; CRT com
-//   modulos nao coprimos; Garner para NTT de 3 primos / resposta mod qualquer).
-// Complexidade: crt_merge O(log); garner O(k^2 log).
-// Uso: bool crt_merge(r,m,a2,m2) atualiza (r,m) in place; false se sem solucao
-//   (ou lcm > ~9e18). crt_all(a,m,&r,&M) -> bool. Resultado r em [0,M).
-//   garner(r,m,M): vetores de residuos/modulos (m[i] < 2^31, coprimos 2 a 2).
-// Cuidados: comece com r=0,m=1. m>=1. Se lcm estourar ll, crt_merge devolve
-//   false (nao distingue de sem solucao: ajuste se precisar).
 typedef __int128 LL;
 ll exg(ll a, ll b, ll &x, ll &y) {
     if (!b) { x = 1; y = 0; return a; }
@@ -38,7 +26,7 @@ bool crt_all(const vector<ll> &a, const vector<ll> &m, ll &r, ll &M) {
     }
     return true;
 }
-// Garner: x = sum t[i] * prod_{j<i} m[j]; devolve x mod M
+// Garner: x = sum t[i]*prod_{j<i} m[j] mod M
 ll garner(const vector<ll> &r, const vector<ll> &m, ll M) {
     int k = r.size();
     vector<ll> t(k);
@@ -56,3 +44,33 @@ ll garner(const vector<ll> &r, const vector<ll> &m, ll M) {
     }
     return res;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **CRT geral e Garner**
+Combina x = a_i (mod m_i) com modulos nao necessariamente coprimos; Garner reconstroi x mod M sem bigint.
+
+Complexidade: crt_merge O(log); crt_all O(k log); garner O(k^2 log).
+Uso:
+  ll r = 0, m = 1;
+  bool ok = crt_merge(r, m, a2, m2);   // atualiza (r, m) in place
+  bool ok = crt_all(a, m, r, M);       // resultado r em [0, M)
+  ll x = garner(r, m, M);              // m[i] < 2^31, coprimos 2 a 2
+
+* Sobre o codigo:
+  crt_merge resolve x = r + m*k = a2 (mod m2) com exgcd; se g = gcd(m, m2)
+  nao divide a2 - r, nao ha solucao. O novo modulo e lcm = m/g * m2.
+  garner monta x = sum t[i] * prod_{j<i} m[j], com t[i] por inversos mod m[i].
+
+* Problemas e reducoes:
+  + Sistema de congruencias com modulos quaisquer -> crt_merge / crt_all.
+  + Reconstruir inteiro a partir de residuos em primos -> Garner.
+  + NTT com 3 primos: recuperar o coeficiente mod M -> garner.
+  + Duas congruencias com modulos que compartilham fator -> crt_merge detecta inconsistencia.
+  + Contagem ciclica (calendario, periodos) -> achar x que satisfaz varios restos.
+  + Resposta exata abaixo do produto dos modulos -> CRT/Garner.
+
+Cuidados: comece com r = 0, m = 1; m >= 1. Se o lcm passa de ~4e18,
+  crt_merge devolve false (nao distingue de sem solucao). Garner exige modulos
+  coprimos 2 a 2 e m[i] < 2^31.
+Catalogo: Teoria dos numeros.
+Digitacao: 45 linhas | media. Atalho: exg local pode vir de exgcd.cpp.
+*****************************LATEX_DESC_END*/

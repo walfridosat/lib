@@ -1,12 +1,4 @@
-// SPFA (Bellman-Ford com fila)
-//
-// O que faz: menor caminho com pesos negativos; detecta ciclo negativo alcancavel de s.
-// Quando usar: Catalogo > Grafos ("SPFA e so heuristica"). Pesos negativos sem ciclo,
-//   grafo esparso aleatorio. Evite se o problema pode ter teste anti-SPFA.
-// Complexidade: O(n*m) pior caso, tipicamente O(m)
-// Uso: adj[u] = {(v,w)}, 0-based. bool ok = spfa(n, adj, s, d); ok=false se ha ciclo negativo.
-// Cuidados: d[v]=SPFA_INF se inalcancavel. Ciclo negativo detectado por cnt[v] >= n
-//   (numero de arestas do caminho).
+// SPFA - Bellman-Ford com fila, pesos negativos
 const ll SPFA_INF = LLONG_MAX / 4;
 
 bool spfa(int n, const vector<vector<pair<int,ll>>>& adj, int s, vector<ll>& d) {
@@ -27,3 +19,29 @@ bool spfa(int n, const vector<vector<pair<int,ll>>>& adj, int s, vector<ll>& d) 
     }
     return true;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **SPFA - Bellman-Ford com fila**
+Menor caminho com pesos negativos; detecta ciclo negativo alcancavel de s.
+Adj 0-based: adj[u] = {(v,w)}.
+
+Complexidade: O(n*m) pior caso, tipicamente O(m)
+Uso:
+  vector<ll> d;
+  bool ok = spfa(n, adj, s, d);   // false se ha ciclo negativo
+  // d[v] == SPFA_INF se inalcancavel
+
+* Sobre o codigo:
+  Fila com os vertices que melhoraram; in[] evita duplicatas. cnt[v] conta
+  arestas do caminho; cnt[v] >= n indica ciclo negativo.
+
+* Problemas e reducoes:
+  + Caminhos minimos com pesos negativos e sem ciclo negativo.
+  + Detectar ciclo negativo alcancavel de s (retorno false).
+  + MCMF com SPFA quando nao ha custos negativos iniciais.
+  + Grafo esparso aleatorio: costuma ser rapido na pratica.
+
+Cuidados: apenas heuristica; testes anti-SPFA existem. Use Bellman-Ford ou
+  Johnson quando precisar de pior caso garantido.
+Catalogo: Grafos (SPFA, pesos negativos).
+Digitacao: 19 linhas | facil.
+*****************************LATEX_DESC_END*/

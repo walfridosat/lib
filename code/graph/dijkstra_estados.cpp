@@ -1,18 +1,4 @@
-// Dijkstra em grafo implicito / de estados (grid, k cupons, camadas)
-//
-// O que faz: Dijkstra generico onde os vizinhos sao gerados por uma lambda; estados sao
-//   inteiros 0..N-1 (codifique (celula,dir), (v,j), (v,paridade), ...). Inclui exemplo
-//   de "k arestas gratis" (dist[v][j]).
-// Quando usar: Catalogo > Grafos ("Grafo de estados", "Dijkstra em grafo implicito",
-//   "k arestas gratis / k cupons", "Caminho com paridade/cores", "alterna tipos de aresta").
-// Complexidade: O((N + E) log N), N = numero de estados
-// Uso: auto d = dij_impl(N, {src...}, [&](int u, auto&& push){ push(v, w); ... });
-//   Exemplo grid H x W: estado = i*W+j; vizinhos 4-dir dentro da grade com custo c.
-//   Exemplo cupons: estado = v*(K+1)+j; aresta (u,v,w): push(v*(K+1)+j, w) e, se j<K,
-//   push(v*(K+1)+j+1, 0). Resposta = min_j d[t*(K+1)+j].
-// Cuidados: pesos >= 0. Memoria N pode ser n*K; K grande com custo convexo => Aliens.
-//   Estado = (v, paridade): vizinho (u, p^1). "Chegar mais cedo nunca piora" (FIFO) =>
-//   Dijkstra por tempo de chegada, custo da aresta pode depender do tempo atual d[u].
+// Dijkstra implicito - estados e k cupons
 const ll IM_INF = LLONG_MAX / 4;
 
 template<class F>
@@ -30,7 +16,7 @@ vector<ll> dij_impl(int N, const vector<int>& src, F expand) {
     return d;
 }
 
-// Exemplo pronto: menor caminho de s a t usando ate K arestas gratis.
+// exemplo: ate K arestas gratis de s a t
 // adj[u] = {(v,w)}. Retorna o custo minimo.
 ll dij_k_gratis(const vector<vector<pair<int,ll>>>& adj, int s, int t, int K) {
     int n = adj.size();
@@ -45,3 +31,31 @@ ll dij_k_gratis(const vector<vector<pair<int,ll>>>& adj, int s, int t, int K) {
     for (int j = 0; j <= K; j++) r = min(r, d[t * (K + 1) + j]);
     return r;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Dijkstra em grafo implicito / de estados**
+Dijkstra generico em que os vizinhos sao gerados por uma lambda. Estados sao
+inteiros 0..N-1: codifique (celula,dir), (v,j), (v,paridade), etc. 0-based.
+
+Complexidade: O((N + E) log N), N = numero de estados
+Uso:
+  auto d = dij_impl(N, {src...}, [&](int u, auto&& push) { push(v, w); ... });
+  // grid: estado = i*W + j; vizinhos 4-dir com custo
+  // k cupons: estado = v*(K+1) + j; resposta = min_j d[t*(K+1) + j]
+  ll c = dij_k_gratis(adj, s, t, K);   // usa ate K arestas gratis
+
+* Sobre o codigo:
+  Heap minima sobre os N estados; push(v, w) relaxa uma aresta implicita.
+  dij_k_gratis: camada j = quantos cupons usados; aresta normal mantem j,
+  usar cupom vai para j+1 com custo 0.
+
+* Problemas e reducoes:
+  + Grafo de estados / implicito: gere vizinhos sob demanda.
+  + Ate K arestas gratis / K cupons: camada extra por cupom usado.
+  + Caminho com paridade: estado (v, p) e vizinho (u, p^1).
+  + Grid: estado = celula, vizinhos so dentro da grade.
+
+Cuidados: pesos >= 0. Memoria N pode ser n*K; K grande com custo convexo pede
+  Aliens. Se o custo depende do tempo, use Dijkstra por tempo de chegada (FIFO).
+Catalogo: Grafos (grafo de estados, implicito, k cupons).
+Digitacao: 30 linhas | media.
+*****************************LATEX_DESC_END*/

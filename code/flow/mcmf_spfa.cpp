@@ -1,10 +1,4 @@
-// Min-cost max-flow simples com SPFA (aceita custos negativos sem ciclo negativo)
-//
-// O que faz: igual a mcmf.cpp, porem mais curto (bom para colar rapido, grafos pequenos).
-// Quando usar: atribuicao pequena, k caminhos de custo minimo (Catalogo > Grafos).
-// Complexidade: O(F * V * E) pior caso, rapido na pratica.
-// Uso: MCMFS m(n); m.add(u,v,cap,cost); auto [f,c]=m.run(s,t[,lim]);
-// Cuidados: sem ciclo negativo no grafo inicial; 0-indexed. Para grafos grandes use mcmf.cpp.
+// Min-cost max-flow com SPFA
 struct MCMFS {
     struct E { int to; ll cap, cost; };
     int n; vector<E> e; vector<vector<int>> g;
@@ -34,3 +28,41 @@ struct MCMFS {
         return {F, C};
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Min-cost max-flow (SPFA)**
+Fluxo de custo minimo de s a t; versao curta para grafos pequenos. Aceita
+custos negativos se nao houver ciclo negativo. 0-indexed.
+
+Complexidade: O(F V E) pior caso; rapido na pratica.
+Uso:
+  MCMFS m(n); m.add(u, v, cap, cost); auto [f, c] = m.run(s, t[, lim]);
+
+* Sobre o codigo:
+  Em cada augmentacao, SPFA (deque) acha o caminho de custo minimo no
+  residual considerando so arestas com cap > 0. pe[] guarda a aresta
+  anterior; o gargalo e saturado e o custo d[t] e somado a C. Sem potenciais.
+
+* Problemas e reducoes:
+  + Min-cost max-flow: arestas com cap e cost; resposta (F, C).
+  + Fluxo de custo minimo de valor exato k: run(s, t, k); confira f == k.
+  + Atribuicao de custo minimo: s -> pessoa cap 1, pessoa -> tarefa custo,
+    tarefa -> t cap 1; fluxo n.
+  + k caminhos disjuntos de custo minimo: cap 1 nas arestas, fluxo k.
+  + Custo convexo: arestas paralelas cap 1 com custos marginais
+    f(1)-f(0), f(2)-f(1), ...
+  + Maximizar lucro: cost = -lucro; pare quando o marginal for >= 0.
+  + Intervalos ponderados com ate k sobrepostos: linha i -> i+1 cap k custo
+    0; intervalo [l, r) vira l -> r cap 1 custo -w.
+  + Transporte: s -> fornecedor cap oferta, fornecedor -> cliente custo,
+    cliente -> t cap demanda.
+  + Carteiro chines dirigido: balanceie os graus com fluxo de custo minimo.
+  + Atribuicao com capacidades: clone em slots ou camadas com caps.
+  + Matching bipartido de peso maximo: cost = -peso; aumente enquanto o
+    caminho tiver custo < 0.
+
+Cuidados: sem ciclo negativo no grafo inicial; 0-indexed. Para grafos grandes
+  use mcmf.cpp.
+Catalogo: Grafos.
+Digitacao: 29 linhas | media. Atalho: ok (versao ja enxuta); a extracao do
+  caminho e a saturacao repetem o padrao de mcmf.cpp.
+*****************************LATEX_DESC_END*/

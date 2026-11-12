@@ -1,14 +1,4 @@
-// Ponto/vetor em ponto flutuante (long double) + primitivas
-//
-// O que faz: struct Pd com operadores, rotacao, projecao, reflexao, interseção de retas,
-//   distancia ponto-reta/segmento, angulo orientado.
-// Quando usar: Catalogo > Geometria (precisao: compare com eps, long double, clamp em acos/sqrt).
-//   Use so quando as coordenadas nao forem inteiras (ver point_int.cpp).
-// Complexidade: O(1) cada.
-// Uso: Pd a(1.5,2); cross(a,b); rot(a, ang); proj(p, a, b); refl(p, a, b);
-//   lineInter(a,b,c,d,out) devolve false se paralelas; distPointSeg(a,b,p).
-// Cuidados: EPS = 1e-9; compare com eq(a,b) e sg(x), nunca ==. acos/asin: clamp em [-1,1];
-//   sqrt: sqrtl(max(0,x)).
+// Ponto e vetor em long double com primitivas
 
 typedef long double ld;
 const ld EPS = 1e-9L;
@@ -47,19 +37,53 @@ ld distPointSeg(Pd p, Pd a, Pd b) {
   t = max((ld)0, min((ld)1, t));                        // limita a [0,1]
   return len(p - (a + (b - a) * t));
 }
-// interseção das retas ab e cd; false se paralelas
+// intersecao das retas ab e cd; false se paralelas
 bool lineInter(Pd a, Pd b, Pd c, Pd d, Pd &out) {
   ld den = cross(b - a, d - c);
   if (sg(den) == 0) return false;
   out = a + (b - a) * (cross(c - a, d - c) / den);
   return true;
 }
-// segmentos ab e cd: ponto de interseção unico (se cruzam em 1 ponto); false caso contrario
+// segmentos: cruzamento proprio em 1 ponto
 bool segInter(Pd a, Pd b, Pd c, Pd d, Pd &out) {
   ld oa = cr(c, d, a), ob = cr(c, d, b), oc = cr(a, b, c), od = cr(a, b, d);
   if (sg(oa) * sg(ob) < 0 && sg(oc) * sg(od) < 0) {
     out = (a * ob - b * oa) / (ob - oa);
     return true;
   }
-  return false;  // toque/colinear: trate a parte (ver point_int.cpp se inteiro)
+  return false;  // toque/colinear: trate a parte
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Ponto e vetor em long double com primitivas**
+Struct Pd com operadores, rotacao, projecao, reflexao, intersecao de retas, distancia
+ponto-reta/segmento e angulo orientado. Use quando as coordenadas nao forem inteiras.
+
+Complexidade: O(1) por operacao
+Uso:
+  Pd a(1.5, 2), b(3, 4);
+  ld c = cross(a, b);
+  Pd r = rot(a, ang), pr = proj(p, a, b), rf = refl(p, a, b);
+  bool ok = lineInter(a, b, c, d, out);  // false se paralelas
+  ld ds = distPointSeg(p, a, b);
+
+* Sobre o codigo:
+  sg e eq comparam com EPS relativo. perp gira 90 graus; unit normaliza; rot usa cos/sin.
+  proj projeta na reta ab; refl reflete pela reta; lineInter resolve o sistema por cross.
+  segInter so detecta cruzamento proprio de um ponto.
+
+* Problemas e reducoes:
+  + Primitivas de geometria com coordenadas reais.
+  + Distancia ponto-reta e ponto-segmento.
+  + Rotacao, projecao e reflexao de pontos.
+  + Intersecao de retas (e de segmentos com cruzamento proprio).
+  + Angulo orientado entre dois vetores.
+
+Cuidados: EPS = 1e-9; compare com eq(a,b) e sg(x), nunca com ==. Faca clamp em acos/asin para
+  [-1,1] e use sqrtl(max(0,x)). segInter nao trata toque nem colineares: para isso use
+  point_int.cpp (se inteiro) ou trate a parte. Coordenadas muito grandes podem estourar a
+  precisao relativa do EPS.
+Catalogo: Geometria.
+Digitacao: 51 linhas | media. Atalho: cross/dot/norm2/len/cr se repetem em circles,
+  half_plane e min_circle; centralizar esse bloco num unico arquivo base.
+*****************************LATEX_DESC_END*/

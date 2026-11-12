@@ -1,16 +1,4 @@
-// Dijkstra: variantes (denso O(n^2), gargalo/minimax, contagem de caminhos, arestas em
-// algum caminho minimo, caminho)
-//
-// O que faz: dij_dense (sem heap); dij_count (dist + numero de caminhos minimos mod M +
-//   pai); dij_minimax (minimiza o maior peso no caminho); on_shortest (arestas que pertencem
-//   a algum caminho minimo s->t).
-// Quando usar: Catalogo > Grafos ("Dijkstra lazy vs decrease-key", "custo maximo ou
-//   bottleneck", "contagem de caminhos minimos", "arestas em algum caminho minimo").
-// Complexidade: dense O(n^2); demais O(m log n)
-// Uso: adj[u] = {(v,w)}, 0-based; ver exemplo em cada funcao. Dijkstra basico: code/graph/dijkstra.
-// Cuidados: pesos >= 0 (w=0 ok em dij_count desde que sem ciclo de peso 0 que quebre a
-//   contagem: com ciclo de peso 0 a contagem de caminhos fica infinita). Multiplicativo
-//   (maximizar produto de prob <= 1): max-heap com combinacao *, ou use -log.
+// Dijkstra - variantes
 typedef vector<vector<pair<int,ll>>> GW;
 const ll DJ_INF = LLONG_MAX / 4;
 
@@ -30,7 +18,7 @@ vector<ll> dij_dense(const vector<vector<ll>>& w, int s) {
     return d;
 }
 
-// dist + numero de caminhos minimos (mod DJM) + pai de um caminho minimo.
+// dist + caminhos minimos mod DJM + pai
 const ll DJM = 1000000007;
 void dij_count(const GW& adj, int s, vector<ll>& d, vector<ll>& cnt, vector<int>& par) {
     int n = adj.size();
@@ -47,7 +35,7 @@ void dij_count(const GW& adj, int s, vector<ll>& d, vector<ll>& cnt, vector<int>
     }
 }
 
-// minimax: dist[v] = min sobre caminhos do maior peso de aresta. (maximin: troque min/max)
+// minimax: menor maior-peso; maximin: troque
 vector<ll> dij_minimax(const GW& adj, int s) {
     int n = adj.size();
     vector<ll> d(n, DJ_INF);
@@ -64,8 +52,8 @@ vector<ll> dij_minimax(const GW& adj, int s) {
     return d;
 }
 
-// Arestas (u,v,w) que estao em algum caminho minimo s->t: ds[u]+w+dt[v]==ds[t].
-// ds = Dijkstra de s em adj; dt = Dijkstra de t no grafo REVERSO radj. Retorna indices
+// aresta em algum caminho minimo: ds+w+dt==ds[t]
+// dt vem do grafo reverso; retorna (u, posicao)
 // (u, posicao em adj[u]).
 vector<pair<int,int>> on_shortest(const GW& adj, const vector<ll>& ds, const vector<ll>& dt, int t) {
     vector<pair<int,int>> r;
@@ -76,3 +64,35 @@ vector<pair<int,int>> on_shortest(const GW& adj, const vector<ll>& ds, const vec
         }
     return r;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Dijkstra - variantes**
+dij_dense (sem heap, O(n^2)); dij_count (dist + numero de caminhos minimos
+mod DJM + pai); dij_minimax (minimiza o maior peso do caminho); on_shortest
+(arestas em algum caminho minimo s->t). Adj 0-indexado: adj[u] = {(v,w)}.
+
+Complexidade: dij_dense O(n^2); as demais O(m log n)
+Uso:
+  d = dij_dense(w, s);                    // w[i][j], DJ_INF = sem aresta
+  dij_count(adj, s, d, cnt, par);         // cnt mod DJM, par = pai
+  d = dij_minimax(adj, s);                // (maximin: troque min/max)
+  auto e = on_shortest(adj, ds, dt, t);   // indices (u, posicao em adj[u])
+
+* Sobre o codigo:
+  dij_dense escolhe o minimo nao-fechado por varredura. O(n^2) bom para n
+  pequeno e grafo denso. dij_count soma cnt[u] quando empata dist; minimax
+  relaxa com nd = max(du, w). on_shortest testa ds[u] + w + dt[v] == ds[t],
+  com dt de Dijkstra no grafo reverso.
+
+* Problemas e reducoes:
+  + Contagem de caminhos minimos mod primo: dij_count.
+  + Maior aresta do caminho (minimax/bottleneck): dij_minimax.
+  + Arestas/vertices em algum caminho minimo: on_shortest.
+  + Probabilidades (maximizar produto <= 1): max-heap com *, ou -log.
+  + Grafo denso com n pequeno: dij_dense dispensa heap.
+
+Cuidados: pesos >= 0. Em dij_count, ciclo de peso 0 torna a contagem infinita.
+  DJM e primo fixo (1e9+7); troque se precisar.
+Catalogo: Grafos (Dijkstra lazy vs decrease-key, bottleneck, contagem).
+Digitacao: 61 linhas | dificil. Atalho: dij_minimax e o Dijkstra basico diferem
+  so na relaxacao; una com um parametro.
+*****************************LATEX_DESC_END*/

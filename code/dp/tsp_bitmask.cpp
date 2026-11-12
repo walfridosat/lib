@@ -1,14 +1,4 @@
-// DP em bitmask: TSP, atribuicao e particao em subconjuntos
-//
-// O que faz: (1) tsp: menor ciclo hamiltoniano, dp[mask][ultimo]. (2) assign_mask: custo minimo de atribuir n itens
-//   a n posicoes, dp[mask] com posicao = popcount(mask). (3) partition3: dp[mask] = melhor particao de mask em grupos
-//   com custo g[sub] (3^n, fixando o menor bit).
-// Quando usar: Catalogo > DP > "TSP / hamiltoniano", "Permutacoes como mascara", "Subconjuntos de mascara, 3^n", n <= 20 / 16-18.
-// Complexidade: tsp O(2^n n^2); assign_mask O(2^n n); partition3 O(3^n).
-// Uso: tsp(d) com d[i][j] matriz n x n (0-based, ciclo comeca em 0); assign_mask(c) com c[item][pos];
-//   partition3(n, g) com g de tamanho 2^n (g[0] ignorado), retorna dp[(1<<n)-1].
-// Cuidados: TINF = 1e18 (cuidado ao somar). tsp usa n*2^n ll (n=20: 160MB; use int se couber).
-//   Para caminho (nao ciclo) troque o fecho final por min sobre ultimo sem voltar.
+// DP em bitmask - TSP, atribuicao e particao
 const ll TINF = (ll)1e18;
 ll tsp(const vector<vector<ll>>& d){
     int n = d.size();
@@ -27,7 +17,7 @@ ll tsp(const vector<vector<ll>>& d){
 }
 ll assign_mask(const vector<vector<ll>>& c){                 // c[item][posicao], n x n
     int n = c.size();
-    vector<ll> dp(1<<n, TINF); dp[0] = 0;                    // mask = itens ja colocados nas posicoes 0..popcount-1
+    vector<ll> dp(1<<n, TINF); dp[0] = 0;                    // itens ja colocados nas posicoes 0..popcount-1
     for(int m = 0; m < (1<<n); m++){
         if(dp[m] >= TINF) continue;
         int p = __builtin_popcount(m);                       // proxima posicao
@@ -47,3 +37,33 @@ ll partition3(int n, const vector<ll>& g){                   // g[sub] = custo d
     }
     return dp[(1<<n)-1];
 }
+/*LATEX_DESC_BEGIN***************************
+-> **DP em bitmask: TSP, atribuicao e particao**
+(1) tsp: menor ciclo hamiltoniano, dp[mask][ultimo]. (2) assign_mask: custo
+minimo de atribuir n itens a n posicoes. (3) partition3: melhor particao de
+mask em grupos com custo g[sub], fixando o menor bit. 0-based.
+
+Complexidade: tsp O(2^n n^2); assign_mask O(2^n n); partition3 O(3^n).
+Uso:
+  ll a = tsp(d);                 // d[i][j] matriz n x n, ciclo comeca em 0
+  ll b = assign_mask(c);         // c[item][posicao]
+  ll e = partition3(n, g);       // g tem tamanho 2^n, g[0] ignorado
+
+* Sobre o codigo:
+  tsp so percorre mascaras que contem o vertice 0 e fecha o ciclo no fim.
+  assign_mask usa popcount(mask) como proxima posicao a preencher.
+  partition3 itera subconjuntos s de mask que contem o menor bit, evitando
+  contar a mesma particao varias vezes.
+
+* Problemas e reducoes:
+  + Caixeiro viajante com n <= 20 (ciclo ou caminho).
+  + Atribuicao de tarefas a posicoes (custo minimo).
+  + Particionar um conjunto em grupos com custo por grupo.
+  + Cobertura por subconjuntos e coloracao em grafo pequeno.
+
+Cuidados: TINF = 1e18 (cuidado ao somar). tsp usa n*2^n ll (n=20: 160MB; use
+  int se couber). Para caminho (nao ciclo), troque o fecho final por min sobre
+  o ultimo sem voltar.
+Catalogo: DP > TSP / permutacoes como mascara / subconjuntos de mascara 3^n.
+Digitacao: 38 linhas | media.
+*****************************LATEX_DESC_END*/

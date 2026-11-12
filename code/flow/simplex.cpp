@@ -1,16 +1,4 @@
-// Simplex (programacao linear) - estilo KACTL
-//
-// O que faz: maximiza c.x sujeito a A x <= b, x >= 0.
-// Quando usar: LP pequeno (vars/restricoes ate ~100-300), jogos de soma zero, mistura,
-//   dieta, max flow pequeno (Catalogo > Otimizacao: "Simplex", "Dualidade em LP",
-//   "Jogo de soma zero"). Minimizar: passe -c e negue o resultado.
-// Complexidade: exponencial pior caso, muito rapido na pratica. Regra de Bland-like
-//   (desempate por indice) evita ciclar.
-// Uso: LPSolver lp(A, b, c); vector<double> x; double v = lp.solve(x);
-//   v = valor otimo (x recebe a solucao); v = -inf se inviavel; v = +inf se ilimitado.
-//   Restricao >=: multiplique por -1. Igualdade: duas desigualdades. x livre: x = x+ - x-.
-// Cuidados: double com eps=1e-8; b negativo e tratado (fase 1). Resposta inteira nao e
-//   garantida (so se o LP for totalmente unimodular).
+// Simplex - programacao linear (max c.x sujeito a A x <= b, x >= 0)
 typedef double SXT;
 typedef vector<double> vd;
 typedef vector<vd> vvd;
@@ -69,3 +57,47 @@ struct LPSolver {
         return ok ? D[m][n + 1] : SX_INF;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Simplex - programacao linear**
+Maximiza c.x sujeito a A x <= b, x >= 0 (double). Tambem resolve o dual,
+jogos de soma zero e LP pequeno.
+
+Complexidade: exponencial no pior caso, muito rapido na pratica; desempate
+por indice (Bland-like) evita ciclar.
+Uso:
+  LPSolver lp(A, b, c); vector<double> x; double v = lp.solve(x);
+  v = valor otimo (x = solucao); -inf se inviavel; +inf se ilimitado.
+  Minimizar: passe -c e negue o resultado.
+  >=: multiplique a restricao por -1. Igualdade: duas desigualdades.
+  x livre: x = x+ - x- com x+, x- >= 0.
+
+* Sobre o codigo:
+  Tableau D com base B e nao-base N. A fase 1 acha uma base viavel se algum
+  b[i] < 0 (pivot com a variavel artificial). Depois simplex(1) pivota
+  escolhendo a coluna de custo reduzido negativo e a linha pela razao
+  minima. solve() le x das variaveis basicas.
+
+* Problemas e reducoes:
+  + LP em forma padrao max c.x, A x <= b, x >= 0: base.
+  + Minimizacao: use -c e negue o valor; restricoes >=: multiplique por -1.
+  + Igualdades: duas desigualdades (<= e >=).
+  + Variavel livre: x = x+ - x-.
+  + Jogo de soma zero: maximize v com sum_i p_i A_ij >= v e sum p_i = 1,
+    p >= 0; o valor do jogo e v e a estrategia e p.
+  + Fluxo maximo como LP: variaveis = fluxo por aresta, restricoes de cap e
+    conservacao; maximize o fluxo que sai de s.
+  + Min-cost flow como LP: minimize sum cost_e f_e com conservacao e caps.
+  + Atribuicao como LP: x_ij >= 0, sum_j x_ij = 1, sum_i x_ij <= 1; a
+    matriz e totalmente unimodular, entao a solucao e inteira.
+  + Minimax / Chebyshev: minimize t com -t <= a_i.x - b_i <= t.
+  + Dieta/mistura: minimize custo com restricoes nutricionais >=.
+  + Cobertura por vertices (relaxacao): minimize sum x_v com x_u + x_v >= 1
+    por aresta.
+  + Resolver o dual: as variaveis duais sao os precos-sombra das restricoes.
+
+Cuidados: double com eps = 1e-8; b negativo e tratado na fase 1. A resposta
+  inteira so e garantida se o LP for totalmente unimodular. Restricoes
+  lineares apenas.
+Catalogo: Otimizacao (simplex, dualidade em LP, jogo de soma zero).
+Digitacao: 58 linhas | dificil. Atalho: ok (tableau compacto).
+*****************************LATEX_DESC_END*/

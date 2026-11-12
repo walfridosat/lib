@@ -1,15 +1,4 @@
-// Floor sum (algoritmo tipo Euclides)
-//
-// O que faz: floor_sum = sum_{i=0}^{n-1} floor((a*i+b)/m) exato (cabe em ll se
-//   o resultado couber). floor_sum3 devolve (sum f, sum i*f, sum f^2) mod MOD
-//   com i = 0..n (inclusive).
-// Quando usar: Catalogo > Teoria dos numeros (floor sum; pontos de rede sob
-//   reta; sum (a*i+b) mod m = sum(a*i+b) - m*floor_sum; contar ax+by<=n).
-// Complexidade: O(log m).
-// Uso: floor_sum(n,m,a,b) com n>=0,m>=1, a,b quaisquer (negativos ok).
-//   floor_sum3(n,a,b,c) -> {f,g,h} para floor((a*i+b)/c), i=0..n, mod MOD.
-// Cuidados: floor_sum usa unsigned: resultado deve caber em ull. Em floor_sum3
-//   a, b, c < 2^62 ok (operacoes mod MOD). c>=1.
+// Floor sum (algoritmo de Euclides)
 typedef unsigned long long ull;
 ull fs_unsigned(ull n, ull m, ull a, ull b) {
     ull ans = 0;
@@ -37,7 +26,7 @@ ll floor_sum(ll n, ll m, ll a, ll b) {
     }
     return (ll)(ans + fs_unsigned(n, m, a, b));
 }
-// versao com soma de i*f e f^2 (recursao classica), tudo mod MOD
+// floor_sum3: soma i*f e f^2, tudo mod MOD
 const ll MODF = 998244353, I2 = (MODF + 1) / 2, I6 = 166374059; // inverso de 6 mod 998244353
 struct FGH { ll f, g, h; };
 FGH floor_sum3(ll n, ll a, ll b, ll c) { // i = 0..n
@@ -69,3 +58,30 @@ FGH floor_sum3(ll n, ll a, ll b, ll c) { // i = 0..n
     res.h = (r % MODF + MODF) % MODF;
     return res;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Floor sum (algoritmo de Euclides)**
+Soma sum_{i=0}^{n-1} floor((a*i+b)/m) exata; floor_sum3 tambem soma i*f e f^2 mod 998244353.
+
+Complexidade: O(log m).
+Uso:
+  ll s = floor_sum(n, m, a, b);        // n >= 0, m >= 1, a,b quaisquer
+  FGH r = floor_sum3(n, a, b, c);      // i = 0..n, mod MODF; c >= 1
+
+* Sobre o codigo:
+  fs_unsigned reduz a e b modulo m, soma as partes inteiras e troca os papeis
+  de m e a, como no algoritmo de Euclides. floor_sum trata a,b negativos
+  ajustando a soma. floor_sum3 aplica a mesma recursao guardando f, i*f e f^2.
+
+* Problemas e reducoes:
+  + Somar floor((a*i+b)/m) para i em [0, n) -> floor_sum.
+  + Somar (a*i+b) mod m = sum(a*i+b) - m*floor_sum -> floor_sum.
+  + Contar pontos de rede sob a reta a*x + b*y <= n -> floor_sum.
+  + Somar floor((a*i+b)/m) em um subintervalo -> diferenca de floor_sum.
+  + Somar i*floor(...) ou floor(...)^2 -> floor_sum3.
+  + Numero de pontos inteiros em um triangulo reto -> floor_sum.
+
+Cuidados: floor_sum usa unsigned por dentro; o resultado deve caber em ull.
+  Em floor_sum3, a, b, c < 2^62 e c >= 1.
+Catalogo: Teoria dos numeros.
+Digitacao: 59 linhas | media. Atalho: floor_sum3 e parte opcional; pode ir para outro arquivo.
+*****************************LATEX_DESC_END*/

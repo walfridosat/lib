@@ -1,11 +1,4 @@
-// Blossom (Edmonds) - emparelhamento maximo em grafo geral
-//
-// O que faz: matching maximo em grafo nao bipartido, encolhendo ciclos impares (blossoms).
-// Quando usar: "pareie jogadores/vertices" em grafo qualquer (Catalogo > Grafos
-//   "Matching geral"; tamanho do maximo: Tutte-Berge). Em arvore basta guloso de folhas.
-// Complexidade: O(V^3) (V buscas, cada O(V^2)); ok para V ~ 500..1000.
-// Uso: Blossom b(n); b.add(u,v); int m=b.solve(); b.mt[v] = par de v (ou -1). 0-indexed.
-// Cuidados: auto-lacos ignorados (v==to). Arestas duplicadas ok.
+// Blossom - matching maximo em grafo geral
 struct Blossom {
     int n; vector<vector<int>> g; vector<int> mt, p, base, q; vector<char> used, bl;
     Blossom(int n) : n(n), g(n), mt(n, -1), p(n), base(n), q(n), used(n), bl(n) {}
@@ -58,3 +51,39 @@ struct Blossom {
         return r;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Blossom (Edmonds) - matching maximo geral**
+Matching de cardinalidade maxima em grafo nao direcionado qualquer, encolhendo
+ciclos impares (blossoms). Vertices 0-indexed.
+
+Complexidade: O(V^3) (V buscas, cada O(V^2)); ok para V ~ 500..1000.
+Uso:
+  Blossom b(n); b.add(u, v); int m = b.solve();
+  b.mt[v] -> par de v (ou -1). Auto-lacos e arestas duplicadas sao tolerados.
+
+* Sobre o codigo:
+  findPath faz BFS alternada a partir de uma raiz livre. Ao achar aresta entre
+  vertices de mesma paridade, lca acha a base do blossom e markPath contrai o
+  ciclo ajustando base[]. solve() inicializa guloso e aumenta por caminhos.
+
+* Problemas e reducoes:
+  + Matching maximo em grafo geral: vertices = objetos, arestas = pares
+    compativeis; resposta = solve(), pares em mt[].
+  + Matching perfeito (1-fator): mesmo modelo; existe sse solve()*2 == n.
+  + Dominos em tabuleiro com buracos: vertices = casas livres, arestas entre
+    casas vizinhas; matching perfeito = cobertura completa por dominos.
+  + Maximo de dominos sem sobrepor: mesmo modelo, resposta = matching maximo.
+  + Maximo de pares disjuntos (pessoas/robos compativeis): idem item 1.
+  + Cobertura minima por arestas (sem vertices isolados): mesmo grafo;
+    resposta = n - solve() (pegue o matching e cubra o resto).
+  + Emparelhamento perfeito dentro de um conjunto T (so arestas internas):
+    remova vertices fora de T e teste matching perfeito no subgrafo induzido.
+  + Matching com aresta (u,v) forcada: remova u e v, some 1 ao matching do
+    restante; existe matching de tamanho k com (u,v) sse isso da k.
+
+Cuidados: auto-lacos ignorados (v == to); arestas duplicadas ok. Sem recursao.
+  0-indexed.
+Catalogo: Grafos (matching geral, Tutte-Berge).
+Digitacao: 52 linhas | dificil. Atalho: lca e markPath poderiam virar uma
+  contrai() unica, ao custo de ficar mais dificil de depurar.
+*****************************LATEX_DESC_END*/

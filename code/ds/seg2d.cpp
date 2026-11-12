@@ -1,15 +1,4 @@
-// Segtree de segtrees (2D online): update de ponto, soma em retangulo
-//
-// O que faz: camada externa iterativa em x, cada no externo tem uma segtree
-//   dinamica em y. add(x,y,v) e soma no retangulo [x1,x2) x [y1,y2).
-// Quando usar: Catalogo > Estruturas de dados (Segtree de segtrees, BIT 2D
-//   com coordenadas grandes, contar pontos em retangulo online com updates).
-//   Para estatico/offline prefira sweep + BIT (ver bit.cpp, bit2d.cpp).
-// Complexidade: O(log N * log M) por op; memoria O(q log N log M) nos.
-// Uso: Seg2D s(N, M);  // x em [0,N), y em [0,M), M ate 1e9+
-//   s.add(x, y, v); s.query(x1, y1, x2, y2);  // [x1,x2) x [y1,y2)
-// Cuidados: memoria pesada (cerca de 2*q*logN*logM nos de 16 bytes);
-//   para max/min com updates de aumento so troque soma por max (nao invertivel).
+// Segtree de segtrees 2D - ponto e retangulo online
 struct Seg2D {
     int N; ll M;
     vector<int> rt;                // raiz da segtree em y de cada no externo
@@ -43,3 +32,30 @@ struct Seg2D {
         return s;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree de Segtrees 2D**
+Outer iterativa em x; cada no externo tem uma segtree dinamica em y. Update de
+ponto add(x,y,v) e soma no retangulo [x1,x2) x [y1,y2). 0-based.
+
+Complexidade: O(log N * log M) por operacao; memoria O(q log N log M) nos.
+Uso:
+  Seg2D s(N, M);                    // x em [0,N), y em [0,M), M ate 1e9+
+  s.add(x, y, v);
+  ll sum = s.query(x1, y1, x2, y2); // [x1,x2) x [y1,y2)
+
+* Sobre o codigo:
+  O vetor rt guarda a raiz da segtree em y de cada no externo. addY cria nos
+  sob demanda no pool L/R/C; add sobe x ate a raiz atualizando todas as copias
+  de y; query decompoe x e soma os intervalos de y.
+
+* Problemas e reducoes:
+  + Soma/contagem em retangulo com updates de ponto online.
+  + Contar pontos em retangulo (add 1 em cada ponto).
+  + Max/min em retangulo quando os updates so aumentam (troque soma por max).
+  + Estatico/offline: sweep + BIT e mais leve que a segtree de segtrees.
+
+Cuidados: memoria pesada (~2*q*logN*logM nos de 16 bytes). Coordenadas
+  grandes ok; para operacoes nao inversiveis so vale com updates monotonos.
+Catalogo: Estruturas de dados.
+Digitacao: 33 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

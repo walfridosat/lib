@@ -1,17 +1,4 @@
-// Sqrt decomposition (exemplo: add em intervalo + contar >= x em intervalo)
-//
-// O que faz: blocos de tamanho B; cada bloco guarda copia ordenada e um lazy
-//   de soma. Update: bloco inteiro mexe so no lazy; bloco parcial reconstroi.
-// Quando usar: Catalogo > Estruturas de dados (Sqrt decomposition quando a
-//   operacao nao e associativa/estranha; bloco com array ordenado para
-//   "contar >= x"; reconstrucao periodica). Use como TEMPLATE: troque o
-//   que cada bloco guarda (bitset, tabela de contagem, funcao de pulo).
-// Complexidade: update O(B log B + n/B); query O(B + (n/B) log B).
-//   B ~ sqrt(n log n) na pratica; teste por experimento.
-// Uso: Sqrt s(a); s.add(l, r, v) [l,r) 0-based; s.count_ge(l, r, x).
-// Cuidados: sempre rebuild(b) apos mexer em elementos soltos do bloco b.
-//   Para "Holes" (pular ate sair do bloco): guarde nxt[i], cnt[i] por bloco
-//   e recompute o bloco no update (ideia igual, nao incluida).
+// Sqrt decomposition - add em range e contar >= x
 struct Sqrt {
     int n, B, nb; vector<ll> a, lz; vector<vector<ll>> srt;
     Sqrt(const vector<ll>& v) : n(v.size()), a(v) {
@@ -45,3 +32,31 @@ struct Sqrt {
         return res;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Sqrt Decomposition**
+Blocos de tamanho B; cada bloco guarda copia ordenada e lazy de soma. Update
+de range: bloco inteiro mexe so no lazy; bloco parcial reconstroi. 0-based.
+
+Complexidade: update O(B log B + n/B); query O(B + (n/B) log B).
+  B ~ sqrt(n log n) na pratica; teste por experimento.
+Uso:
+  Sqrt s(a);
+  s.add(l, r, v);            // [l, r)
+  int c = s.count_ge(l, r, x);
+
+* Sobre o codigo:
+  a guarda os valores crus, lz a soma pendente por bloco e srt a copia
+  ordenada. rebuild(b) reordena o bloco. count_ge usa lower_bound em x - lz[b]
+  nos blocos inteiros e testa a[i] + lz nos pedacos das pontas.
+
+* Problemas e reducoes:
+  + Range add + contar valores >= x em range.
+  + Operacoes nao associativas ou estranhas: trate por bloco.
+  + Manter informacao ordenada por bloco (bitset, contagem, pulo).
+  + Reconstrucao periodica de estruturas.
+
+Cuidados: sempre rebuild(b) apos mexer em elementos soltos do bloco b.
+  Para "Holes" guarde nxt[i], cnt[i] por bloco e reconstrua no update.
+Catalogo: Estruturas de dados (Sqrt decomposition).
+Digitacao: 33 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

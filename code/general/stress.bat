@@ -1,4 +1,6 @@
 @echo off
+rem Uso: stress.bat [N]  (N = 1000 se omitido)
+rem Requer sol.cpp, brute.cpp e gen.cpp na mesma pasta.
 rem Stress test (Windows cmd). Uso: stress.bat [N]   (precisa de sol.cpp brute.cpp gen.cpp na pasta)
 rem Catalogo > Quando nada funciona (Gerador de testes). gen recebe a seed em argv[1].
 set N=%1

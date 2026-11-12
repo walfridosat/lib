@@ -1,4 +1,6 @@
 #!/bin/bash
+# Uso: bash stress.sh [N]  (N = 1000 se omitido)
+# Requer sol.cpp, brute.cpp e gen.cpp na mesma pasta.
 # Stress test (bash)
 #
 # O que faz: compila sol.cpp, brute.cpp e gen.cpp, roda N casos aleatorios e para no primeiro que diverge.

@@ -1,14 +1,4 @@
-// 0-1 BFS e BFS com pesos pequenos (Dial)
-//
-// O que faz: menor distancia com pesos em {0,1} usando deque (bfs01), ou com pesos
-//   inteiros em [0,W] usando buckets circulares (dial).
-// Quando usar: Catalogo > Grafos ("Pesos 0/1 -> 0-1 BFS", "0-1 BFS com custo de virar",
-//   grid com setas, estado (celula,direcao)).
-// Complexidade: bfs01 O(n+m); dial O(n+m+W*n)
-// Uso: adj[u] = {(v,w)}, 0-based. d = bfs01(n, adj, s); d[v]==INF01 se inalcancavel.
-//   Para multi-fonte: ligue super-fonte com custo 0 (ou inicialize varias fontes).
-// Cuidados: um vertice pode entrar mais de uma vez no deque (ok, so relaxa se melhorar).
-//   Em grid, codifique o estado como (celula*4+dir) para "mudar de direcao custa 1".
+// 0-1 BFS e Dial - distancias com pesos pequenos
 const ll INF01 = LLONG_MAX / 4;
 
 vector<ll> bfs01(int n, const vector<vector<pair<int,int>>>& adj, int s) {
@@ -26,7 +16,7 @@ vector<ll> bfs01(int n, const vector<vector<pair<int,int>>>& adj, int s) {
     return d;
 }
 
-// Dial: pesos em [0,W]. Buckets circulares de tamanho W+1.
+// Dial: pesos [0,W]; buckets de tamanho W+1
 vector<ll> dial(int n, const vector<vector<pair<int,int>>>& adj, int s, int W) {
     vector<ll> d(n, INF01);
     vector<vector<int>> bk(W + 1);
@@ -47,3 +37,28 @@ vector<ll> dial(int n, const vector<vector<pair<int,int>>>& adj, int s, int W) {
     }
     return d;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **0-1 BFS e Dial - pesos pequenos**
+Menor distancia com pesos em {0,1} via deque (bfs01), ou com pesos inteiros
+em [0, W] via buckets circulares (dial). Vertices 0-based.
+
+Complexidade: bfs01 O(n + m); dial O(n + m + W*n)
+Uso:
+  auto d = bfs01(n, adj, s);         // d[v] == INF01 se inalcancavel
+  auto d = dial(n, adj, s, W);       // pesos em [0, W]
+
+* Sobre o codigo:
+  bfs01: peso 0 vai para a frente do deque, peso 1 para o fim (ordem por dist).
+  dial: bucket cur % (W+1); entradas velhas sao descartadas por d[u] != cur.
+
+* Problemas e reducoes:
+  + Pesos 0/1 (custo de virar, grid com setas): 0-1 BFS direto.
+  + k trocas de direcao: estado (celula, direcao), mudar de direcao custa 1.
+  + Multi-fonte: inicialize varias fontes com 0 (ou super-fonte de custo 0).
+  + Pesos inteiros limitados: Dial em vez de heap de Dijkstra.
+
+Cuidados: um vertice pode entrar mais de uma vez no deque; so relaxa se
+  melhorar. Em grid use id = celula*4 + dir para o estado.
+Catalogo: Grafos (0-1 BFS, Dial, grafo de estados).
+Digitacao: 36 linhas | media. Atalho: dial pode usar Dijkstra comum se W for grande.
+*****************************LATEX_DESC_END*/

@@ -1,13 +1,4 @@
-// DSU (union-find com path compression + union by size)
-//
-// O que faz: find(u) com compressao; join(u, v) une as componentes; sz guarda tamanhos.
-// Quando usar: Catalogo > Grafos (DSU, Kruskal, componentes, remocoes ao contrario).
-//            Para rollback use code/ds/dsu_rollback.cpp; com peso/potencial use dsu_potencial.
-// Complexidade: O(alpha(n)) amortizado por operacao; memoria O(n).
-// Uso: DSU d(n); d.join(u, v); if (d.find(u) == d.find(v)) ...
-// Cuidados: indices 0..n (o construtor aloca n+1); para 0-indexado puro use DSU(n-1)
-//            ou ajuste; nao use find em indice fora do intervalo.
-// a(1e6)==5
+// DSU - union-find
 
 struct DSU {
 	vector<int> pai, sz;
@@ -27,3 +18,30 @@ struct DSU {
 		sz[u] += sz[v];
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **DSU - union-find**
+find(u) com compressao de caminho; join(u,v) une componentes; sz guarda
+tamanhos. O construtor aloca n+1 posicoes (indices 0..n).
+
+Complexidade: O(alpha(n)) amortizado por operacao; memoria O(n)
+Uso:
+  DSU d(n);                  // indices 0..n
+  d.join(u, v);
+  if (d.find(u) == d.find(v)) ...
+
+* Sobre o codigo:
+  pai[] e sz[]; find recursivo comprime; join pendura a menor na maior
+  (union by size). alpha(1e6) == 5.
+
+* Problemas e reducoes:
+  + Kruskal: ordene as arestas e use join/find.
+  + Componentes conexas com apenas unioes.
+  + Remocoes ao contrario: processe offline de tras para frente e vire uniao.
+  + Arestas online com paridade: DSU com potenciais.
+  + Proximo indice livre / cobertura de intervalos: DSU como "jump".
+
+Cuidados: indices 0..n; para 0-indexado puro use DSU(n-1) ou ajuste. Nao
+  chame find fora do intervalo. Para rollback use dsu_rollback.
+Catalogo: Grafos (DSU, Kruskal, componentes, remocoes ao contrario).
+Digitacao: 14 linhas | facil.
+*****************************LATEX_DESC_END*/

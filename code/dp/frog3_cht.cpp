@@ -1,13 +1,4 @@
 // Frog 3 com CHT (exemplo completo, standalone)
-//
-// O que faz: resolve o DP dp[i] = c + h[i]^2 + min_j (dp[j] + h[j]^2 - 2*h[i]*h[j])
-//            com convex hull trick; inclui leitura, CHT e main.
-// Quando usar: Catalogo > DP (CHT / Li Chao) como exemplo de montagem; para o trecho
-//            reutilizavel use code/ds/cht_monotono.cpp ou code/ds/lichao.cpp.
-// Complexidade: O(n log n) (insercao/consulta binaria no hull).
-// Uso: programa completo: le n, c e h[0..n-1], imprime a resposta em dp[n-1].
-// Cuidados: e standalone (tem main); inclinacoes sao inseridas em ordem, mas a query
-//            usa busca binaria, entao funciona tambem fora de ordem; use ll.
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
@@ -98,3 +89,29 @@ signed main() {
     while(T--)solve();
     //cout<<"clash royale"<<endl;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Frog 3 com convex hull trick (exemplo standalone)**
+Resolve dp[i] = c + h[i]^2 + min_j (dp[j] + h[j]^2 - 2*h[i]*h[j]) com CHT.
+Programa completo: le n, c e h[0..n-1] e imprime dp[n-1], 0-based.
+
+Complexidade: O(n log n) (insercao O(1) amortizado, consulta binaria).
+Uso:
+  programa completo; a classe cht tambem pode ser copiada:
+  cht hull(vazio); hull.add({m, b}); ll y = hull.query(x);
+
+* Sobre o codigo:
+  Cada candidato j vira a reta y = (-2*h[j])*x + (dp[j] + h[j]^2); a query em
+  x = h[i] devolve o minimo. inter(a,b) e o x onde duas retas se cruzam;
+  add remove retas que nunca serao otimas. query faz busca binaria nas quebras.
+
+* Problemas e reducoes:
+  + DP de sapo com custo quadratico (Frog 3).
+  + Qualquer dp[i] = min_j (a[j]*x[i] + b[j]) com x monotono ou consulta binaria.
+  + Minimizar soma de custos lineares em sequencia.
+
+Cuidados: e standalone (tem main). Inclinacoes sao inseridas em ordem, mas a
+  query usa busca binaria, entao tambem funciona fora de ordem. Use ll.
+Catalogo: DP (CHT / Li Chao) como exemplo de montagem.
+Digitacao: 68 linhas | dificil. Atalho: para o trecho reutilizavel use
+  code/ds/cht_monotono.cpp ou code/ds/lichao.cpp.
+*****************************LATEX_DESC_END*/

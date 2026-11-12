@@ -1,25 +1,4 @@
-// Busca binaria: templates (inteira, real, exponencial, k-esimo, mediana)
-//
-// O que faz: colecao de templates de binaria na resposta.
-//   bs_first(lo,hi,ok)  : menor x em [lo,hi] com ok(x) (ok monotono F..FT..T);
-//                         retorna hi+1 se nenhum.
-//   bs_last(lo,hi,ok)   : maior x em [lo,hi] com ok(x) (ok monotono T..TF..F);
-//                         retorna lo-1 se nenhum.
-//   bs_real(lo,hi,ok)   : 100 iteracoes; devolve o menor x real com ok(x)=true.
-//   bs_exp(ok)          : limite superior desconhecido: dobra ate ok, acha menor x>=1.
-//   isqrt / iroot       : raiz inteira exata (sem erro de double).
-//   kth_dois(A,B,k)     : k-esimo (1-based) da uniao de dois arrays ordenados.
-//   kth_soma(A,B,k)     : k-esimo menor de A[i]+B[j] (arrays ordenados).
-// Quando usar: "Catalogo > Busca binaria e otimizacao" (binaria na resposta,
-//   k-esimo de conjunto implicito, binaria em reais, limite desconhecido,
-//   mediana de dois arrays). Binaria na segtree/BIT: ver code/ds (descida).
-// Complexidade: O(log(range) * custo do check).
-// Uso: ll x = bs_first<ll>(0, 1e18, [&](ll m){ return check(m); });
-//   Ex: "minimizar o maximo" -> bs_first; "maximizar o minimo" -> bs_last.
-// Cuidados: mid = lo + (hi-lo)/2 (nao (lo+hi)/2 com overflow); para valores
-//   negativos o piso aqui eh correto pois hi-lo >= 0. Em check com m*m ou
-//   m*k em 1e18 use __int128 ou compare com divisao. Em reais NAO use
-//   while(hi-lo>eps) com valores grandes. Monotonicidade deve ser provada.
+// Busca binaria - templates (inteira, real, k-esimo)
 template<class T, class F> T bs_first(T lo, T hi, F ok) {
 	T ans = hi + 1; // invariante: ans eh o menor ok conhecido
 	while (lo <= hi) {
@@ -63,7 +42,7 @@ ll iroot(ll n, int k) { // floor(n^(1/k)), n >= 0, k >= 1
 	};
 	return bs_last<ll>(0, 3037000500LL, pot_le); // raiz de n<=9.2e18 (k>=2) cabe em 3.04e9
 }
-// k-esimo (1-based) da uniao de dois arrays ordenados, O(log) por binaria na particao
+// k-esimo (1-based) da uniao de dois arrays ordenados
 ll kth_dois(const vector<ll>& A, const vector<ll>& B, int k) {
 	int n = A.size(), m = B.size();
 	int lo = max(0, k - m), hi = min(k, n); // quantos tirar de A
@@ -78,7 +57,7 @@ ll kth_dois(const vector<ll>& A, const vector<ll>& B, int k) {
 	if (j > 0) r = max(r, B[j - 1]);
 	return r;
 }
-// k-esimo menor (1-based) entre todas as somas A[i]+B[j]: binaria no valor + 2 ponteiros
+// k-esimo menor de A[i]+B[j]: binaria + 2 ponteiros
 ll kth_soma(const vector<ll>& A, const vector<ll>& B, ll k) {
 	auto cnt = [&](ll x) { // quantos pares com soma <= x
 		ll c = 0; int j = B.size();
@@ -90,3 +69,43 @@ ll kth_soma(const vector<ll>& A, const vector<ll>& B, ll k) {
 	};
 	return bs_first<ll>(A[0] + B[0], A.back() + B.back(), [&](ll x) { return cnt(x) >= k; });
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Busca binaria: templates**
+Colecao de templates de binaria na resposta: inteira, real, limite
+desconhecido, k-esimo de uniao e de somas, raiz inteira.
+
+Complexidade: O(log(range) * custo do check).
+Uso:
+  bs_first<ll>(lo, hi, ok)   // menor x com ok(x); hi+1 se nenhum
+  bs_last<ll>(lo, hi, ok)    // maior x com ok(x); lo-1 se nenhum
+  bs_real(lo, hi, ok)        // 100 iteracoes; menor x real com ok
+  bs_exp(ok)                 // menor x >= 1, limite superior dobrado
+  isqrt(n); iroot(n, k)      // raiz inteira exata (n >= 0)
+  kth_dois(A, B, k)          // k-esimo (1-based) da uniao de 2 arrays ordenados
+  kth_soma(A, B, k)          // k-esimo menor de A[i]+B[j]
+  Ex.: ll x = bs_first<ll>(0, 1e18, [&](ll m){ return check(m); });
+  "minimizar o maximo" -> bs_first; "maximizar o minimo" -> bs_last.
+  Binaria na segtree/BIT: descida propria (ver code/ds).
+
+* Sobre o codigo:
+  bs_first mantem ans = menor ok conhecido; bs_last o simetrico.
+  bs_real faz 100 iteracoes de bissecao; bs_exp dobra ate ok e chama bs_first.
+  isqrt/iroot ajustam o valor inicial para baixo e para cima sem erro de double.
+  kth_dois faz binaria na particao i de A; kth_soma conta pares <= x com 2 ponteiros.
+
+* Problemas e reducoes:
+  + Minimizar o maximo -> bs_first; maximizar o minimo -> bs_last.
+  + k-esimo de dois arrays ordenados -> kth_dois.
+  + k-esimo de somas de dois arrays -> kth_soma.
+  + Limite superior desconhecido -> bs_exp.
+  + Raiz inteira / potencia exata -> isqrt, iroot.
+  + Equilibrio ou interseccao em reais -> bs_real.
+
+Cuidados: mid = lo + (hi-lo)/2 (nao (lo+hi)/2); com hi-lo >= 0 o piso serve
+  para negativos. Em check com m*m ou m*k perto de 1e18 use __int128 ou
+  compare com divisao. Em reais use ~100 iteracoes, nao while(hi-lo>eps).
+  A monotonicidade de ok deve ser provada.
+Catalogo: Busca binaria e otimizacao.
+Digitacao: 70 linhas | media. Atalho: bs_last pode ser
+  bs_first(lo, hi, negacao de ok) - 1, eliminando a segunda busca.
+*****************************LATEX_DESC_END*/

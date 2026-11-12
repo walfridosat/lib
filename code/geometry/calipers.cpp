@@ -1,14 +1,4 @@
-// Rotating calipers: diametro, largura minima, retangulo envolvente de menor area
-//
-// O que faz: sobre um fecho convexo CCW (de hull_andrew.cpp) acha o par mais distante,
-//   a menor largura (distancia entre retas suporte paralelas) e a menor area de retangulo
-//   envolvente (com lado colinear a uma aresta do hull).
-// Quando usar: Catalogo > Geometria (pontos extremos, maior distancia, calipers, menor caixa).
-// Complexidade: O(h) apos o hull.
-// Uso: vector<P> h = hull(pts);  diameter2(h) -> maior dist^2 (ll);
-//      width2(h) -> (largura^2) em long double; minRectArea(h) -> area em long double.
-// Cuidados: h CCW sem colineares (h.size()==1 ou 2 tratados). Diametro usa inteiros (exato);
-//   largura/retangulo usam long double.
+// Rotating calipers - diametro, largura e caixa minima
 
 struct P {
   ll x, y;
@@ -50,7 +40,7 @@ long double minRectArea(const vector<P> &h) {
   int n = h.size();
   if (n <= 2) return 0;
   long double best = 1e30L;
-  int r = 1, t = 1, l = 1;  // ponteiros: extremo na direcao e, no topo, e no oposto
+  int r = 1, t = 1, l = 1;  // r, t, l: extremos nas direcoes e, perp e -e
   for (int i = 0; i < n; i++) {
     P e = h[(i + 1) % n] - h[i];
     while (dot(e, h[(r + 1) % n] - h[r]) > 0) r = (r + 1) % n;          // max projecao em e
@@ -64,3 +54,35 @@ long double minRectArea(const vector<P> &h) {
   }
   return best;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Rotating calipers - diametro, largura e caixa minima**
+Sobre o fecho convexo CCW (de hull_andrew.cpp), acha o par mais distante, a menor largura
+(distancia entre retas suporte paralelas) e a menor area de retangulo envolvente.
+
+Complexidade: O(h) apos o hull
+Uso:
+  vector<P> h = hull(pts);         // CCW, sem colineares
+  ll d2 = diameter2(h);            // maior distancia^2 (exato, ll)
+  long double w2 = width2(h);      // largura^2
+  long double a = minRectArea(h);  // menor area de retangulo
+
+* Sobre o codigo:
+  Para cada aresta i do hull, um ponteiro j avanca enquanto a area/altura da aresta ate j
+  cresce. diameter2 usa norm2; width2 usa cross(e, h[j]-h[i]), que e altura*|e|; minRectArea
+  mantem tres ponteiros: projecao maxima (r), altura maxima (t) e projecao minima (l).
+
+* Problemas e reducoes:
+  + Diametro de um conjunto de pontos: hull + diameter2.
+  + Par de pontos mais distante em O(n log n) total (ordenacao inclusa).
+  + Menor largura de um poligono convexo: width2.
+  + Menor retangulo envolvente (com lado colinear a uma aresta): minRectArea.
+  + Calipers tambem serve para antipodal points e giro de arestas.
+
+Cuidados: h deve ser CCW e estritamente convexo (sem colineares); h.size() 1 ou 2 e tratado.
+  Diametro usa inteiros (exato; cuidado com overflow de ll em |e|^2); largura e retangulo usam
+  long double e podem perder precisao em coordenadas muito grandes.
+Catalogo: Geometria.
+Digitacao: 51 linhas | dificil. Atalho: os tres lacos repetem o mesmo avanco de ponteiro
+  antipodal; extrair um helper e reusar em diameter2/width2/minRectArea.
+*****************************LATEX_DESC_END*/

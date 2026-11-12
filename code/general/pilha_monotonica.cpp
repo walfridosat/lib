@@ -1,16 +1,4 @@
-// Pilha monotonica (proximo maior/menor, contribuicao, histograma, lexicografico)
-//
-// O que faz: prox/ant maior e menor; soma de max e de min de todos os subarrays (com desempate correto);
-//            maior retangulo em histograma e em matriz 0/1; menor subsequencia lexicografica de tamanho k.
-// Quando usar: "proximo maior", "cada elemento como maximo", "maior retangulo", "remover k digitos".
-//              Catalogo > Arrays e guloso (Pilha monotonica, Contribuicao com empates, Maior submatriz de 1s,
-//              Menor subsequencia lexicografica)
-// Complexidade: O(n) cada
-// Uso: 0-based. nextGreater(a) -> nxt[i] = menor j>i com a[j] > a[i] (n se nao existe); prevGreaterEq(a) idem para a esquerda.
-//      sumMax(a)/sumMin(a) -> soma de max/min sobre todos os subarrays. sumMax - sumMin = soma de (max-min).
-//      largestRect(h), largestOnes(grid), minSubseqLex(a, k) -> vetor de tamanho k lexicograficamente minimo.
-// Cuidados: empates! Um lado estrito (>) e o outro nao estrito (>=), senao conta subarrays em dobro.
-//           sumMax pode estourar ll se n e valores muito grandes (n^3 * V); aqui ll.
+// Pilha monotonica - proximo maior/menor, contribuicao, histograma
 
 // nxt[i] = primeiro j > i com a[j] > a[i], ou n
 vector<int> nextGreater(const vector<ll>& a) {
@@ -30,7 +18,7 @@ vector<int> prevGreaterEq(const vector<ll>& a) {
     }
     return prv;
 }
-// soma do maximo de todos os subarrays: i e o maximo de (prv[i], nxt[i]); esquerda >= (empate vai pro mais a esquerda), direita >
+// i e maximo de (prv[i], nxt[i]); esquerda >=, direita >
 ll sumMax(const vector<ll>& a) {
     int n = a.size(); auto nx = nextGreater(a); auto pv = prevGreaterEq(a); ll ans = 0;
     for (int i = 0; i < n; i++) ans += a[i] * (ll)(i - pv[i]) * (nx[i] - i);
@@ -55,7 +43,7 @@ ll largestRect(const vector<ll>& h) {
     }
     return best;
 }
-// maior submatriz so de 1s (grid de 0/1): histograma por linha
+// maior submatriz de 1s: histograma por linha
 ll largestOnes(const vector<vector<int>>& g) {
     if (g.empty()) return 0;
     int m = g[0].size(); vector<ll> h(m, 0); ll best = 0;
@@ -65,7 +53,7 @@ ll largestOnes(const vector<vector<int>>& g) {
     }
     return best;
 }
-// subsequencia de tamanho k lexicograficamente minima (remove n-k elementos)
+// remove n-k; menor lexicografica de tamanho k
 vector<ll> minSubseqLex(const vector<ll>& a, int k) {
     int n = a.size(), rem = n - k; vector<ll> st;
     for (int i = 0; i < n; i++) {
@@ -75,3 +63,33 @@ vector<ll> minSubseqLex(const vector<ll>& a, int k) {
     st.resize(k);
     return st;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Pilha Monotonica**
+Proximo/anterior maior e menor; soma de max/min de todos os subarrays; maior retangulo
+em histograma e em matriz 0/1; menor subsequencia lexicografica de tamanho k.
+
+Complexidade: O(n) cada
+Uso:
+  auto nx = nextGreater(a);      // nxt[i] = j > i com a[j] > a[i], ou n
+  auto pv = prevGreaterEq(a);    // prv[i] = j < i com a[j] >= a[i], ou -1
+  ll smax = sumMax(a), smin = sumMin(a);
+  ll r = largestRect(h); ll o = largestOnes(grid);
+  vector<ll> s = minSubseqLex(a, k);
+
+* Sobre o codigo:
+  nextGreater/prevGreaterEq mantem pilha de indices e desempilham quando o novo e maior.
+  sumMax usa (i - prv[i]) * (nxt[i] - i) como numero de subarrays em que a[i] e maximo.
+  largestRect usa sentinela -1 no fim; largestOnes roda por linha.
+  minSubseqLex remove n-k elementos enquanto o topo e maior.
+
+* Problemas e reducoes:
+  + Proximo maior/menor elemento.
+  + Soma de max/min sobre todos os subarrays: sumMax/sumMin.
+  + Maior retangulo em histograma e maior submatriz de 1s.
+  + Remover k digitos: minSubseqLex.
+
+Cuidados: empates! Um lado estrito (>) e o outro nao estrito (>=), senao conta
+  subarrays em dobro; sumMax pode estourar ll com n e valores grandes.
+Catalogo: Arrays e guloso (Pilha monotonica, Contribuicao com empates, Maior submatriz de 1s, Menor subsequencia lexicografica)
+Digitacao: 62 linhas | media.
+*****************************LATEX_DESC_END*/

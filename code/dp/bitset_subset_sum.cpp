@@ -1,13 +1,4 @@
 // Subset sum com bitset e multiplicidades
-//
-// O que faz: dado multiconjunto de pesos, diz quais somas 0..W sao alcancaveis.
-//   ss_bitset: binary splitting + bitset (O(W/64) por pacote). ss_count: O(nW) sem log (usa used[] minimo).
-// Quando usar: Catalogo > DP > "Subset sum com bitset", "Mochila limitada so de viabilidade", "Mochila de raiz (pesos distintos)".
-//   Se soma total S: ha ate sqrt(2S) pesos distintos, agrupe iguais e use isso: S*sqrt(S)/64.
-// Complexidade: ss_bitset O(sum_i log c_i * W/64); ss_count O(n_distintos * W).
-// Uso: bitset<SSW> r = ss_bitset(pesos); r[x] = x alcancavel. ss_count(W, w, c) retorna vector<char> alcancavel[0..W].
-//   w[i] peso distinto, c[i] quantidade. Para pesos "um bem grande" ver code/dp/subsetsum.cpp (Pisinger).
-// Cuidados: SSW deve ser > soma maxima de interesse. Bits acima de SSW sao descartados (shift), ok para "<= W".
 const int SSW = 100005;
 bitset<SSW> ss_bitset(const vector<int>& pesos){
     map<int,int> cnt;
@@ -34,3 +25,29 @@ vector<char> ss_count(int W, const vector<int>& w, const vector<int>& c){
     }
     return dp;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Subset sum com bitset e multiplicidades**
+Dado um multiconjunto de pesos, diz quais somas 0..W sao alcancaveis.
+ss_bitset: binary splitting + bitset. ss_count: O(nW) com vetor used[] minimo.
+
+Complexidade: ss_bitset O(sum log c_i * SSW/64); ss_count O(n_distintos * W).
+Uso:
+  bitset<SSW> r = ss_bitset(pesos);        // r[x] = x e alcancavel
+  vector<char> ok = ss_count(W, w, c);     // w[i] peso, c[i] quantidade
+
+* Sobre o codigo:
+  ss_bitset agrupa pesos iguais e escreve cada quantidade c em pacotes 1,2,4,...;
+  cada pacote vira um shift do bitset (0/1 sobre os pacotes). ss_count percorre as
+  somas em ordem crescente e usa used[x] = minimo de copias do peso atual para x.
+
+* Problemas e reducoes:
+  + Mochila limitada so de viabilidade: basta saber se a soma e possivel.
+  + Mochila de raiz (pesos distintos): ha ate sqrt(2S) pesos distintos.
+  + Troco/particao com quantidade limitada de cada moeda.
+
+Cuidados: SSW deve ser maior que a maior soma de interesse; bits acima de SSW
+  sao descartados no shift (ok para "<= W"). Pesos positivos.
+Catalogo: DP > Subset sum com bitset / mochila limitada.
+Digitacao: 26 linhas | media. Atalho: se todas as quantidades sao 1, troque o
+  laco de pacotes por b |= b << w.
+*****************************LATEX_DESC_END*/

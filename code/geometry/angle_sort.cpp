@@ -1,18 +1,4 @@
-// Sweep angular: contar pontos em semiplano e triangulos que contem a origem
-//
-// O que faz: ordena pontos por angulo em torno da origem (exato, com cross) e usa dois
-//   ponteiros sobre grupos de mesma direcao para achar, para cada ponto i, quantos pontos j
-//   estao estritamente a esquerda (cross(v_i, v_j) > 0, i.e. em (theta_i, theta_i + pi)).
-//   Com isso: triangulos que contem a origem = C(n,3) - sum C(k_i, 2).
-// Quando usar: Catalogo > Geometria (sweep angular, "triangulos que contem um ponto",
-//   cobertura por intervalos angulares).
-// Complexidade: O(n log n).
-// Uso: vector<P> v (ja relativos a origem; nenhum igual a (0,0));
-//   countLeft(v) -> k[i] (por indice original).
-//   trianglesContainingOrigin(v): #triangulos com a origem ESTRITAMENTE dentro,
-//     valido se nenhum par de pontos e colinear com a origem (nem mesma direcao nem oposta).
-// Cuidados: coordenadas ate 1e9 (cross em ll). Para "contem o ponto Q": subtraia Q de todos.
-//   Com colinearidades use countLeft e trate casos de borda a mao.
+// Sweep angular - conta pontos a esquerda e triangulos com a origem
 
 struct P {
   ll x, y;
@@ -57,6 +43,36 @@ vector<ll> countLeft(const vector<P> &v) {
 
 ll trianglesContainingOrigin(const vector<P> &v) {
   ll n = v.size(), bad = 0;
-  for (ll x : countLeft(v)) bad += x * (x - 1) / 2;  // triangulos "dentro de um semiplano" por vertice inicial
+  for (ll x : countLeft(v)) bad += x * (x - 1) / 2;  // triangulos dentro de um semiplano
   return n * (n - 1) * (n - 2) / 6 - bad;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Sweep angular - pontos a esquerda e triangulos com a origem**
+Para cada ponto i, conta quantos pontos j estao em (theta_i, theta_i + pi), ou seja
+cross(v_i, v_j) > 0. Indices 0-based, vetores ja relativos a origem.
+
+Complexidade: O(n log n)
+Uso:
+  vector<P> v;  // relativo a origem; nenhum ponto (0,0)
+  vector<ll> k = countLeft(v);          // k[i] pelo indice original
+  ll t = trianglesContainingOrigin(v);  // triangulos com a origem dentro
+
+* Sobre o codigo:
+  Ordena os indices por angulo exato (half + cross). Junta direcoes iguais em grupos d[] com
+  contagem c[]; duplica o vetor de prefixos para o teste de dois ponteiros. left[g] = pontos
+  estritamente a esquerda do grupo g. k[i] apenas copia left[grp[i]].
+
+* Problemas e reducoes:
+  + Triangulos que contem a origem: C(n,3) - sum C(k_i,2), com k_i de countLeft.
+  + Triangulos que contem um ponto Q: subtraia Q de todos os pontos e use o mesmo.
+  + Para cada ponto, contar pontos em um semiplano (angulo < pi): k[i] de countLeft.
+  + Cobertura por intervalos angulares: os grupos ordenados dao os eventos de inicio/fim.
+
+Cuidados: coordenadas ate 1e9 (cross em ll). trianglesContainingOrigin exige que nenhum par
+  de pontos seja colinear com a origem (mesma direcao ou oposta); com colinearidades, use
+  countLeft e trate as bordas a mao.
+Catalogo: Geometria.
+Digitacao: 44 linhas | media. Atalho: d, c e grp repetem a mesma informacao; da para agrupar
+  em um unico vetor de grupos e mapear k no fim.
+*****************************LATEX_DESC_END*/

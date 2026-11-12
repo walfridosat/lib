@@ -1,15 +1,4 @@
-// Wavelet matrix
-//
-// O que faz: sobre array estatico de inteiros >= 0: k-esimo menor, contar < x,
-//   contar valores em [lo,hi] e contar igual a x, tudo em [l, r).
-// Quando usar: Catalogo > Estruturas de dados (Wavelet tree/matrix; k-esimo
-//   em [l,r] online; mais leve que segtree persistente; quantil).
-// Complexidade: build O(n LOG), query O(LOG); memoria n*LOG ints.
-// Uso: WM w(a, LOG=20);  valores em [0, 2^LOG). Comprima antes se maiores.
-//   w.kth(l, r, k) k 0-based (k=0 e o menor); w.less(l, r, x); w.range(l, r, lo, hi)
-//   (valores em [lo, hi]); w.eq(l, r, x). Intervalos [l, r) 0-based.
-// Cuidados: valores negativos -> some um offset/comprima. Maior <= x ou
-//   menor >= x: use less + kth (ex.: kth(l, r, less(l,r,x+1)-1)).
+// Wavelet matrix - k-esimo e contagens em range
 struct WM {
     int n, LOG; vector<vector<int>> c0; vector<int> zeros;
     WM(vector<int> a, int LOG = 20) : n(a.size()), LOG(LOG), c0(LOG, vector<int>(a.size() + 1)), zeros(LOG) {
@@ -47,3 +36,32 @@ struct WM {
     int range(int l, int r, int lo, int hi) { return less(l, r, hi + 1) - less(l, r, lo); }
     int eq(int l, int r, int x) { return range(l, r, x, x); }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Wavelet Matrix**
+Sobre array estatico de inteiros >= 0: k-esimo menor, contar < x, contar em
+[lo,hi] e contar igual a x, tudo em [l, r). 0-based.
+
+Complexidade: build O(n LOG), query O(LOG); memoria n*LOG ints.
+Uso:
+  WM w(a, LOG = 20);        // valores em [0, 2^LOG); comprima se maiores
+  int q = w.kth(l, r, k);   // k-esimo menor, k 0-based
+  int a = w.less(l, r, x);  // #{a[i] < x}
+  int b = w.range(l, r, lo, hi);  // valores em [lo, hi]
+  int c = w.eq(l, r, x);    // #{a[i] == x}
+
+* Sobre o codigo:
+  c0[lv][i] conta zeros ate i no nivel lv; zeros[lv] e o total de zeros.
+  Cada nivel particiona estavelmente os valores pelo bit; kth/less descem
+  usando as contagens para remapear l e r.
+
+* Problemas e reducoes:
+  + k-esimo menor em [l, r] online.
+  + Contar valores < x ou em [lo, hi].
+  + Quantil/mediana de subarray.
+  + Contar iguais a x (via range(x, x)).
+
+Cuidados: valores negativos exigem offset ou compressao. Maior <= x ou menor
+  >= x: combine less e kth (ex.: kth(l, r, less(l, r, x + 1) - 1)).
+Catalogo: Estruturas de dados (Wavelet tree/matrix).
+Digitacao: 37 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

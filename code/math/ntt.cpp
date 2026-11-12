@@ -1,14 +1,4 @@
-// NTT (Number Theoretic Transform) modulo 998244353
-//
-// O que faz: convolucao/multiplicacao de polinomios com raiz primitiva 3; prep_roots
-//            pre-calcula raizes e rev guarda a bit-reversal; suporta tamanho ate 2^23.
-// Quando usar: Catalogo > Algebra, polinomios e FFT (NTT). Para coeficientes grandes
-//            ou modulo arbitrario use 3 NTTs + CRT (ver o proprio catalogo).
-// Complexidade: O(n log n); memoria O(n).
-// Uso: prep_roots(n); ntt(a, invert); veja as funcoes do arquivo (convolution etc.).
-// Cuidados: trecho sem includes/constantes globais proprias (usa MOD, G, MAXCOEF);
-//            n deve ser potencia de 2 <= 2^23; roots precisa comecar {0, 1};
-//            nao misture com outro arquivo que defina MOD/roots/power com outro sentido.
+// NTT - convolucao mod 998244353
 const int MOD = 998244353;
 const int G = 3;
 const int MAXCOEF = 1e6 + 1; // pra calcular mod x^n
@@ -93,3 +83,32 @@ vector<int> convolution(vector<int> a, vector<int> b) {
     a.resize(min(sz, MAXCOEF));
     return a;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **NTT - convolucao mod 998244353**
+Convolucao de polinomios inteiros modulo 998244353 (raiz primitiva 3).
+
+Complexidade: O(n log n) tempo; O(n) memoria.
+Uso:
+  prep_roots(n);              // n potencia de 2
+  ntt(a);                     // transformada direta
+  vector<int> c = convolution(a, b);
+
+* Sobre o codigo:
+  prep_roots pre-calcula as raizes em roots; ntt aplica bit-reversal em rev e
+  as borboletas. A inversa e outra ntt seguida de reverse e escala por inv_n,
+  dentro de convolution. MAXCOEF trunca a resposta.
+
+* Problemas e reducoes:
+  + Multiplicar polinomios mod 998244353 -> convolution.
+  + Multiplicar inteiros grandes (base 10^k) -> convolution dos digitos.
+  + Contar pares/somas de produtos -> convolucao das frequencias.
+  + Somas de convolucao c[k] = sum a[i]*b[k-i] -> convolution.
+  + Quadrado de um polinomio -> convolution(a, a).
+  + Series formais (exp, log) usando NTT -> NTT como bloco base.
+
+Cuidados: n potencia de 2 <= 2^23; roots comeca {0, 1}; sem includes/constantes
+  globais proprias (usa MOD, G, MAXCOEF); nao misture com outro arquivo que
+  defina MOD/roots/power com outro sentido.
+Catalogo: Algebra, polinomios e FFT.
+Digitacao: 68 linhas | dificil. Atalho: uma funcao inversa explicita evita o reverse manual.
+*****************************LATEX_DESC_END*/

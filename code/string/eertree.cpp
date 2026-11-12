@@ -1,18 +1,4 @@
-// Eertree (arvore de palindromos) + particao em palindromos (serie link)
-//
-// O que faz: no por palindromo distinto (<= n nos). len, link (maior sufixo palindromo
-//   proprio), cnt (ocorrencias). Com diff/slink (series link) faz DP de particao em
-//   palindromos em O(n log n): minimo de pecas e numero de particoes.
-// Quando usar: Catalogo > Strings ("Palindromos distintos/contar -> eertree",
-//   "Eertree: ocorrencias", "Fatoracao em palindromos (serie link)").
-// Complexidade: add amortizado O(1) (alfabeto 26); particao O(n log n).
-// Uso: Eertree T; for c in s: T.add(c); (usa 'a'..'z')
-//   T.last = no do maior sufixo palindromo do prefixo atual; T.sz()-2 = nro de palindromos distintos.
-//   T.calc_cnt(): cnt[v] = ocorrencias de v na string inteira (chame no fim).
-//   part(s) -> {minimo de pecas, nro de particoes mod MODP} para cada prefixo: vector<pair<int,ll>> r, r[i] do prefixo de tam i.
-//   Nos 0 (len -1, raiz impar) e 1 (len 0, raiz par); palindromos reais: v >= 2.
-// Cuidados: particao em palindromos de tamanho PAR: intercale s1 sn s2 sn-1... e some so
-//   posicoes pares do dp (CF 932G). Contagem de particoes aqui e mod MODP.
+// Eertree (arvore de palindromos) + particao em palindromos
 const ll MODP = 1e9 + 7;
 struct Eertree {
 	static const int K = 26;
@@ -81,3 +67,42 @@ vector<pair<int, ll>> part(const string& s) { // {min pecas, nro de particoes} p
 	for (int i = 0; i <= n; i++) r[i] = {dp[i], ways[i]};
 	return r;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Eertree (arvore de palindromos)**
+No por palindromo distinto (<= n nos): len, link (maior sufixo palindromo
+proprio), cnt (ocorrencias). Com diff/slink (series link) faz DP de particao
+em palindromos em O(n log n): minimo de pecas e numero de particoes.
+Alfabeto 'a'..'z'.
+
+Complexidade: add amortizado O(1); particao O(n log n).
+Uso:
+  Eertree T; for (char c : s) T.add(c);
+  T.last = no do maior sufixo palindromo do prefixo atual;
+  T.sz() - 2 = numero de palindromos distintos;
+  T.calc_cnt(); // cnt[v] = ocorrencias de v na string inteira
+  auto r = part(s); // r[i] = {min pecas, numero de particoes mod MODP}
+  Nos 0 (len -1, raiz impar) e 1 (len 0, raiz par); palindromos reais: v >= 2.
+
+* Sobre o codigo:
+  getlink sobe pelos links ate achar um palindromo que se estende com s[i].
+  add cria no novo se preciso e calcula link, diff e slink (series link).
+  calc_cnt propaga cnt[v] para link[v] em ordem inversa de criacao. part usa
+  a serie para agrupar transicoes com a mesma diff no DP.
+
+* Problemas e reducoes:
+  + Palindromos distintos: T.sz() - 2.
+  + Ocorrencias de cada palindromo: calc_cnt().
+  + Minimo de pecas para particionar s em palindromos: part(s).
+  + Numero de particoes em palindromos (mod MODP): part(s).
+  + Fatoracao em palindromos de tamanho par: intercale s1 sn s2 sn-1... e
+    some so as posicoes pares do dp (CF 932G).
+  + Maior sufixo palindromo a cada prefixo: T.last.
+
+Cuidados: particao em palindromos de tamanho PAR: intercale s1 sn s2 sn-1...
+  e some so posicoes pares do dp (CF 932G). Contagem de particoes aqui e mod
+  MODP. Nos 0-indexados; a string em si nao e indexada na API.
+Catalogo: Strings (palindromos distintos/contar -> eertree, eertree:
+  ocorrencias, fatoracao em palindromos (serie link)).
+Digitacao: 68 linhas | dificil. Atalho: part duplica o laco de series; poderia
+  virar um metodo da struct com o DP como parametro.
+*****************************LATEX_DESC_END*/

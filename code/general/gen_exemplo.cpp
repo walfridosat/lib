@@ -1,10 +1,4 @@
-// Gerador de testes (exemplo para stress.sh / stress.bat)
-//
-// O que faz: gera um caso aleatorio pequeno determinado pela seed (argv[1]).
-// Quando usar: junto com brute force. Catalogo > Quando nada funciona (Gerador de testes)
-// Complexidade: O(n)
-// Uso: ./gen SEED > in.txt   (arquivo standalone: tem include e main proprios; copie como gen.cpp)
-// Cuidados: mantenha n e valores pequenos (n<=8, v<=5) para casos de borda aparecerem; varie parametros pela seed.
+// Gerador de testes - caso aleatorio pela seed (stress)
 #include <bits/stdc++.h>
 using namespace std;
 int main(int argc, char** argv) {
@@ -18,3 +12,22 @@ int main(int argc, char** argv) {
     // arvore aleatoria:   for i in 2..n: printf("%lld %d\n", R(1,i-1), i);
     // permutacao: vector<int> p(n); iota(..); shuffle(p.begin(), p.end(), rng);
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Gerador de Testes (exemplo)**
+Gera um caso aleatorio pequeno determinado pela seed em argv[1], para stress test.
+
+Complexidade: O(n)
+Uso:
+  ./gen SEED > in.txt   // arquivo standalone com include e main proprios
+
+* Sobre o codigo:
+  n e V sao pequenos para aparecerem muitos empates e casos de borda.
+  Ha linhas comentadas para gerar arvore aleatoria ou permutacao.
+
+* Problemas e reducoes:
+  + Stress test: combine com brute force e stress.sh/stress.bat.
+
+Cuidados: mantenha n e valores pequenos (n <= 8, v <= 5); varie parametros pela seed.
+Catalogo: Quando nada funciona (Gerador de testes)
+Digitacao: 13 linhas | facil.
+*****************************LATEX_DESC_END*/

@@ -1,18 +1,4 @@
-// Caminho/circuito euleriano (Hierholzer) - nao direcionado e direcionado
-//
-// O que faz: devolve a sequencia de vertices de um circuito/trilha que usa cada aresta
-//   exatamente uma vez, ou vazio se nao existe.
-// Quando usar: Catalogo > Grafos ("Euleriano -> graus pares; Hierholzer", "Euler em nao
-//   direcionado/direcionado", "Sequencia de de Bruijn", cobertura de arestas por trilhas).
-// Complexidade: O(n + m)
-// Uso: vector<array<int,2>> E (arestas u,v), 0-based.
-//   euler_und(n, E) -> vertices (tamanho m+1); euler_dir(n, E) idem (aresta u->v).
-//   m == 0 => retorna {0}? Aqui retorna vazio se nao ha aresta (trate fora).
-//   Para trilhas de arestas (ids) troque o push final de vertice por id.
-// Cuidados: exige conexidade das arestas (checada pelo tamanho final == m+1).
-//   Nao dirigido: 0 ou 2 vertices de grau impar (comeca num impar). Dirigido: in==out,
-//   ou um com out-in=1 (inicio) e um com in-out=1. Self-loops ok.
-//   Cobertura minima de arestas por trilhas = max(1, #impares/2) por componente.
+// Euleriano - Hierholzer
 vector<int> euler_und(int n, const vector<array<int,2>>& E) {
     int m = E.size();
     vector<vector<pair<int,int>>> g(n);
@@ -67,3 +53,35 @@ vector<int> euler_dir(int n, const vector<array<int,2>>& E) {
     reverse(path.begin(), path.end());
     return path;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Euleriano - trilha/circuito (Hierholzer)**
+Devolve a sequencia de vertices de um circuito/trilha que usa cada aresta
+exatamente uma vez, ou vazio se nao existe. E = vector<array<int,2>> u,v; 0-based.
+
+Complexidade: O(n + m)
+Uso:
+  vector<int> p = euler_und(n, E);   // nao direcionado, arestas u-v
+  vector<int> p = euler_dir(n, E);   // direcionado, arestas u->v
+  // p tem tamanho m+1; vazio se nao ha trilha (m==0 tambem devolve vazio)
+  // para ids de aresta, troque o push final de vertice por id
+
+* Sobre o codigo:
+  Hierholzer com pilha e iterador it[u]: desce consumindo arestas, e ao travar
+  desempilha gravando o vertice; no fim o caminho e invertido.
+  Graus: nao dirigido aceita 0 ou 2 impares (comeca num impar); dirigido exige
+  0 ou 1 vertice com out-in=1 e 0 ou 1 com in-out=1. O tamanho final m+1
+  confirma a conexidade das arestas.
+
+* Problemas e reducoes:
+  + Circuito euleriano: todos os graus pares (dirigido: in == out).
+  + Trilha euleriana: 0 ou 2 impares (dirigido: um inicio e um fim).
+  + Sequencia de de Bruijn: trilha euleriana no grafo de k-1 uplas.
+  + Cobertura minima por trilhas: max(1, #impares/2) por componente.
+  + Rota com cada aresta uma vez: decomponha em trilhas eulerianas.
+
+Cuidados: exige conexidade das arestas (checada por tamanho == m+1). Self-loops
+  ok. Sem arestas retorna vazio, nao {0}. Para multigrafo use ids de aresta.
+Catalogo: Grafos (euleriano, Hierholzer, de Bruijn, trilhas).
+Digitacao: 53 linhas | media. Atalho: euler_und e euler_dir compartilham todo
+  o laco de pilha/iterador; una com uma flag.
+*****************************LATEX_DESC_END*/

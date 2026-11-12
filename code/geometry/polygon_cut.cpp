@@ -1,12 +1,4 @@
 // Corte de poligono por semiplano (Sutherland-Hodgman)
-//
-// O que faz: devolve a parte do poligono que fica a esquerda (ou sobre) da reta orientada a->b.
-// Quando usar: Catalogo > Geometria (recorte de poligono, HPI incremental, kernel de poligono).
-// Complexidade: O(n) por corte.
-// Uso: vector<Pd> g; g = cutPoly(g, a, b);  // mantem lado esquerdo de a->b
-//   Para HPI simples: comece com uma caixa grande e corte por cada semiplano (O(n*m)).
-// Cuidados: funciona para poligono convexo (resultado convexo); em nao convexo pode gerar
-//   arestas degeneradas sobre a reta. Resultado vazio => vetor vazio.
 
 struct Pd {
   long double x, y;
@@ -36,3 +28,32 @@ long double polyArea(const vector<Pd> &g) {  // area (nao sinalizada)
   for (int i = 0, n = g.size(); i < n; i++) s += cross(g[i], g[(i + 1) % n]);
   return fabsl(s) / 2;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Corte de poligono por semiplano (Sutherland-Hodgman)**
+Devolve a parte do poligono que fica a esquerda (ou sobre) da reta orientada a -> b.
+
+Complexidade: O(n) por corte
+Uso:
+  vector<Pd> g;
+  g = cutPoly(g, a, b);           // mantem o lado esquerdo de a->b
+  long double ar = polyArea(g);   // area nao sinalizada
+  // HPI simples: comece com uma caixa grande e corte por cada semiplano (O(n*m))
+
+* Sobre o codigo:
+  Para cada aresta p->q, sp e sq sao os lados de p e q. Mantem p se sp >= -E e adiciona o
+  ponto de cruzamento quando os sinais sao opostos (sem contar toque). Resultado vazio =>
+  vetor vazio.
+
+* Problemas e reducoes:
+  + Recorte de poligono por uma reta/semiplano.
+  + HPI incremental com caixa grande.
+  + Kernel de um poligono por cortes sucessivos.
+  + Area da parte recortada: polyArea.
+
+Cuidados: funciona para poligono convexo (resultado convexo); em nao convexo pode gerar
+  arestas degeneradas sobre a reta. E = 1e-12; coordenadas reais. Nao fecha o poligono
+  duplicando o primeiro vertice (as funcoes usam (i+1)%n).
+Catalogo: Geometria.
+Digitacao: 26 linhas | facil. Atalho: ok.
+*****************************LATEX_DESC_END*/

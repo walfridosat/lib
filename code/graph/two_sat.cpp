@@ -1,22 +1,4 @@
-// 2-SAT
-//
-// O que faz: decide satisfatibilidade de clausulas de 2 literais e devolve uma atribuicao.
-// Quando usar: Catalogo > Grafos ("Restricoes booleanas de 2 variaveis -> 2-SAT",
-//   "2-SAT com cardinalidade no maximo uma de k", "2-SAT com escolha de 2 opcoes por item",
-//   2-SAT binaria/incremental).
-// Complexidade: O(n + clausulas)
-// Uso: TwoSat ts(n);  variaveis 0..n-1, literal (x, true) = x verdadeiro.
-//   ts.add_or(x,vx, y,vy)   : (x==vx) OU (y==vy)
-//   ts.imply(x,vx, y,vy)    : (x==vx) => (y==vy)
-//   ts.set(x,v)             : x == v  (forcado)
-//   ts.at_most_one(vector<int> vars) : no maximo um verdadeiro (O(k) clausulas, aux vars:
-//                                      crie ts com folga: n + soma dos k)
-//   bool ok = ts.solve(); ts.val[x] = atribuicao.
-// Cuidados: at_most_one cria variaveis novas (ts.n cresce) - chame ANTES de solve e use
-//   val so para os indices originais. "Variavel forcada": x forcado a true se x==false
-//   leva a contradicao (rode solve com set(x,false)); menor lexicografica: tente fixar
-//   x=false e resolver de novo (O(n*(n+m))). Ordem das comps: Tarjan => comp menor = depois
-//   na ordem topologica; x verdadeiro se comp[x] < comp[!x].
+// 2-SAT - satisfatibilidade e atribuicao
 struct TwoSat {
     int n;                      // numero de variaveis
     vector<vector<int>> g;      // no 2*x = x verdadeiro, 2*x+1 = x falso
@@ -78,3 +60,40 @@ struct TwoSat {
         return true;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **2-SAT - satisfatibilidade e atribuicao**
+Decide clausulas de 2 literais e devolve uma atribuicao. Variaveis 0..n-1;
+literal (x, true) = x verdadeiro.
+
+Complexidade: O(n + clausulas)
+Uso:
+  TwoSat ts(n);
+  ts.add_or(x, vx, y, vy);    // (x==vx) OU (y==vy)
+  ts.imply(x, vx, y, vy);     // (x==vx) => (y==vy)
+  ts.set(x, v);               // x == v (forcado)
+  ts.at_most_one(vars);       // no maximo um verdadeiro
+  bool ok = ts.solve();       // ts.val[x] = atribuicao
+
+* Sobre o codigo:
+  No 2*x = x verdadeiro, 2*x+1 = x falso. add_or cria as duas implicacoes.
+  at_most_one usa variaveis prefixo p_i = x_0 | ... | x_i, com O(k) clausulas.
+  solve roda Tarjan nas 2n implicacoes; x e verdadeiro sse comp[2x] < comp[2x+1]
+  (Tarjan numera sumidouros primeiro).
+
+* Problemas e reducoes:
+  + Restricoes booleanas de 2 variaveis: cada clausula vira add_or.
+  + "No maximo um de k": at_most_one, O(k) clausulas com variaveis auxiliares.
+  + "Exatamente um de k": at_most_one + ao menos um (OR de todos).
+  + Escolha de 2 opcoes por item: variavel por item; proiba pares invalidos.
+  + Variavel forcada: x e true sse set(x, false) for insatisfativel.
+  + Menor atribuicao lexicografica: fixe x=false e rode solve de novo,
+    O(n*(n+m)).
+  + Busca binaria/incremental: re-rode solve apos adicionar clausulas.
+
+Cuidados: at_most_one cria variaveis novas (n cresce); chame ANTES de solve e
+  use val so para os indices originais. Ordem: Tarjan => comp menor = mais a
+  frente. Se n for grande, at_most_one com n + soma dos k tem folga.
+Catalogo: Grafos (2-SAT, cardinalidade no maximo um, escolha de 2 opcoes).
+Digitacao: 61 linhas | dificil. Atalho: solve repete o Tarjan de scc_tarjan;
+  extraia a funcao de SCC.
+*****************************LATEX_DESC_END*/

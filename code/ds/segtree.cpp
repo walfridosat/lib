@@ -1,12 +1,4 @@
-// Segtree lazy (soma em intervalo + soma em range)
-//
-// O que faz: arvore recursiva com lazy para somar val em [l, r] e consultar a soma
-//            de [l, r] em O(log n); 0-indexada.
-// Quando usar: Catalogo > Estruturas de dados e queries (Segtree, lazy propagation).
-//            Para update pontual use code/ds/seg_t.cpp (iterativa, mais rapida).
-// Complexidade: O(n) para construir, O(log n) por update/query, O(n) memoria.
-// Uso: SegTree st(a); st.update(l, r, val); ll s = st.query(l, r); (intervalos inclusivos)
-// Cuidados: n >= 1; a soma pode estourar int (use ll); a arvore usa indices 1..4n.
+// Segtree lazy - range add e range sum
 
 class SegTree {
     private:
@@ -74,3 +66,28 @@ class SegTree {
             return query(1, 0, n - 1, l, r);
         }
     };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree Lazy de Soma**
+Arvore recursiva com lazy: soma val em [l, r] e consulta a soma de [l, r] em
+O(log n). 0-indexada, intervalos inclusivos.
+
+Complexidade: O(n) para construir, O(log n) por update/query, O(n) memoria.
+Uso:
+  SegTree st(a);
+  st.update(l, r, val);
+  ll s = st.query(l, r);   // intervalos inclusivos
+
+* Sobre o codigo:
+  lazy[node] acumula o que falta descer. push aplica a tag ao no e aos filhos;
+  updateRange e query decompoem [l, r] recursivamente.
+
+* Problemas e reducoes:
+  + Range add + range sum.
+  + Ponto apos varios range adds: query(i, i).
+  + Para min/max ou atribuicao use seg_lazy.cpp (ACL generica).
+
+Cuidados: n >= 1; a soma pode estourar int (use ll); a arvore usa indices
+  1..4n. Intervalos sao inclusivos, ao contrario das outras segtrees da lib.
+Catalogo: Estruturas de dados e queries (Segtree, lazy propagation).
+Digitacao: 59 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

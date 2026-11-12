@@ -1,19 +1,5 @@
-// Contagens diversas: hook length, floresta, graficidade, torneios, torres, Ryser
-//
-// O que faz: # SYT por hook length; extensoes lineares de floresta n!/prod sz;
-//   Erdos-Gallai (sequencia grafica), Gale-Ryser (bipartida), Landau (torneio);
-//   # 3-ciclos de torneio; permutacoes evitando posicoes proibidas dado r_k;
-//   permanente 0/1 por Ryser (Gray code, n <= ~25).
-// Quando usar: "Catalogo > Combinatoria" (Hook length e RSK; Ordens lineares em floresta;
-//   Possibilidade de grau; Torneios; Torres e posicoes proibidas; Permanente).
-// Complexidade: hook O(n); EG O(n log n); Ryser O(2^n * n).
+// Contagens diversas - hook, grafos, torneios, permanente
 // Requer: code/combinatorics/binom_mod.cpp (cole antes).
-// Uso: hook_syt(lambda) (precisa binom_mod.cpp: fact, pw, MOD);
-//   forest_orderings(sz, n) com sz = tamanhos das subarvores de cada no;
-//   erdos_gallai(d); gale_ryser(a, b); landau(s); tournament_3cycles(out);
-//   forbidden_perms(n, r) com r[k] = # modos de k torres nas posicoes proibidas;
-//   permanent01(a) com a n x n de 0/1 (mod 2^64 em unsigned; exato se resultado < 2^63).
-// Cuidados: Erdos-Gallai exige soma par; ordena internamente (decrescente).
 ll hook_syt(const vector<int>& lam) { // lam decrescente; n!/prod hooks
     int n = 0; for (int x : lam) n += x;
     int rows = lam.size(); ll den = 1;
@@ -43,7 +29,7 @@ bool erdos_gallai(vector<ll> d) {
     }
     return true;
 }
-// Gale-Ryser: existe matriz 0/1 com somas de linha a e de coluna b?
+// Gale-Ryser: matriz 0/1 com somas a e b?
 bool gale_ryser(vector<ll> a, vector<ll> b) {
     ll sa = 0, sb = 0; for (ll x : a) sa += x; for (ll x : b) sb += x;
     if (sa != sb) return false;
@@ -59,7 +45,7 @@ bool gale_ryser(vector<ll> a, vector<ll> b) {
     }
     return true;
 }
-bool landau(vector<ll> s) { // placares de torneio: sum dos k menores >= C(k,2), total = C(n,2)
+bool landau(vector<ll> s) { // placares de torneio (Landau)
     sort(s.begin(), s.end());
     ll pre = 0; int n = s.size();
     for (int k = 1; k <= n; k++) { pre += s[k-1]; if (pre < (ll)k * (k - 1) / 2) return false; }
@@ -78,7 +64,7 @@ ll forbidden_perms(int n, const vector<ll>& r) { // sum (-1)^k r_k (n-k)!
     }
     return s % MOD;
 }
-// Permanente de matriz 0/1 (n <= ~25): Ryser com Gray code. Resultado exato em ll.
+// permanente 0/1: Ryser com Gray code
 ll permanent01(const vector<vector<int>>& a) {
     int n = a.size(); vector<ll> rs(n, 0);
     ll tot = 0; unsigned g = 0;
@@ -93,3 +79,37 @@ ll permanent01(const vector<vector<int>>& a) {
     }
     return tot;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Contagens diversas (hook, grafos, torneios, permanente)**
+Hook length, extensoes de floresta, Erdos-Gallai, Gale-Ryser, Landau, posicoes proibidas e permanente 0/1.
+
+Complexidade: hook O(n); EG O(n log n); Ryser O(2^n n).
+Uso:
+  ll h = hook_syt(lambda);
+  ll fo = forest_orderings(sz, n);
+  bool eg = erdos_gallai(d), gr = gale_ryser(a, b), la = landau(s);
+  ll t3 = tournament_3cycles(out);
+  ll fp = forbidden_perms(n, r);        // r[k] = # k torres proibidas
+  ll pm = permanent01(a);               // n <= ~25
+
+* Sobre o codigo:
+  hook_syt divide n! pelo produto dos hooks. forest_orderings divide por
+  prod sz. Erdos-Gallai/Gale-Ryser/Landau testam as desigualdades classicas.
+  forbidden_perms faz inclusao-exclusao com r_k. permanent01 usa Ryser com
+  Gray code, somando produtos de somas de colunas.
+
+* Problemas e reducoes:
+  + Numero de tabelas de Young de forma lambda -> hook_syt.
+  + Ordenacoes lineares compativeis com uma floresta -> forest_orderings.
+  + Saber se uma sequencia de graus realiza um grafo simples -> erdos_gallai.
+  + Saber se somas de linha/coluna realizam matriz 0/1 -> gale_ryser.
+  + Saber se placares realizam um torneio -> landau.
+  + Numero de 3-ciclos de um torneio -> tournament_3cycles.
+  + Permutacoes que evitam posicoes proibidas -> forbidden_perms.
+  + Permanente de matriz 0/1 (matching perfeito contado) -> permanent01.
+
+Cuidados: Erdos-Gallai exige soma par; ordena internamente (decrescente).
+  permanent01 e mod 2^64 em unsigned e exato so se o resultado < 2^63.
+Catalogo: Combinatoria.
+Digitacao: 79 linhas | dificil. Atalho: erdos_gallai e gale_ryser repetem somas parciais; helper comum.
+*****************************LATEX_DESC_END*/

@@ -1,14 +1,4 @@
 // Trie (arvore de prefixos) para minusculas
-//
-// O que faz: insert(p) insere a palavra p; count(p) devolve quantas vezes p foi
-//            inserida (0 se nao existe); terminal guarda o numero de ocorrencias.
-// Quando usar: Catalogo > Strings (trie). Gatilhos: prefixos, contagem de palavras,
-//            max xor (trie de bits), Aho-Corasick, autômato de dicionario.
-// Complexidade: O(|p|) por insercao/consulta; O(MAXS * sigma) memoria.
-// Uso: init(); insert(p); int k = count(p); (init e chamado automaticamente na 1a vez)
-// Cuidados: MAXS = soma dos |p| + 1 (ajuste ao problema); sigma = 26 e 'a'..'z';
-//            para varias execucoes/subcasos chame init() para zerar; a trie de bits
-//            usa sigma = 2 e os bits do valor, nao caracteres.
 const int MAXS = 1000005; // nos totais: soma dos |p|
 const int sigma = 26;
 
@@ -52,3 +42,31 @@ int count(string &p){
 	}
 	return terminal[cur];
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Trie (arvore de prefixos) para minusculas**
+insert(p) insere p; count(p) devolve quantas vezes p foi inserida (0 se nao
+existe); terminal guarda o numero de ocorrencias.
+
+Complexidade: O(|p|) por insercao/consulta; O(MAXS * sigma) memoria.
+Uso:
+  init(); insert(p); int k = count(p);
+  (init e chamado automaticamente na 1a vez)
+  MAXS = soma dos |p| + 1; sigma = 26 e 'a'..'z'.
+
+* Sobre o codigo:
+  trie[cur][id] e o filho; terminal[cur] conta palavras que terminam no no.
+  init zera o no 0; insert cria nos com memset(-1) e count para no primeiro
+  filho ausente. Para varias execucoes/subcasos chame init().
+
+* Problemas e reducoes:
+  + Prefixos e contagem de palavras: insert/count.
+  + Max xor: trie de bits, sigma = 2 e os bits do valor.
+  + Base para Aho-Corasick: mesma trie com links.
+  + Dicionario/autocomplete: armazene mais dados por no.
+
+Cuidados: MAXS = soma dos |p| + 1 (ajuste ao problema); sigma = 26 e
+  'a'..'z'; para varias execucoes/subcasos chame init(); a trie de bits usa
+  sigma = 2 e os bits do valor, nao caracteres.
+Catalogo: Strings (trie).
+Digitacao: 32 linhas | facil. Atalho: ok.
+*****************************LATEX_DESC_END*/

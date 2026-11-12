@@ -1,22 +1,4 @@
-// Heavy-Light Decomposition + segtree sobre monoide (caminho e subarvore)
-//
-// O que faz: decompoe a arvore em cadeias pesadas; vertices numerados em ordem de
-//   DFS com filho pesado primeiro, entao cada cadeia E cada subarvore sao
-//   intervalos contiguos de pos[]. HLDSeg<M> guarda um monoide em pos[] e
-//   responde query de caminho (ate nao comutativo), subarvore e update pontual.
-// Quando usar: queries/updates de caminho ou subarvore com updates
-//   (Catalogo > Arvores, "HLD com segtree", "HLD: query nao comutativa",
-//   "Arvore com updates em aresta" -> peso da aresta no filho).
-// Complexidade: build O(n); caminho O(log^2 n); subarvore O(log n); LCA O(log n).
-// Uso: HLD h(g, raiz);  h.lca(u,v);  h.pos[v], h.sz[v], h.head[v], h.par[v], h.dep[v].
-//   Monoide M: typedef T; static T id(); static T op(T a,T b); static T rev(T a)
-//   (rev inverte o sentido do segmento; identidade se op e comutativa).
-//   HLDSeg<M> s(h, valores_por_vertice);
-//   s.set(v, x); s.path(u,v,edges): valor do caminho u->v NA ORDEM u...v;
-//   edges=true -> valores nas arestas guardados no filho (exclui o LCA);
-//   s.subtree(v, edges).   0-based.
-// Cuidados: para update de intervalo/lazy use pos[] com uma segtree lazy de ds/.
-//   Sem recursao (DFS por pilha). Para path em ordem u->v o rev e necessario.
+// HLD - heavy-light com segtree de monoide
 struct HLD {
     int n;
     vector<int> par, dep, sz, heavy, head, pos, ord;
@@ -35,7 +17,7 @@ struct HLD {
         }
         int t = 0;
         vector<int> st = {r}; head[r] = r;
-        while (!st.empty()) {               // preordem: filho pesado e o ultimo empilhado (sai primeiro)
+        while (!st.empty()) {               // filho pesado empilhado por ultimo (sai 1o)
             int v = st.back(); st.pop_back();
             pos[v] = t; ord[t++] = v;
             for (int w : g[v]) if (w != par[v] && w != heavy[v]) { head[w] = w; st.push_back(w); }
@@ -82,7 +64,7 @@ template<class M> struct HLDSeg {
         return l > r ? M::id() : seg(l, r);
     }
     T path(int u, int v, bool edges = false) const {
-        T L = M::id(), R = M::id();        // L: lado de u (ordem u->cima), R: lado de v (ordem cima->v)
+        T L = M::id(), R = M::id();        // L: lado de u; R: lado de v (ordem correta)
         while (h.head[u] != h.head[v]) {
             if (h.dep[h.head[u]] >= h.dep[h.head[v]]) {
                 L = M::op(L, M::rev(seg(h.pos[h.head[u]], h.pos[u]))); u = h.par[h.head[u]];
@@ -101,3 +83,41 @@ template<class M> struct HLDSeg {
         return M::op(L, R);
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **HLD + segtree de monoide**
+Decompoe em cadeias pesadas; vertices numerados em DFS com filho pesado
+primeiro, entao cada cadeia e cada subarvore sao intervalos contiguos de pos[].
+HLDSeg<M> guarda um monoide em pos[] e responde caminho (ate nao comutativo),
+subarvore e update pontual. 0-based.
+
+Complexidade: build O(n); caminho O(log^2 n); subarvore O(log n); LCA O(log n)
+Uso:
+  HLD h(g, raiz);   // h.lca(u,v), h.pos[v], h.sz[v], h.head[v], h.par[v], h.dep[v]
+  // monoide M: typedef T; static T id(); static T op(T a, T b);
+  //            static T rev(T a)  (inverte o segmento; id se op e comutativa)
+  HLDSeg<M> s(h, valores_por_vertice);
+  s.set(v, x);
+  s.path(u, v, edges);    // valor do caminho u->v NA ORDEM u...v
+  s.subtree(v, edges);    // subtree; edges=true usa valores guardados no filho
+  // edges=true exclui o LCA (peso de aresta fica no filho)
+
+* Sobre o codigo:
+  pre[] da a ordem da BFS; sz e heavy sao calculados de baixo para cima; a
+  preordem com pilha numera pos[] de modo que cadeias e subarvores sao
+  intervalos. HLDSeg e uma segtree iterativa 2n sobre pos[].
+  path(u,v) sobe pelas cadeias; L acumula o lado de u (com rev) e R o de v.
+
+* Problemas e reducoes:
+  + Query/update de caminho com monoide qualquer (soma, max, min, GCD).
+  + Query nao comutativa: rev corrige o sentido de u para v.
+  + Query de subarvore: intervalo [pos[v], pos[v]+sz[v]-1].
+  + Pesos de aresta: guarde no filho e use edges=true (exclui o LCA).
+  + LCA em O(log n) e distancia por profundidade.
+  + Update de intervalo/lazy: use pos[] com segtree lazy de ds/.
+
+Cuidados: iterativo (sem recursao). Sem op comutativa, esquecer rev inverte
+  o resultado. Para lazy, esta segtree nao serve; troque por uma de ds/.
+Catalogo: Arvores (HLD com segtree, query nao comutativa, updates em aresta).
+Digitacao: 82 linhas | dificil. Atalho: path e subtree compartilham seg();
+  para op comutativa rev e dispensavel.
+*****************************LATEX_DESC_END*/

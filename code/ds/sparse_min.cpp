@@ -1,11 +1,4 @@
-// Sparse table para minimo em intervalo estatico
-//
-// O que faz: pre-processa um array e responde min(a[l..r]) em O(1).
-// Quando usar: Catalogo > Estruturas de dados e queries (Sparse table).
-//   Array estatico, muitas consultas de min/max/gcd/OR/AND.
-// Complexidade: build O(n log n), memoria O(n log n), query O(1).
-// Uso: SparseMin st(a); st.query(l, r) com 0 <= l <= r < n.
-// Cuidados: so vale para operacoes idempotentes (min, max, gcd, OR, AND).
+// Sparse table - minimo em intervalo estatico
 struct SparseMin {
     vector<vector<ll>> t;
     vector<int> lg;
@@ -25,3 +18,26 @@ struct SparseMin {
         return min(t[j][l], t[j][r - (1 << j) + 1]);
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Sparse Table de Minimo**
+Pre-processa um array estatico e responde min(a[l..r]) em O(1). 0-based.
+
+Complexidade: build O(n log n), memoria O(n log n), query O(1).
+Uso:
+  SparseMin st(a);
+  ll mn = st.query(l, r);   // 0 <= l <= r < n
+
+* Sobre o codigo:
+  t[j][i] = minimo de 2^j posicoes a partir de i; lg precalcula o piso do log.
+  A query cobre [l, r] com dois blocos de tamanho 2^j que se sobrepoem.
+
+* Problemas e reducoes:
+  + RMQ estatico de min/max com muitas consultas.
+  + LCA O(1) via Euler tour + profundidade.
+  + gcd em intervalo (operacao idempotente).
+  + OR/AND em intervalo.
+
+Cuidados: so vale para operacoes idempotentes (min, max, gcd, OR, AND).
+Catalogo: Estruturas de dados e queries (Sparse table).
+Digitacao: 19 linhas | facil. Atalho: ok.
+*****************************LATEX_DESC_END*/

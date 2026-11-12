@@ -1,13 +1,4 @@
 // Hash 2D de submatrizes (mod 2^61-1)
-//
-// O que faz: hash de qualquer submatriz em O(1); permite achar padrao 2D,
-//   submatrizes iguais de tamanho fixo (set de hashes), simetrias, etc.
-// Quando usar: Catalogo > Strings ("Hash 2D").
-// Complexidade: build O(nm); get O(1).
-// Uso: Hash2D H(v) com v = vector<string>;
-//   H.get(x1,y1,x2,y2) = hash da submatriz linhas [x1,x2) colunas [y1,y2).
-//   Duas submatrizes de mesmo tamanho sao iguais sse hashes iguais.
-// Cuidados: usa duas bases aleatorias (uma por eixo). Compare so tamanhos iguais.
 typedef unsigned long long ull;
 const ull H2M = (1ULL << 61) - 1;
 ull h2mul(ull a, ull b) {
@@ -45,3 +36,31 @@ struct Hash2D {
 		return r;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Hash 2D de submatrizes (mod 2^61-1)**
+Hash de qualquer submatriz em O(1); permite achar padrao 2D, submatrizes
+iguais de tamanho fixo (set de hashes), simetrias etc. 0-indexed.
+
+Complexidade: build O(nm); get O(1).
+Uso:
+  Hash2D H(vector<string> v);
+  ull h = H.get(x1, y1, x2, y2); // linhas [x1,x2), colunas [y1,y2)
+  Duas submatrizes de mesmo tamanho sao iguais sse os hashes sao iguais.
+
+* Sobre o codigo:
+  h[i][j] e a soma a[x][y] * B1^(i-1-x) * B2^(j-1-y) (prefixo 2D com
+  inclusao-exclusao). p1/p2 guardam as potencias de B1/B2; get desfaz as
+  quatro bordas. Aritmetica em mod 2^61-1 com __uint128_t.
+
+* Problemas e reducoes:
+  + Hash de submatriz: H.get(x1, y1, x2, y2).
+  + Busca de padrao 2D: hashes de janelas do mesmo tamanho.
+  + Submatrizes iguais de tamanho fixo: set de hashes.
+  + Simetrias/translacoes de tabuleiro: compare hashes de regioes.
+  + Verificar repeticao de blocos: hashes de cada bloco.
+
+Cuidados: usa duas bases aleatorias (uma por eixo). Compare so submatrizes
+  do mesmo tamanho. 0-indexed. n = 0 e tratado (m = 0).
+Catalogo: Strings (hash 2D).
+Digitacao: 37 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

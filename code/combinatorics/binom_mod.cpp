@@ -1,17 +1,4 @@
 // Fatoriais e binomiais modulo primo
-//
-// O que faz: pre-calcula fact, ifact e inv_[1..N]; responde C(n,k), P(n,k),
-//   multinomial, estrelas e barras (com e sem limite superior) e somas
-//   parciais de binomiais S(n,m)=sum_{i<=m} C(n,i) deslizando n e m em O(1).
-// Quando usar: "Catalogo > Combinatoria, contagem e probabilidade" (fatorial ate 1e6,
-//   estrelas e barras, IE com limites, somas parciais de binomiais).
-// Complexidade: init O(N); cada consulta O(1) (bounded_sb: O(k)).
-// Uso: init_comb(N) uma vez (N < MAXN). C(n,k) com 0<=k<=n<=N, senao devolve 0.
-//   multiset(n,k) = multiconjuntos de tamanho k de n tipos = C(n+k-1,k).
-//   bounded_sb(n,k,u) = # (x_1..x_k) com 0<=x_i<=u e soma n.
-//   PartialBinom pb(n,m); pb.n_up(); pb.m_up(); ... mantem S(n,m).
-// Cuidados: MOD deve ser primo > N. n fora de [0,N] nao e tratado (use
-//   lucas.cpp ou binom_general.cpp). Para n ate 1e18 e k pequeno use C_big.
 const ll MOD = 998244353;
 const int MAXN = 2000005;
 ll fact[MAXN], ifact[MAXN], inv_[MAXN];
@@ -45,14 +32,14 @@ ll multiset(ll n, ll k) { // n tipos, escolhe k com repeticao
     if (n == 0) return k == 0;
     return C(n + k - 1, k);
 }
-// C(n,k) com n ate 1e18 e k pequeno (k < MOD): produto direto, precisa ifact[k]
+// C(n,k) com n grande e k pequeno (k < MOD)
 ll C_big(ll n, ll k) {
     if (k < 0 || k > n) return 0;
     ll r = 1;
     for (ll i = 0; i < k; i++) r = r * ((n - i) % MOD) % MOD;
     return r * ifact[k] % MOD;
 }
-// # solucoes de x_1+..+x_k = n com 0<=x_i<=u, por IE: sum_j (-1)^j C(k,j) C(n-j(u+1)+k-1,k-1)
+// solucoes com 0<=x_i<=u, por inclusao-exclusao
 ll bounded_sb(ll n, ll k, ll u) {
     ll r = 0;
     for (ll j = 0; j <= k && n - j * (u + 1) >= 0; j++) {
@@ -61,7 +48,7 @@ ll bounded_sb(ll n, ll k, ll u) {
     }
     return r;
 }
-// Soma parcial S(n,m)=sum_{i<=m} C(n,i), movendo n,m em O(1) por passo
+// S(n,m)=sum_{i<=m} C(n,i), move n,m em O(1)
 struct PartialBinom {
     ll n, m, S;
     PartialBinom(ll n_, ll m_) : n(n_), m(m_) { // calcula S inicial em O(m)
@@ -72,3 +59,35 @@ struct PartialBinom {
     void m_up() { m++; S = (S + C(n, m)) % MOD; }
     void m_down() { S = (S - C(n, m) + MOD) % MOD; m--; }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Fatoriais e binomiais mod primo**
+Pre-calcula fatorial, inverso do fatorial e inversos; responde C, P, multinomial e somas parciais.
+
+Complexidade: init O(N); consulta O(1) (bounded_sb O(k)).
+Uso:
+  init_comb(N);                 // N < MAXN
+  ll c = C(n, k), p = P(n, k);
+  ll m = multinomial(v), ms = multiset(n, k);
+  ll b = bounded_sb(n, k, u);
+  PartialBinom pb(n, m); pb.n_up(); pb.m_up(); // S(n,m) = sum_{i<=m} C(n,i)
+
+* Sobre o codigo:
+  fact/ifact em O(N); inv_ e o inverso linear. C e P checam o intervalo.
+  multiset e estrelas e barras; bounded_sb aplica inclusao-exclusao.
+  C_big usa produto direto para k pequeno. PartialBinom move n e m em O(1):
+  S(n+1,m) = 2S(n,m) - C(n,m).
+
+* Problemas e reducoes:
+  + C(n,k) e P(n,k) mod primo com n <= 1e6 -> init_comb + C/P.
+  + Estrelas e barras (multiconjuntos) -> multiset(n,k).
+  + Solucoes de x_1+...+x_k = n com 0 <= x_i <= u -> bounded_sb.
+  + Somas parciais sum_{i<=m} C(n,i) com n,m variando -> PartialBinom.
+  + Multinomial (arranjos de grupos) -> multinomial.
+  + C(n,k) com n ate 1e18 e k pequeno -> C_big.
+  + Probabilidades combinatorias mod p -> C/P.
+
+Cuidados: MOD primo > N; n fora de [0, N] nao e tratado (use lucas.cpp ou
+  binom_general.cpp); bounded_sb e O(k).
+Catalogo: Combinatoria, contagem e probabilidade.
+Digitacao: 60 linhas | media. Atalho: C e P repetem a checagem de intervalo; helper comum.
+*****************************LATEX_DESC_END*/

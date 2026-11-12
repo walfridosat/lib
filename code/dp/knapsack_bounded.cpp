@@ -1,12 +1,4 @@
-// Mochila limitada (bounded knapsack): fila monotona e binary splitting
-//
-// O que faz: maximiza valor com itens (peso w_i, valor v_i, quantidade c_i), capacidade W.
-//   knap_deque: O(nW) com deque por residuo; knap_split: O(nW log c) por binary splitting.
-// Quando usar: Catalogo > DP > "Mochila limitada por binary splitting", "Mochila limitada com fila monotona".
-// Complexidade: knap_deque O(n*W); knap_split O(W * sum log c_i).
-// Uso: vector<ll> dp = knap_deque(W, w, v, c); dp[x] = melhor valor com peso total <= x (dp[0..W]).
-//   w,v,c vetores de mesmo tamanho (w>0, v>=0). Para peso exato, inicialize dp[x>0] = -INF (e use cuidado com INF).
-// Cuidados: ordem do laco na 0/1 (W decrescente). Valores negativos de v nao tratados. c_i pode ser enorme (clamp em W/w).
+// Mochila limitada - fila monotona e binary splitting
 vector<ll> knap_deque(int W, const vector<int>& w, const vector<ll>& v, const vector<ll>& c){
     vector<ll> dp(W+1, 0), nd(W+1);
     int n = w.size();
@@ -40,3 +32,31 @@ vector<ll> knap_split(int W, const vector<int>& w, const vector<ll>& v, const ve
     }
     return dp;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Mochila limitada (bounded knapsack)**
+Maximiza valor com itens (peso w_i, valor v_i, quantidade c_i), capacidade W.
+knap_deque: O(nW) com deque por residuo. knap_split: O(nW log c) por binary
+splitting. Devolve dp[0..W], dp[x] = melhor valor com peso total <= x.
+
+Complexidade: knap_deque O(n*W); knap_split O(W * sum log c_i).
+Uso:
+  vector<ll> dp = knap_deque(W, w, v, c);
+  vector<ll> dp2 = knap_split(W, w, v, c);
+
+* Sobre o codigo:
+  knap_deque percorre cada residuo r mod w[i] e mantem uma janela deslizante de
+  cnt+1 candidatos com deque monotona de valores dp[r+k*w]-k*v. knap_split
+  quebra c em pacotes 1,2,4,... e resolve como 0/1.
+
+* Problemas e reducoes:
+  + Mochila com quantidade limitada de cada item.
+  + Troco minimo/maximo com numero limitado de moedas.
+  + Contagem de formas com multiplicidades (troque max por soma).
+
+Cuidados: na 0/1, o laco de W e decrescente. Valores negativos de v nao sao
+  tratados. c_i enorme: o codigo ja limita em W/w[i]. Para peso exato,
+  inicialize dp[x>0] = -INF.
+Catalogo: DP > Mochila limitada (binary splitting / fila monotona).
+Digitacao: 33 linhas | media. Atalho: knap_split e mais curto; use-o se log c
+  for aceitavel, deixando knap_deque so quando O(nW) for necessario.
+*****************************LATEX_DESC_END*/

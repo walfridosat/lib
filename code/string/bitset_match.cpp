@@ -1,14 +1,4 @@
 // Matching e LCS com bitset
-//
-// O que faz: (1) ocorrencias de p em t por bitset (util quando ha variacoes tipo
-//   "casa com classe de chars" ou varios deslocamentos); (2) LCS de duas strings em O(nm/w).
-// Quando usar: Catalogo > Strings ("LCS com bitset", "Padrao em texto" com bitset).
-// Complexidade: match O(|p|*|t|/w); lcs O(|t|*|s|/w).
-// Uso: bit_match(t, p) -> vector<int> posicoes iniciais (0-based) de p em t. (|t| <= BN)
-//   lcs_bits(s, t) -> tamanho do LCS de s e t.
-// Cuidados: BN e o tamanho do bitset do match; ajuste ao limite. Para casar '?' em p,
-//   pule o caractere (nao faz AND) no match. lcs_bits nao usa bitset fixo: aloca
-//   palavras de 64 bits do tamanho de s e faz a soma com carry manualmente.
 const int BN = 100005;
 vector<int> bit_match(const string& t, const string& p) {
 	int n = t.size(), m = p.size();
@@ -21,7 +11,7 @@ vector<int> bit_match(const string& t, const string& p) {
 	for (int i = 0; i + m <= n; i++) if (res[i]) r.push_back(i);
 	return r;
 }
-// LCS bit-paralelo (Hyyrö): V = (V + (V & M[c])) | (V & ~M[c]); resposta = zeros de V.
+// LCS bit-paralelo (Hyyro): V = (V + (V & M[c])) | (V & ~M[c]); resposta = zeros de V.
 int lcs_bits(const string& s, const string& t) {
 	int n = s.size();
 	if (n == 0 || t.empty()) return 0;
@@ -46,3 +36,31 @@ int lcs_bits(const string& s, const string& t) {
 	for (int i = 0; i < n; i++) zeros += !((V[i >> 6] >> (i & 63)) & 1);
 	return zeros;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Matching e LCS com bitset**
+(1) Ocorrencias de p em t por bitset, util com classes de caracteres ou
+varios deslocamentos; (2) LCS de duas strings em O(nm/w).
+
+Complexidade: match O(|p| |t| / w); lcs O(|t| |s| / w).
+Uso:
+  vector<int> pos = bit_match(t, p); // posicoes iniciais 0-based (|t| <= BN)
+  int l = lcs_bits(s, t);            // tamanho do LCS de s e t
+
+* Sobre o codigo:
+  bit_match monta pos[c] com as posicoes de c em t e faz res &= pos[p[j]] >> j;
+  o bit i fica 1 quando t[i+j] == p[j] para todo j. lcs_bits usa o algoritmo
+  de Hyyro: V = (V + (V & M[c])) | (V & ~M[c]) com carry manual entre
+  palavras de 64 bits; a resposta e o numero de zeros.
+
+* Problemas e reducoes:
+  + Padrao em texto com bitset: bit_match devolve os inicios.
+  + Casamento com '?' no padrao: pule o caractere (nao faz AND) no match.
+  + LCS de duas strings: lcs_bits, O(nm/64).
+  + Comparar muitas posicoes de uma vez: bit-paralelismo.
+  + Maior subsequencia comum como base para diff.
+
+Cuidados: BN e o tamanho do bitset do match; ajuste ao limite. lcs_bits nao
+  usa bitset fixo: aloca palavras de 64 bits do tamanho de s. 0-indexed.
+Catalogo: Strings (LCS com bitset, padrao em texto com bitset).
+Digitacao: 37 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

@@ -1,12 +1,4 @@
-// Codigo de Gray
-//
-// O que faz: g(i) = i ^ (i>>1) percorre todas as mascaras mudando 1 bit por passo; inversa; enumeracao de subset sums em O(1)/passo.
-// Quando usar: percorrer 2^n subconjuntos atualizando soma/estado incrementalmente; hipercubo hamiltoniano; Hanoi/aneis chineses.
-//              Catalogo > Construtivos (Gray code), Bits e XOR (Ordem de Gray)
-// Complexidade: O(1) por passo
-// Uso: gray(i); ungray(g); em loop: for i in 1..2^n-1: bit = __builtin_ctz(i) e o bit que mudou de g(i-1) para g(i).
-//      forEachSubsetSum(a, f): chama f(mask, soma) para os 2^n subconjuntos (n <= ~25).
-// Cuidados: o bit alterado do passo i (i>=1) e ctz(i); mask comeca em 0.
+// Codigo de Gray - mascaras mudando 1 bit por passo
 ll gray(ll i) { return i ^ (i >> 1); }
 ll ungray(ll g) { ll i = 0; for (; g; g >>= 1) i ^= g; return i; }   // inversa: prefixo xor dos bits
 template<class F> void forEachSubsetSum(const vector<ll>& a, F f) {
@@ -18,3 +10,25 @@ template<class F> void forEachSubsetSum(const vector<ll>& a, F f) {
         f(mask, sum);
     }
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Codigo de Gray**
+g(i) = i ^ (i >> 1) percorre as 2^n mascaras mudando um bit por passo; ungray inverte.
+forEachSubsetSum atualiza a soma de cada subconjunto em O(1) por passo.
+
+Complexidade: O(1) por passo; O(2^n) para enumerar tudo
+Uso:
+  ll g = gray(i); ll j = ungray(g);
+  forEachSubsetSum(a, [&](ll mask, ll sum) { ... });  // n <= ~25
+
+* Sobre o codigo:
+  No passo i >= 1, o bit que muda e ctz(i); mask ^= 1 << bit.
+  forEachSubsetSum soma a[bit] se o bit entrou e subtrai se saiu.
+
+* Problemas e reducoes:
+  + Enumerar subconjuntos atualizando soma/estado incrementalmente.
+  + Hipercubo hamiltoniano e sequencias de Hanoi/aneis chineses.
+
+Cuidados: a enumeracao usa 1LL << n; mask comeca em 0 e o bit alterado e ctz(i).
+Catalogo: Construtivos (Gray code), Bits e XOR (Ordem de Gray)
+Digitacao: 11 linhas | facil.
+*****************************LATEX_DESC_END*/

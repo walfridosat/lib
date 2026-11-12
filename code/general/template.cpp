@@ -1,12 +1,4 @@
-// Template base para colar no inicio do arquivo
-//
-// O que faz: includes, macros (FORI, FORJ, endl, pb, all, pii), solve() vazio e main
-//            com fast IO e laco de T casos (T = 1 por padrao).
-// Quando usar: Catalogo > Como usar quando travar, e o prelude de todos os trechos.
-// Complexidade: O(1).
-// Uso: cole este arquivo e escreva o corpo em solve(); descomente cin >> t para T casos.
-// Cuidados: endl aqui e '\n' (sem flush); em interativos use '\n' << flush explicitamente;
-//            evite nomes que colidam com as macros (all, pii) em funcoes da biblioteca.
+// Template base - includes, macros, solve e main
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -31,3 +23,23 @@ int main(){
 
     return 0;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Template Base**
+Includes, macros (FORI, FORJ, endl, pb, all, pii), solve() vazio e main com fast IO
+e um laco de T casos (T = 1 por padrao).
+
+Complexidade: O(1)
+Uso:
+  cole este arquivo e escreva o corpo em solve();
+  descomente cin >> t para T casos.
+
+* Sobre o codigo:
+  endl e '\n' (sem flush), entao em interativos use '\n' << flush.
+
+* Problemas e reducoes:
+  + Prelude de todos os trechos e ponto de partida quando travar.
+
+Cuidados: evite nomes que colidam com as macros (all, pii) em funcoes da biblioteca.
+Catalogo: Como usar quando travar
+Digitacao: 19 linhas | facil.
+*****************************LATEX_DESC_END*/

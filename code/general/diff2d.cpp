@@ -1,13 +1,4 @@
 // Prefixos 2D, diferencas 2D e maior submatriz de soma maxima
-//
-// O que faz: soma de retangulo em O(1); adicionar retangulo em O(1) (aplicar no fim); Kadane 2D.
-// Quando usar: muitas adicoes em retangulos + leitura final; soma de submatriz; "maior soma de submatriz".
-//              Catalogo > Arrays e guloso (Prefixo 2D e diferencas 2D, Maior soma de submatriz)
-// Complexidade: O(nm) construir, O(1) consulta; Kadane 2D O(min(n,m)^2 * max(n,m))
-// Uso: Pref2D P(g);  P.query(r1,c1,r2,c2) inclusivo, 0-based.
-//      Diff2D D(n, m); D.add(r1,c1,r2,c2,v); auto res = D.build();  res[i][j].
-//      maxSubmatrix(g) -> maior soma de submatriz nao vazia.
-// Cuidados: indices 0-based inclusivos; vetor 1-based interno; soma pode estourar int.
 struct Pref2D {
     int n, m; vector<vector<ll>> p;
     Pref2D(const vector<vector<ll>>& g) : n(g.size()), m(g.empty() ? 0 : g[0].size()), p(n + 1, vector<ll>(m + 1, 0)) {
@@ -56,3 +47,28 @@ ll maxSubmatrix(vector<vector<ll>> g) {
     }
     return best;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Prefixos 2D / Diferencas 2D / Maior Submatriz**
+Soma de retangulo em O(1); adicionar em retangulo em O(1) e aplicar no fim; Kadane 2D.
+Indices 0-based inclusivos.
+
+Complexidade: O(nm) construir e O(1) consulta; Kadane 2D O(min(n,m)^2 * max(n,m))
+Uso:
+  Pref2D P(g); ll s = P.query(r1, c1, r2, c2);
+  Diff2D D(n, m); D.add(r1, c1, r2, c2, v); auto res = D.build();
+  ll best = maxSubmatrix(g);  // maior soma de submatriz nao vazia
+
+* Sobre o codigo:
+  Pref2D usa p[i+1][j+1] = g[i][j] + cima + esquerda - diagonal.
+  Diff2D marca +v nos cantos e desfaz; build aplica o prefixo 2D.
+  maxSubmatrix fixa as linhas (lado menor) e roda Kadane nas colunas.
+
+* Problemas e reducoes:
+  + Muitas adicoes em retangulos com leitura final: Diff2D.
+  + Soma de qualquer submatriz: Pref2D.
+  + Maior soma de submatriz (nao vazia): maxSubmatrix.
+
+Cuidados: vetor 1-based interno; a soma pode estourar int (use ll).
+Catalogo: Arrays e guloso (Prefixo 2D e diferencas 2D, Maior soma de submatriz)
+Digitacao: 48 linhas | media.
+*****************************LATEX_DESC_END*/

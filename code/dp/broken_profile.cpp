@@ -1,12 +1,4 @@
-// Broken profile DP (plug DP simples): ladrilhar grade com dominos
-//
-// O que faz: conta (mod) o numero de ladrilhamentos de uma grade n x m com dominos 1x2, com celulas bloqueadas '#'.
-//   Processa celula a celula; mascara de m bits = "quais celulas da fronteira ja estao preenchidas".
-// Quando usar: Catalogo > DP > "Broken profile (plug DP simples)", grid com m <= ~12-15, ladrilhos, independentes em grade.
-// Complexidade: O(n * m * 2^m).
-// Uso: count_tilings(g) com g vetor de strings ('.' livre, '#' bloqueada); m = largura (a menor dimensao!). Retorna mod BP_MOD.
-// Cuidados: bit j da mascara na celula (i,j) = "celula (i,j) ja coberta"; ao processar, o bit passa a significar
-//   "celula (i+1,j) coberta". Para outro problema (independentes, cores) so troque as transicoes.
+// Broken profile (plug DP) - ladrilhar grade com dominos
 const ll BP_MOD = 998244353;
 ll count_tilings(const vector<string>& g){
     int n = g.size(), m = g[0].size();
@@ -19,7 +11,7 @@ ll count_tilings(const vector<string>& g){
             bool filled = mask >> j & 1;
             if(g[i][j] == '#'){                                  // bloqueada: nao pode estar coberta
                 if(!filled) nd[mask] = (nd[mask] + v) % BP_MOD;
-            } else if(filled){                                   // ja coberta por domino vertical de cima/horizontal
+            } else if(filled){                                   // ja coberta por domino de cima/horizontal
                 nd[mask ^ (1<<j)] = (nd[mask ^ (1<<j)] + v) % BP_MOD;
             } else {
                 // vertical: cobre (i,j) e (i+1,j)
@@ -34,3 +26,28 @@ ll count_tilings(const vector<string>& g){
     }
     return dp[0];
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Broken profile (plug DP) - ladrilhar grade com dominos**
+Conta mod BP_MOD os ladrilhamentos de uma grade n x m com dominos 1x2 e celulas
+bloqueadas '#'. Processa celula a celula; a mascara de m bits e a fronteira.
+
+Complexidade: O(n * m * 2^m).
+Uso:
+  ll ans = count_tilings(g);   // g: vetor de strings, '.' livre, '#' bloqueada
+
+* Sobre o codigo:
+  dp[mask] conta as formas de preencher as celulas ja processadas, onde o bit j
+  indica se a celula da fronteira na coluna j ja esta coberta. Ao processar (i,j),
+  o bit j passa a significar (i+1,j). Celula bloqueada exige bit j livre; celula
+  livre e nao coberta pode receber domino vertical (i+1,j) ou horizontal (i,j+1).
+
+* Problemas e reducoes:
+  + Contar ladrilhamentos com dominos 1x2 em grade com obstaculos.
+  + Contar emparelhamentos perfeitos de grade bipartida por colunas.
+  + Trocar as transicoes da o mesmo esqueleto para independentes ou coloracao.
+
+Cuidados: use a menor dimensao como m (m <= ~12-15); a mascara tem 2^m estados.
+  Para outro problema, so troque as transicoes.
+Catalogo: DP > Broken profile (plug DP simples).
+Digitacao: 25 linhas | media.
+*****************************LATEX_DESC_END*/

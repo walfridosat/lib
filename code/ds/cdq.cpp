@@ -1,21 +1,4 @@
-// CDQ (divide e conquista offline) - template com BIT: dominancia 3D / DP 2D
-//
-// O que faz: exemplo completo de CDQ: res[i] = val[i] + max(res[j]) para
-//   j < i (indice = dimensao 1), x_j < x_i, y_j < y_i (LIS 3D ponderado).
-//   Dimensao 1 = ordem do indice, ordena por x (dim 2) em cada passo e usa
-//   BIT em y (dim 3). Adapte "contribui" para contagem/soma (troque max por +).
-// Quando usar: "Catalogo > Estruturas de dados" (CDQ para DP online e para
-//   updates/queries no tempo): dominancia 3D, LIS ponderado 2D, CHT nao
-//   monotonico, updates+queries de ponto/retangulo offline.
-// Complexidade: O(n log^2 n).
-// Uso: vector<CDQP> p(n) com x, y (y comprimido em 1..CDQY-1), val; res=0;
-//   cdq(p, 0, n); resultado em p[i].res.
-// Cuidados: CDQ de DP: resolve(l,m), contribui esq->dir, resolve(m,r) NESSA
-//   ordem (dp depende do resultado final da esquerda). Para query apos update
-//   na mesma coordenada, ordene com desempate (update antes de query). A BIT
-//   deve ser DESFEITA apos cada contribuicao (limpa so os pontos tocados).
-//   Para contagem de dominancia (sem DP) a ordem das chamadas recursivas eh
-//   livre. Pontos com mesmo indice-tempo nao existem (indice eh unico).
+// CDQ - divide e conquista offline (dominancia 3D / DP)
 struct CDQP { int x, y; ll val, res; };
 const int CDQY = 100005; // maior y + 1
 ll cdq_bit[CDQY];
@@ -40,3 +23,33 @@ void cdq(vector<CDQP>& p, int l, int r) { // processa [l, r) na ordem do indice
 	for (size_t i = 0; i < k; i++) cdq_clr(p[A[i]].y);
 	cdq(p, m, r);
 }
+/*LATEX_DESC_BEGIN***************************
+-> **CDQ (divide e conquista offline)**
+Exemplo de CDQ: res[i] = val[i] + max(res[j]) para j < i, x_j < x_i,
+y_j < y_i (LIS 3D ponderado). Dimensao 1 = indice, 2 = x, 3 = BIT em y.
+
+Complexidade: O(n log^2 n).
+Uso:
+  vector<CDQP> p(n);  // p[i] = {x, y (1..CDQY-1), val, 0}
+  cdq(p, 0, n);
+  // resultado em p[i].res
+  Adapte "contribui" para contagem/soma (troque max por +).
+
+* Sobre o codigo:
+  Divide por indice; resolve a esquerda, contribui esq->dir ordenando por
+  x com BIT em y, e resolve a direita. A BIT e desfeita nos pontos tocados.
+
+* Problemas e reducoes:
+  + LIS 3D ponderado / dominancia 3D.
+  + Contar pontos dominados em 3D.
+  + dp[i] = max(dp[j]) + val com x_j<x_i e y_j<y_i.
+  + Updates + queries offline no tempo (CDQ no lugar da segtree no tempo).
+  + DP com transicao tipo CHT fora de ordem (CDQ optimization).
+
+Cuidados: no DP a ordem e resolve(l,m), contribui esq->dir, resolve(m,r).
+  Para query apos update na mesma coordenada ordene com desempate (update
+  antes de query). Desfaca a BIT apos cada contribuicao. Pontos com mesmo
+  indice-tempo nao existem. Para contagem pura a ordem recursiva e livre.
+Catalogo: Estruturas de dados.
+Digitacao: 24 linhas | dificil.
+*****************************LATEX_DESC_END*/

@@ -1,14 +1,4 @@
-// Segtree beats (chmin em intervalo + add em intervalo; soma e max)
-//
-// O que faz: a[i] = min(a[i], x) em [l,r), a[i] += v em [l,r), query soma e
-//   max em [l,r). Guarda max, segundo max (estrito), qtd do max.
-// Quando usar: Catalogo > Estruturas de dados (Segtree beats chmin/chmax;
-//   a_i <- min(a_i, x)). chmax: negue os valores (ou espelhe o codigo).
-// Complexidade: amortizado O(log n) por chmin sem add; O(log^2 n) com add.
-// Uso: Beats b(a) (vector<ll>, 0-based); b.chmin(l,r,x); b.add(l,r,v);
-//   b.sum(l,r); b.mx(l,r). Intervalos [l, r) meio-abertos.
-// Cuidados: tags separadas para "elementos maximos" (lm) e "outros" (lo).
-//   Para chmin+chmax juntos precisa guardar tambem min/segundo min (nao incluido).
+// Segtree beats - chmin e add em range, soma e max
 struct Beats {
     const ll NEG = LLONG_MIN / 4;
     int n; vector<ll> mx_, se, sm, lm, lo_; vector<int> cnt;
@@ -79,3 +69,31 @@ struct Beats {
     ll sum(int l, int r) { return qs(1, 0, n, l, r); }
     ll mx(int l, int r) { return qm(1, 0, n, l, r); }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree Beats**
+Range chmin: a[i] = min(a[i], x) em [l,r); range add: a[i] += v; consulta soma
+e maximo em [l,r). Guarda max, segundo max estrito e quantidade de maximos.
+
+Complexidade: amortizado O(log n) por chmin sem add; O(log^2 n) com add.
+Uso:
+  Beats b(a);              // vector<ll>, 0-based
+  b.chmin(l, r, x);        // a[i] = min(a[i], x), intervalo [l, r)
+  b.add(l, r, v);
+  ll s = b.sum(l, r); ll m = b.mx(l, r);
+
+* Sobre o codigo:
+  ap aplica em lote: os maximos recebem am e o resto recebe ao. push usa o max
+  dos filhos antes da tag para decidir quem e "maximo". chmin so desce quando o
+  segundo maximo nao permite aplicar em bloco.
+
+* Problemas e reducoes:
+  + Range chmin mantendo soma e maximo (cortar valores acima de x).
+  + Range add + range chmin + soma/max combinados.
+  + chmax: negue os valores, aplique chmin e negue de volta.
+  + "Nivelar" alturas por chmin (water filling / cortar picos).
+
+Cuidados: tags separadas para maximos (lm) e demais (lo). Para chmin e chmax
+  juntos precisa guardar tambem min e segundo min (nao incluido).
+Catalogo: Estruturas de dados (Segtree beats).
+Digitacao: 70 linhas | dificil. Atalho: ok.
+*****************************LATEX_DESC_END*/

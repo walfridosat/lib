@@ -1,14 +1,4 @@
-// Distintos em intervalo (offline, sweep por r + BIT)
-//
-// O que faz: para cada query [l,r] devolve (a) quantidade de valores
-//   distintos e (b) soma dos valores distintos.
-// Quando usar: Catalogo > Estruturas de dados ("Distintos em [l,r]",
-//   "Distintos em intervalo, versao com soma"; distintos em subarvore via
-//   Euler tour).
-// Complexidade: O((n + q) log n).
-// Uso: vector<pair<ll,ll>> r = distinct_range(a, qs); a 0-based, qs com
-//   pares (l,r) 0-based inclusivos; r[i] = {qtd distintos, soma distintos}.
-// Cuidados: valores quaisquer (comprime internamente). Soma pode ser ll.
+// Distintos em intervalo - sweep por r + BIT
 vector<pair<ll, ll>> distinct_range(const vector<ll>& a, const vector<pair<int, int>>& qs) {
     int n = a.size(), q = qs.size();
     vector<ll> vs(a); sort(vs.begin(), vs.end()); vs.erase(unique(vs.begin(), vs.end()), vs.end());
@@ -31,3 +21,28 @@ vector<pair<ll, ll>> distinct_range(const vector<ll>& a, const vector<pair<int, 
     }
     return res;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Distintos em intervalo**
+Para cada query [l,r] devolve a quantidade de valores distintos e a soma
+dos valores distintos. a 0-based; qs (l,r) inclusivos.
+
+Complexidade: O((n + q) log n).
+Uso:
+  auto r = distinct_range(a, qs);
+  // r[i] = {quantidade de distintos, soma dos distintos}
+
+* Sobre o codigo:
+  Sweep por r mantendo so a ultima ocorrencia de cada valor.
+  Duas BITs (contagem e soma) respondem por diferenca de prefixos.
+
+* Problemas e reducoes:
+  + Quantidade de distintos em [l,r].
+  + Soma dos valores distintos em [l,r].
+  + Distintos em subarvore via Euler tour.
+
+Cuidados: valores quaisquer (comprime internamente). A soma pode precisar
+  de ll.
+Catalogo: Estruturas de dados.
+Digitacao: 22 linhas | media. Atalho: as duas BITs podem virar uma BIT
+  de pair<ll,ll> (soma componente a componente).
+*****************************LATEX_DESC_END*/

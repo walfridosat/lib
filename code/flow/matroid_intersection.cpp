@@ -1,20 +1,4 @@
-// Interseccao de matroides (cardinalidade maxima e peso maximo)
-//
-// O que faz: maior conjunto S do universo {0..n-1} independente em DUAS matroides, via
-//   caminhos aumentantes no grafo de trocas. Com pesos: maximiza o peso total (caminho
-//   de custo minimo com menos arestas, SPFA).
-// Quando usar: arvore geradora arco-iris (grafica ^ particao por cor), arborescencia
-//   (grafica ^ in-grau<=1), matching bipartido (particao ^ particao), "floresta +
-//   matching", escalonamento (Catalogo > Otimizacao: "Interseccao de matroides",
-//   "Matroides do dia a dia", "Uniao de matroides").
-// Complexidade: r augmentacoes, cada uma O(r*n) chamadas ao oraculo (+SPFA). Pequeno/medio.
-// Uso: auto S = matroidInter(n, ind1, ind2[, w]);
-//   ind1/ind2: bool f(const vector<int>& S) -> S e independente na matroide?
-//   w[i] = peso (vazio = so cardinalidade maxima). Devolve os indices escolhidos.
-//   Com pesos devolve o conjunto de MAIOR PESO (qualquer tamanho; pesos podem ser < 0).
-//   Prontos: partOracle(cor, cap) e graphOracle(nVertices, arestas).
-// Cuidados: o oraculo deve ser rapido (O(|S|)). Para max peso de tamanho fixo k, pegue
-//   o k-esimo prefixo (veja comentario no codigo). 0-indexed.
+// Interseccao de matroides - cardinalidade e peso maximo
 typedef function<bool(const vector<int>&)> MOracle;
 // matroide de particao: no maximo cap[c] elementos de cor c
 MOracle partOracle(vector<int> color, vector<int> cap) {
@@ -83,3 +67,46 @@ vector<int> matroidInter(int n, MOracle ind1, MOracle ind2, vector<ll> w = {}) {
     }
     return best;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Interseccao de matroides**
+Maior conjunto S do universo {0..n-1} independente em DUAS matroides, por
+caminhos aumentantes no grafo de trocas. Com pesos, maximiza o peso total.
+0-indexed.
+
+Complexidade: r augmentacoes, cada uma O(r*n) chamadas ao oraculo (+ SPFA).
+Uso:
+  auto S = matroidInter(n, ind1, ind2[, w]);
+  ind1/ind2: bool f(const vector<int>& S) -> S e independente na matroide?
+  w[i] = peso (vazio = so cardinalidade). Devolve os indices escolhidos.
+  Com pesos devolve o conjunto de MAIOR PESO (qualquer tamanho; w pode < 0).
+  Prontos: partOracle(cor, cap), graphOracle(nVertices, arestas).
+
+* Sobre o codigo:
+  Mantem S independente nas duas matroides. Monta um grafo de trocas: y -> x
+  se S - y + x e independente em M1, x -> y se em M2; x fora de S e fonte se
+  S + x e independente em M1, e sorvedouro se em M2. Um caminho fonte-
+  sorvedouro e aumentado por trocas. SPFA com custo -w fora e +w dentro acha
+  o melhor conjunto.
+
+* Problemas e reducoes:
+  + Maximo conjunto comum independente (cardinalidade): base; devolve S.
+  + Maximo peso comum independente: passe w; melhor S por peso.
+  + Arvore/floresta arco-iris (cores): universo = arestas, M1 = grafica (sem
+    ciclo), M2 = particao (no maximo cap[c] por cor); S = floresta.
+  + Arvore geradora arco-iris: idem com |S| = nVertices - 1.
+  + Matching bipartido: universo = arestas (l, r), M1 = particao em L (no
+    maximo 1 por l), M2 = particao em R (no maximo 1 por r).
+  + Arborescencia/branching: universo = arcos, M1 = grafica no grafo
+    subjacente (sem ciclo), M2 = particao por cabeca (in-grau <= 1).
+  + Floresta comum de dois grafos: M1 e M2 graficas em dois grafos sobre o
+    mesmo conjunto de arestas; S = maior floresta valida nos dois.
+  + Duas restricoes de particao: cotas por grupo em M1 e em M2; S e um
+    b-matching entre os grupos.
+
+Cuidados: o oraculo deve ser rapido (O(|S|)). Para max peso de tamanho fixo k,
+  guarde o conjunto apos k augmentacoes. 0-indexed.
+Catalogo: Otimizacao (interseccao de matroides, matroides do dia a dia,
+  uniao de matroides).
+Digitacao: 68 linhas | dificil. Atalho: o grafo de trocas poderia usar uma
+  funcao auxiliar de relaxacao do SPFA, hoje repetida no laco.
+*****************************LATEX_DESC_END*/

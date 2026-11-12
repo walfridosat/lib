@@ -1,13 +1,4 @@
-// Convolucao com modulo arbitrario por 3 NTT + CRT (Garner)
-//
-// O que faz: c = a*b mod M para M qualquer (ex.: 1e9+7), exato (sem erro de ponto flutuante).
-// Quando usar: precisa de convolucao mod 1e9+7 / modulo composto
-//   (Catalogo > Algebra, polinomios e FFT: Modulo arbitrario (MTT)).
-// Complexidade: O(n log n), 9 NTTs (3 primos x 3 transformadas).
-// Uso: vector<ll> c = convArb(a, b, M); // 0-based, coeficientes em [0, M)
-// Cuidados: o coeficiente real chega a n*M^2; o produto dos 3 primos e ~8e25, entao
-//   vale para n*M^2 < 8e25 (n=1e6 e M=1e9 da 1e24: ok). Tamanho <= 2^23.
-//   Alternativa em double: code/algebra/fft.cpp (convMod).
+// Convolucao modulo arbitrario por 3 NTT + CRT (Garner)
 template<int P, int RT> struct NTTm { // NTT para primo P e raiz primitiva RT
     static ll pw(ll b, ll e) { ll r = 1; b %= P; for (; e; e >>= 1, b = b * b % P) if (e & 1) r = r * b % P; return r; }
     static void run(vector<int>& a, bool inv) {
@@ -64,3 +55,28 @@ vector<ll> convArb(const vector<ll>& a, const vector<ll>& b, ll M) {
     }
     return c;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Convolucao com modulo arbitrario (3 NTT + CRT)**
+c = a*b mod M para M qualquer (ex.: 1e9+7), exato, sem ponto flutuante.
+Usa tres primos NTT amigaveis e reconstroi por Garner.
+
+Complexidade: O(n log n), 9 NTTs (3 primos x 3 transformadas).
+Uso:
+  vector<ll> c = convArb(a, b, M);   // 0-based, coeficientes em [0, M)
+
+* Sobre o codigo:
+  NTTm<P,RT> faz NTT e multiplicacao mod P. convArb roda a convolucao mod
+  P1 = 998244353, P2 = 167772161 e P3 = 469762049 e reconstroi o coeficiente
+  inteiro x = r1 + P1*k1 + P1*P2*k2 (Garner), reduzindo mod M no fim.
+
+* Problemas e reducoes:
+  + Convolucao mod 1e9+7 ou modulo composto.
+  + Contagem com polinomios quando o modulo nao e NTT-amigavel.
+  + Multiplicar polinomios com coeficientes grandes sem erro de arredondamento.
+
+Cuidados: o coeficiente real chega a n*M^2; o produto dos 3 primos e ~8e25,
+  entao vale para n*M^2 < 8e25 (n=1e6 e M=1e9 da 1e24: ok). Tamanho <= 2^23.
+  Alternativa em double: code/algebra/fft.cpp (convMod).
+Catalogo: Algebra, polinomios e FFT (Modulo arbitrario, MTT).
+Digitacao: 55 linhas | dificil.
+*****************************LATEX_DESC_END*/

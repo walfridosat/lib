@@ -1,12 +1,4 @@
-// LCS classica O(n*m) (subsequencia comum maxima)
-//
-// O que faz: dp[i][j] = LCS dos prefixos a[0..i) e b[0..j); devolve o comprimento.
-// Quando usar: Catalogo > DP (Strings/DP em duas strings). Para n*m grande use
-//            code/string/bitset_match.cpp (lcs_bits) ou code/dp/lcs_bitset.cpp.
-// Complexidade: O(n*m) tempo e memoria (pode rolar para O(min(n,m))).
-// Uso: int k = lcs(a, b).
-// Cuidados: copie as strings por valor ou use const& (aqui por valor, sem risco);
-//            para reconstruir a subsequencia guarde os pais ou refaca o caminho.
+// lcs - subsequencia comum maxima O(n*m)
 int lcs(string a, string b) {
     int n = a.size(), m = b.size();
     vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
@@ -21,3 +13,26 @@ int lcs(string a, string b) {
     }
     return dp[n][m];
 }
+/*LATEX_DESC_BEGIN***************************
+-> **LCS classica O(n*m)**
+dp[i][j] = LCS dos prefixos a[0..i) e b[0..j); devolve o comprimento, 0-based.
+
+Complexidade: O(n*m) tempo e memoria (pode rolar para O(min(n,m))).
+Uso:
+  int k = lcs(a, b);
+
+* Sobre o codigo:
+  Se a[i-1] == b[j-1], dp[i][j] = dp[i-1][j-1] + 1; senao, o maximo entre
+  descartar um caractere de a ou de b. As strings chegam por valor.
+
+* Problemas e reducoes:
+  + Maior subsequencia comum entre duas strings.
+  + Distancia de edicao sem troca (so inserir/remover).
+  + Alinhamento de sequencias.
+
+Cuidados: para n*m grande use lcs_bitset.cpp. Para reconstruir a subsequencia,
+  guarde os pais ou refaca o caminho. Strings por valor, sem risco de copia.
+Catalogo: DP (strings / DP em duas strings).
+Digitacao: 13 linhas | facil. Atalho: para so o comprimento, use duas linhas
+  em vez da matriz inteira.
+*****************************LATEX_DESC_END*/

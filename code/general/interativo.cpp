@@ -1,15 +1,4 @@
-// Template interativo + buscas binarias interativas + interator local
-//
-// O que faz: funcao de query com flush, busca binaria por query (valor ate 1e18 em ~60 queries),
-//            min e max em ceil(3n/2)-2 comparacoes; esqueleto de interator para teste local.
-// Quando usar: problemas interativos. Catalogo > Construtivos e interativos (Busca binaria interativa, Flush e protocolo)
-// Complexidade: log N queries / 3n/2 comparacoes
-// Uso: ll ask(ll x) manda "? x", da flush e le a resposta (se vier -1, exit(0) imediatamente).
-//      bsearchInteractive(lo, hi, pred): menor x em [lo, hi] com pred(x) verdadeiro (pred monotono; pred faz a query).
-//      minMaxCompare(n, less): indices do min e do max usando less(i, j) (query "a[i] < a[j]?").
-// Cuidados: SEMPRE flush apos cada saida. O template define endl como '\n' (sem flush),
-//           entao use '\n' << flush ou cout.flush(); nao misture cin/scanf sem sync;
-//           conte queries localmente; em erro do juiz (-1) termine na hora. Teste com interator local (abaixo).
+// Template interativo - query com flush, busca binaria, min/max
 ll ask(ll x) {
     cout << "? " << x << '\n' << flush;
     ll r; cin >> r;
@@ -24,7 +13,7 @@ template<class P> ll bsearchInteractive(ll lo, ll hi, P pred) {
     }
     return lo;
 }
-// pareia elementos: compara o par (1 query), depois menor com menores e maior com maiores
+// pareia; menor com menores, maior com maiores
 template<class L> pair<int, int> minMaxCompare(int n, L less) {
     int mn = -1, mx = -1;
     for (int i = 0; i + 1 < n; i += 2) {
@@ -53,3 +42,30 @@ template<class L> pair<int, int> minMaxCompare(int n, L less) {
        }
    }
 */
+/*LATEX_DESC_BEGIN***************************
+-> **Template Interativo**
+Query com flush, busca binaria interativa (valor ate 1e18 em ~60 queries),
+min e max em ceil(3n/2)-2 comparacoes, e esqueleto de interator local.
+
+Complexidade: O(log N) queries; 3n/2 comparacoes
+Uso:
+  ll r = ask(x);              // manda "? x", flush, le a resposta (-1 -> exit)
+  ll lo = bsearchInteractive(lo, hi, pred);
+  auto [mn, mx] = minMaxCompare(n, less);
+  answer(x);                  // manda "! x"
+
+* Sobre o codigo:
+  ask/answer fazem flush a cada saida; o pred de bsearch faz a query.
+  minMaxCompare pareia elementos e compara menor com menores e maior com maiores.
+  O comentario no fim tem um esqueleto de interator local para testar.
+
+* Problemas e reducoes:
+  + Achar valor secreto por comparacoes: bsearchInteractive.
+  + Min e max com poucas comparacoes: minMaxCompare.
+
+Cuidados: SEMPRE flush apos cada saida; o template define endl como '\n' (sem flush),
+  entao use '\n' << flush ou cout.flush(); nao misture cin/scanf sem sync;
+  conte queries; em erro do juiz (-1) termine na hora.
+Catalogo: Construtivos e interativos (Busca binaria interativa, Flush e protocolo)
+Digitacao: 43 linhas | media.
+*****************************LATEX_DESC_END*/

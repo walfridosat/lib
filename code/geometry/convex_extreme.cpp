@@ -1,13 +1,4 @@
-// Vertice extremo de poligono convexo numa direcao (busca binaria O(log n))
-//
-// O que faz: dado poligono convexo CCW e direcao dir, devolve o indice do vertice que maximiza
-//   dot(dir, v). Serve para "max a*x + b*y sobre o hull" com muitas consultas.
-// Quando usar: Catalogo > Geometria (fecho convexo = max de funcao linear; queries de direcao
-//   -> busca binaria no hull).
-// Complexidade: O(log n) por consulta.
-// Uso: vector<P> h = hull(pts) (CCW, estrito, n >= 3); int i = extrVertex(h, P(a,b));
-// Cuidados: h CCW estritamente convexo. Se houver empate (aresta perpendicular a dir)
-//   devolve um dos dois vertices. Valores: dot em ll (coords ~1e9 ok).
+// Vertice extremo de convexo numa direcao
 
 struct P {
   ll x, y;
@@ -21,11 +12,11 @@ int extrVertex(const vector<P> &h, P dir) {
   int n = h.size();
   // sinal de dot(dir, h[i+1]-h[i]): >0 sobe, <0 desce
   auto up = [&](int i) { return dot(dir, h[(i + 1) % n] - h[i % n]) > 0; };
-  // varia: o vetor aresta gira CCW; a sequencia de "up" e ciclicamente [up...up, down...down] (ou rotacao).
+  // sequencia de up e ciclica: up...up, down...down
   if (!up(n - 1) && !up(0)) {  // comeca em descida: busca o minimo da rotacao
-    // h[0] pode estar no meio da descida; procuramos o ponto onde passa a subir e depois desce
+    // h[0] pode estar no meio da descida
   }
-  int lo = 0, hi = n;  // busca em [lo, hi): predicado "up" com cuidado de wrap
+  int lo = 0, hi = n;  // busca em [lo, hi) com wrap
   bool u0 = up(0);
   while (hi - lo > 1) {
     int m = (lo + hi) / 2;
@@ -33,7 +24,7 @@ int extrVertex(const vector<P> &h, P dir) {
     // posicao relativa de m em relacao ao inicio: decide pelo lado de dot
     ll d0 = dot(dir, h[0]), dm = dot(dir, h[m]);
     bool right;  // maximo esta em (m, hi)?
-    if (u0) right = um || dm < d0;   // subindo de 0: se m ainda sobe, ou ja desceu abaixo de d0 (maximo antes)
+    if (u0) right = um || dm < d0;   // subindo de 0: decide pelo lado do maximo
     else right = !um && dm > d0;     // descendo de 0: maximo so apos o fundo
     // reinterpreta: right = maximo esta a direita de m
     if (u0) right = um && dm >= d0;  // so se m ainda esta subindo a partir de 0
@@ -48,3 +39,31 @@ int extrVertex(const vector<P> &h, P dir) {
   }
   return best;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Vertice extremo de convexo numa direcao**
+Dado poligono convexo CCW e direcao dir, devolve o indice do vertice que maximiza
+dot(dir, v). Indices 0-based.
+
+Complexidade: O(log n) por consulta
+Uso:
+  vector<P> h = hull(pts);         // CCW, estrito, n >= 3
+  int i = extrVertex(h, P(a, b));  // maximiza a*x + b*y
+
+* Sobre o codigo:
+  up(i) indica se dot(dir, h[i+1]-h[i]) > 0 (a projecao sobe). Essa sequencia e ciclicamente
+  um bloco de subidas seguido de um bloco de descidas. A busca binaria compara dot(dir, h[m])
+  com dot(dir, h[0]) para decidir de que lado esta o maximo; no fim confere os vizinhos.
+
+* Problemas e reducoes:
+  + Maximizar a*x + b*y sobre um conjunto de pontos: hull + extrVertex.
+  + Muitas consultas de direcao no mesmo hull (cada uma O(log n)).
+  + Achar o vertice de suporte numa direcao (usado em calipers).
+  + Minimizar a*x + b*y: chame com P(-a,-b).
+
+Cuidados: h deve ser CCW e estritamente convexo (sem colineares), n >= 3. Em empate (aresta
+  perpendicular a dir) devolve um dos dois vertices. dot em ll; coords ~1e9 cabem.
+Catalogo: Geometria.
+Digitacao: 38 linhas | dificil. Atalho: a variavel right e atribuida duas vezes seguidas;
+  consolidar em uma unica expressao encurta a busca.
+*****************************LATEX_DESC_END*/

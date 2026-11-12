@@ -1,26 +1,4 @@
-// Busca ternaria (real, inteira) e Dinkelbach
-//
-// O que faz: acha o minimo de f unimodal/convexa.
-//   tern_real(lo,hi,f) : minimo em reais (100 iteracoes), devolve o x.
-//   tern_int(lo,hi,f)  : minimo em inteiros via binaria em f(m) vs f(m+1)
-//                        (robusta; exige f estritamente decrescente ate o
-//                        minimo e estritamente crescente depois, ou plato
-//                        so no minimo). Devolve o x.
-//   dinkelbach(oracle) : max (sum a)/(sum b) sobre subconjunto nao vazio
-//                        escolhido por um oraculo (ver abaixo).
-// Quando usar: "Catalogo > Busca binaria e otimizacao" (Funcao unimodal,
-//   convexidade fecha por soma/max, ternaria aninhada, Dinkelbach para razao).
-//   Distancia minima maxima a pontos (convexa), area minima, etc.
-// Complexidade: O(log(range)) avaliacoes.
-// Uso: double x = tern_real(l, r, [&](double x){ return g(x); });
-//   ll x = tern_int(l, r, [&](ll x){ return g(x); });
-//   Ternaria aninhada: tern_real(.., [&](double x){ double y=tern_real(.., [&](double y){return f(x,y);}); return f(x,y); });
-//   Dinkelbach: iterate r; oraculo escolhe subconjunto maximizando
-//   sum(a - r*b); r <- sum a / sum b ate nao melhorar. Converge em poucas
-//   iteracoes e permite resposta exata com fracoes.
-// Cuidados: plato fora do otimo quebra a ternaria; use binaria em f(m)<f(m+1)
-//   se estritamente unimodal. Convexas: soma e max de convexas sao convexas.
-//   Em reais, para f com ruido numerico use ~100 iteracoes e nao compare eps.
+// Busca ternaria - minimo unimodal e Dinkelbach
 template<class F> double tern_real(double lo, double hi, F f) {
 	for (int it = 0; it < 100; it++) {
 		double m1 = lo + (hi - lo) / 3, m2 = hi - (hi - lo) / 3;
@@ -48,3 +26,36 @@ template<class O> pair<ll,ll> dinkelbach(O oracle) {
 	}
 	return {num, den};
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Busca ternaria e Dinkelbach**
+Acha o minimo de f unimodal/convexa, em reais ou inteiros, e a razao
+maxima (sum a)/(sum b) por Dinkelbach.
+
+Complexidade: O(log(range)) avaliacoes.
+Uso:
+  double x = tern_real(l, r, [&](double x){ return g(x); });
+  ll x = tern_int(l, r, [&](ll x){ return g(x); });
+  pair<ll,ll> f = dinkelbach(oracle);  // {num, den} da razao otima
+  Ternaria aninhada: tern_real(.., [&](double x){ double y=tern_real(..); return f(x,y); });
+  Dinkelbach: oracle(num,den) escolhe o subconjunto que maximiza
+  sum(a - r*b), r = num/den; repete r <- sumA/sumB ate nao melhorar.
+
+* Sobre o codigo:
+  tern_real compara f(m1) e f(m2) e descarta um terco.
+  tern_int e uma binaria em f(m) <= f(m+1) (o minimo esta em <= m).
+  dinkelbach compara sa*den com num*sb em __int128 (fracoes exatas).
+
+* Problemas e reducoes:
+  + Distancia minima maxima a pontos (convexa).
+  + Area/perimetro minimo com funcao convexa.
+  + Razao maxima de subconjunto (sum a)/(sum b) -> Dinkelbach.
+  + Ternaria aninhada para funcao convexa em 2 variaveis.
+  + Minimizar soma ou maximo de convexas.
+
+Cuidados: plato fora do otimo quebra a ternaria; exija estritamente
+  unimodal ou convexa. Soma e maximo de convexas sao convexas. Em reais
+  use ~100 iteracoes e nao compare eps. Dinkelbach com ll pode precisar
+  de __int128 nos produtos.
+Catalogo: Busca binaria e otimizacao.
+Digitacao: 27 linhas | media.
+*****************************LATEX_DESC_END*/

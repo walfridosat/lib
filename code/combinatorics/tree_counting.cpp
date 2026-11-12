@@ -1,19 +1,5 @@
-// Contagens de arvores rotuladas e estruturas classicas (Cayley, Prufer, componentes)
-//
-// O que faz: Cayley n^{n-2}; # arvores com graus dados; com vertice de grau d;
-//   # formas de ligar k componentes em arvore; florestas com k raizes;
-//   K_{a,b}; arvores com raiz, florestas com raiz; grafos conexos e DAGs
-//   rotulados (O(n^2)); emparelhamentos perfeitos (2n-1)!!.
-// Quando usar: "Catalogo > Combinatoria" (Prufer; Contar arvores que conectam componentes;
-//   Grafos conexos e DAGs rotulados; Contagens classicas rotuladas).
-//   Codificacao/decodificacao de Prufer: code/tree.
-// Complexidade: O(1)..O(n) por formula; conexos/DAG O(n^2).
+// Arvores rotuladas - Cayley, Prufer e componentes
 // Requer: code/combinatorics/binom_mod.cpp (cole antes).
-// Uso: precisa de binom_mod.cpp (C, fact, ifact, pw, init_comb) colado antes.
-//   cayley(n); trees_with_degrees(d) (d_i >= 1, soma = 2n-2); trees_vertex_degree(n,d);
-//   join_components(sizes); forest_k_roots(n,k); bipartite_trees(a,b);
-//   connected_graphs(N) -> c[0..N]; labeled_dags(N) -> a[0..N]; perfect_matchings(n pares).
-// Cuidados: n pequeno (n=1,2) tem casos de borda tratados; expoentes negativos viram 1.
 ll cayley(ll n) { return n <= 1 ? 1 : pw(n, n - 2); }
 ll trees_with_degrees(const vector<int>& d) { // (n-2)! / prod (d_i-1)!
     int n = d.size(); ll s = 0;
@@ -44,7 +30,7 @@ ll bipartite_trees(ll a, ll b) { return pw(a, b - 1) * pw(b, a - 1) % MOD; } // 
 ll rooted_trees(ll n) { return pw(n, n - 1); }
 ll rooted_forests(ll n) { return pw(n + 1, n - 1); }
 ll perfect_matchings(ll n) { ll r = 1; for (ll i = 1; i < 2 * n; i += 2) r = r * i % MOD; return r; } // (2n-1)!!
-// grafos conexos rotulados: c(n)=2^{C(n,2)} - sum_{k<n} C(n-1,k-1) c(k) 2^{C(n-k,2)}
+// grafos conexos rotulados
 vector<ll> connected_graphs(int N) {
     vector<ll> c(N + 1, 0), p2(N + 1);
     auto g = [&](ll n) { return pw(2, n * (n - 1) / 2); };
@@ -55,7 +41,7 @@ vector<ll> connected_graphs(int N) {
     }
     c[0] = 0; return c;
 }
-// DAGs rotulados: a(n)=sum_{k>=1} (-1)^{k+1} C(n,k) 2^{k(n-k)} a(n-k)
+// DAGs rotulados
 vector<ll> labeled_dags(int N) {
     vector<ll> a(N + 1); a[0] = 1;
     for (int n = 1; n <= N; n++) {
@@ -68,3 +54,40 @@ vector<ll> labeled_dags(int N) {
     }
     return a;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Arvores rotuladas e estruturas classicas**
+Cayley, arvores com graus dados, uniao de componentes, florestas, K_{a,b}, grafos conexos, DAGs e emparelhamentos.
+
+Complexidade: O(1) a O(n) por formula; conexos/DAG O(n^2).
+Uso:
+  ll c = cayley(n);
+  ll td = trees_with_degrees(d);
+  ll tv = trees_vertex_degree(n, d);
+  ll jc = join_components(sizes);
+  ll fr = forest_k_roots(n, k);
+  ll bt = bipartite_trees(a, b);
+  ll rt = rooted_trees(n), rf = rooted_forests(n);
+  vector<ll> cg = connected_graphs(N), dg = labeled_dags(N);
+  ll pm = perfect_matchings(n);
+
+* Sobre o codigo:
+  Cayley n^(n-2) vem de Prufer; com graus d_i, o numero e
+  (n-2)! / prod (d_i-1)!. join_components usa n^(k-2) prod s_i.
+  connected_graphs subtrai as componentes que contem um vertice fixo;
+  labeled_dags usa inclusao-exclusao sobre fontes. perfect_matchings e (2n-1)!!.
+
+* Problemas e reducoes:
+  + Arvores geradoras completas em K_n -> cayley(n).
+  + Arvores com graus prescritos -> trees_with_degrees.
+  + Conectar k componentes em arvore -> join_components.
+  + Florestas com k raizes -> forest_k_roots.
+  + Arvores geradoras de K_{a,b} -> bipartite_trees.
+  + Grafos rotulados conexos -> connected_graphs.
+  + DAGs rotulados -> labeled_dags.
+  + Emparelhamentos perfeitos de 2n vertices -> perfect_matchings.
+
+Cuidados: n = 1 e n = 2 tem casos de borda tratados; expoentes negativos
+  viram 1; precisa de init_comb de binom_mod.cpp.
+Catalogo: Combinatoria.
+Digitacao: 54 linhas | media.
+*****************************LATEX_DESC_END*/

@@ -1,13 +1,4 @@
-// Busca ternaria (minimo de funcao convexa/unimodal)
-//
-// O que faz: tern_double(l, r) acha o x que minimiza func em [l, r] (250 iteracoes);
-//            tern_int(l, r) acha o inteiro minimo comparando vizinhos.
-// Quando usar: Catalogo > Busca binaria e otimizacao (Busca ternaria). So vale se a
-//            funcao for convexa/unimodal no intervalo; caso contrario use binaria na derivada.
-// Complexidade: O(iteracoes) no double; O(log(range)) no inteiro.
-// Uso: troque func(x) pela sua funcao; ld x = tern_double(l, r); ll i = tern_int(l, r).
-// Cuidados: standalone (tem #include e func de exemplo); em empates no inteiro o
-//            resultado pode ser qualquer minimizador; use long double para precisao.
+// Busca ternaria - minimo de funcao convexa/unimodal em [l, r]
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -53,3 +44,27 @@ ll tern_int(ll l, ll r){
     return ans;
 } 
     
+/*LATEX_DESC_BEGIN***************************
+-> **Busca Ternaria**
+tern_double(l, r) devolve o x que minimiza func (convexa/unimodal) em [l, r];
+tern_int(l, r) devolve o menor f(x) inteiro. Intervalos fechados.
+
+Complexidade: O(250) no double; O(log(range)) no inteiro
+Uso:
+  troque func(x) pela sua funcao
+  ld x = tern_double(l, r);  // x minimizador
+  ll v = tern_int(l, r);     // f(x) minimizado
+
+* Sobre o codigo:
+  Compara os pontos m1 e m2 que dividem o intervalo em tres e descarta o lado pior.
+  No inteiro, para quando r - l <= 3 e testa todos os candidatos.
+
+* Problemas e reducoes:
+  + Minimizar funcao convexa ou unimodal sem derivada.
+  + Achar o pico/maximo: use -func(x) ou inverta a comparacao.
+
+Cuidados: so vale se a funcao for convexa/unimodal no intervalo; em empates o
+  inteiro pode devolver qualquer minimizador; use long double para precisao.
+Catalogo: Busca binaria e otimizacao (Busca ternaria)
+Digitacao: 35 linhas | facil. Atalho: tern_int so precisa do laco ate r-l<=3 e do min final.
+*****************************LATEX_DESC_END*/

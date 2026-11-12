@@ -1,13 +1,4 @@
-// Aritmetica modular e utilidades de inteiros
-//
-// O que faz: gcd, lcm, soma/subtracao/multiplicacao mod MOD, exponenciacao e inverso
-//            modular (quando o restante do arquivo define); constantes locais.
-// Quando usar: Catalogo > Teoria dos numeros e divisores (aritmetica modular).
-//            Para binomiais use code/combinatorics/binom_mod.cpp.
-// Complexidade: O(log) por exponenciacao/inverso; O(1) nas demais.
-// Uso: ajuste MOD (primo) no topo; mod_add/mod_sub/mod_mul, fexp(b, p), mod_inv(a).
-// Cuidados: MOD e local deste arquivo (nao redefina em outro trecho colado junto);
-//            para multiplicacao de dois ll use __int128 quando MOD ~ 1e9.
+// Aritmetica modular basica
 
 
 const ll MOD = 1000000007; // primo; ajuste conforme o problema
@@ -47,3 +38,28 @@ ll fexp(ll b, ll p){
 ll mod_inv(ll a) {
     return fexp(a, MOD - 2);
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Aritmetica modular basica**
+gcd, lcm, soma/subtracao/multiplicacao mod MOD, exponenciacao e inverso.
+
+Complexidade: O(log) em fexp/mod_inv; O(1) nas demais.
+Uso:
+  ll g = gcd(a, b), l = lcm(a, b);
+  ll s = mod_add(a, b), d = mod_sub(a, b), p = mod_mul(a, b);
+  ll e = fexp(b, p), iv = mod_inv(a);
+
+* Sobre o codigo:
+  Versoes simples com MOD constante; fexp e exponenciacao binaria e mod_inv
+  usa Fermat (MOD primo).
+
+* Problemas e reducoes:
+  + Aritmetica basica mod primo -> funcoes diretas.
+  + Inverso modular de a mod primo -> mod_inv.
+  + Reduzir expressoes longas mod MOD -> mod_add/mod_sub/mod_mul.
+  + lcm sem overflow -> dividir antes de multiplicar.
+
+Cuidados: MOD e local deste arquivo (nao redefina ao colar junto); para
+  multiplicar dois ll com MOD ~1e9 use __int128.
+Catalogo: Teoria dos numeros e divisores.
+Digitacao: 28 linhas | facil. Atalho: mod_add/mod_sub/mod_mul cabem em uma linha cada.
+*****************************LATEX_DESC_END*/

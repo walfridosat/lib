@@ -1,15 +1,4 @@
-// Pollard rho (Brent) + fatoracao completa
-//
-// O que faz: fatora n < 2^63 (~9e18; o +c do polinomio precisa caber) em primos.
-// Quando usar: Catalogo > Teoria dos numeros (fatorar ate 1e18; divisores de
-//   numeros grandes; ver divisores.cpp para gerar divisores a partir daqui).
-// Complexidade: ~O(n^(1/4)) mulmods por fator.
-// Uso: factorize(n) -> vector<pair<ull,int>> (primo, expoente) ordenado.
-//   n=1 devolve vazio.
-// Cuidados: contem copia de mulmod/powmod/is_prime de miller_rabin.cpp
-//   (apague uma das duas copias se colar os dois). Primos pequenos sao
-//   retirados por divisao antes (rho falha em n pequeno / quadrado de primo
-//   pequeno).
+// Pollard rho (Brent) e fatoracao
 typedef unsigned long long ull;
 ull mulmod(ull a, ull b, ull m) { return (__uint128_t)a * b % m; }
 ull powmod(ull a, ull e, ull m) {
@@ -32,7 +21,7 @@ bool is_prime(ull n) {
     return true;
 }
 mt19937_64 rho_rng(712367);
-ull rho(ull n) { // devolve um divisor nao trivial de n composto impar
+ull rho(ull n) { // divisor nao trivial de n composto impar
     while (true) {
         ull c = rho_rng() % (n - 1) + 1, y = rho_rng() % n, x = 0, ys = 0, g = 1, q = 1;
         auto f = [&](ull v) { return (mulmod(v, v, n) + c) % n; };
@@ -74,3 +63,29 @@ vector<pair<ull, int>> factorize(ull n) {
     }
     return r;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Pollard rho (Brent) e fatoracao**
+Fatora n < 2^63 em primos com Miller-Rabin + Pollard rho.
+
+Complexidade: ~O(n^(1/4)) mulmods por fator.
+Uso:
+  auto f = factorize(n);       // vector<pair<ull,int>> ordenado; n = 1 -> vazio
+
+* Sobre o codigo:
+  factorize tira primos pequenos por divisao; fact_rec testa is_prime e, se
+  composto, chama rho. rho usa o metodo de Brent, acumulando produtos para
+  fazer gcd em lote e refazendo passo a passo se o lote falhar.
+
+* Problemas e reducoes:
+  + Fatorar n ate 1e18 -> factorize.
+  + Gerar divisores de um numero grande -> factorize + divs_fact.
+  + Contar fatores primos distintos / com multiplicidade -> fatoracao.
+  + Provar que um numero grande e composto -> is_prime.
+  + Base para phi, mu e ordem de n grande -> fatoracao.
+
+Cuidados: contem copia de mulmod/powmod/is_prime de miller_rabin.cpp (apague
+  uma copia ao colar os dois); primos pequenos sao retirados por divisao antes;
+  o +c do polinomio precisa caber.
+Catalogo: Teoria dos numeros.
+Digitacao: 64 linhas | dificil. Atalho: incluir miller_rabin.cpp em vez de duplicar as tres funcoes.
+*****************************LATEX_DESC_END*/

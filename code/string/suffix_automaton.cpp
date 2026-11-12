@@ -1,22 +1,4 @@
 // Suffix automaton (SAM), incluindo generalizado
-//
-// O que faz: automato minimo dos sufixos. Estado v = classe de substrings com mesmo
-//   endpos; len[v] = maior, len[link[v]]+1 = menor. Fornece: substrings distintas,
-//   ocorrencias de cada substring, k-esima substring (distinta ou com multiplicidade),
-//   maior substring comum com outra string, menor string que nao e substring.
-// Quando usar: Catalogo > Strings ("Substrings distintas, k-esima, ocorrencias", "SAM: ...",
-//   "SAM generalizado", "Menor string que NAO e substring", "Suffix tree = SAM do reverso").
-// Complexidade: O(n*26) memoria e tempo de construcao.
-// Uso: SAM sm; for c in s: sm.extend(c - 'a'); (para varias strings: sm.last = 0 antes de cada)
-//   sm.calc_cnt() (so p/ UMA string): cnt[v] = nro de ocorrencias das substrings do estado v.
-//   sm.distinct() = nro de substrings distintas (soma len[v]-len[link[v]]).
-//   sm.kth(k, repete): k-esima (1-based) substring lexicografica; repete=true conta
-//   multiplicidade (precisa calc_cnt). Devolve "" se k > total.
-//   sm.lcs(t): maior substring comum entre a string do SAM e t.
-//   sm.min_not_sub(): menor (e lex menor) string que nao e substring.
-// Cuidados: no generalizado nao use cnt do calc_cnt sem adaptar (prefixos de varias
-//   strings); extend ja trata transicao existente (sem clone duplicado). Alfabeto K=26.
-//   O estado inicial e 0; len[0]=0, link[0]=-1.
 struct SAM {
 	static const int K = 26;
 	vector<array<int, K>> nx;
@@ -124,3 +106,46 @@ struct SAM {
 		return r;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Suffix automaton (SAM), incluindo generalizado**
+Automato minimo dos sufixos. Estado v = classe de substrings com mesmo
+endpos; len[v] = maior e len[link[v]]+1 = menor. Fornece substrings distintas,
+ocorrencias de cada substring, k-esima substring (distinta ou com
+multiplicidade), maior substring comum com outra string e menor string que
+nao e substring. Alfabeto 'a'..'z'.
+
+Complexidade: O(n*26) memoria e tempo de construcao.
+Uso:
+  SAM sm; for (char c : s) sm.extend(c - 'a');
+  (varias strings: sm.last = 0 antes de cada uma)
+  sm.calc_cnt(); // so para UMA string: cnt[v] = ocorrencias do estado v
+  sm.distinct(); // numero de substrings distintas
+  sm.kth(k, repete); // k-esima (1-based); repete conta multiplicidade
+  sm.lcs(t); // maior substring comum com t
+  sm.min_not_sub(); // menor string que nao e substring
+  Estado inicial 0; len[0] = 0, link[0] = -1.
+
+* Sobre o codigo:
+  extend cria cur, sobe pelos links adicionando transicoes e clona q quando
+  necessario. A versao generalizada trata transicao ja existente sem duplicar
+  clone. calc_cnt soma 1 por estado nao-clone pela link tree em ordem de len.
+
+* Problemas e reducoes:
+  + Substrings distintas: soma len[v] - len[link[v]].
+  + Ocorrencias de cada substring: calc_cnt e cnt[v] por estado.
+  + k-esima substring lexicografica: kth(k, false) distinta; true com
+    multiplicidade (precisa calc_cnt).
+  + Maior substring comum com outra string: lcs(t).
+  + Menor string que nao e substring: min_not_sub().
+  + Diversas strings: SAM generalizado (last = 0 por string).
+  + Contar substrings que ocorrem >= k vezes: cnt[v] >= k.
+  + SAM do reverso = suffix tree da string.
+
+Cuidados: no generalizado nao use cnt do calc_cnt sem adaptar (prefixos de
+  varias strings); extend ja trata transicao existente (sem clone duplicado).
+  Alfabeto K = 26. 0-indexed nos.
+Catalogo: Strings (substrings distintas, k-esima, ocorrencias, SAM: ..., SAM
+  generalizado, menor string que NAO e substring, suffix tree = SAM do reverso).
+Digitacao: 107 linhas | dificil. Atalho: os sorts por len em calc_cnt/kth/
+  min_not_sub poderiam compartilhar uma ordem topologica unica.
+*****************************LATEX_DESC_END*/

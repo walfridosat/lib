@@ -1,16 +1,4 @@
-// Poligonos: area, centroide, Pick, ponto em poligono (geral e convexo O(log n)), pontos de rede
-//
-// O que faz: area*2 sinalizada (shoelace), centroide, contagem de pontos de rede (Pick),
-//   ponto em poligono qualquer O(n) e em convexo O(log n), pontos de rede no segmento e no circulo.
-// Quando usar: Catalogo > Geometria (area/sinal, centroide, Teorema de Pick, ponto em poligono).
-// Complexidade: area/Pick/inPoly O(n); inConvex O(log n); circleLattice O(r).
-// Uso: vector<P> g (vertices em ordem, sem repetir o primeiro no fim).
-//   area2(g) -> 2*area sinalizada (>0 anti-horario). centroid(g) -> (cx,cy) em long double.
-//   pick(g,I,B): A2=|area2|; B = pontos de rede na borda; I = (A2 - B + 2)/2 interiores.
-//   inPoly(g,q): 0 fora, 1 borda, 2 dentro. inConvex(g,q): idem, g CCW estritamente convexo (n>=3).
-//   latticeOnSeg(a,b) = gcd+1. circleLattice(r) = #(x,y) inteiros com x^2+y^2<=r^2.
-// Cuidados: guarde 2*area em inteiro. Poligono simples assumido. inConvex exige CCW e sem
-//   vertices colineares (use hull() de hull_andrew.cpp).
+// Poligonos - area, centroide, Pick e ponto em poligono
 
 struct P {
   ll x, y;
@@ -42,7 +30,7 @@ pair<long double, long double> centroid(const vector<P> &g) {
   return {cx / (3 * a), cy / (3 * a)};  // 6A = 3 * (2A)
 }
 
-// Pick: B = pontos de rede na borda, I = pontos de rede estritamente dentro
+// Pick: B na borda, I estritamente dentro
 void pick(const vector<P> &g, ll &I, ll &B) {
   B = 0;
   int n = g.size();
@@ -56,7 +44,7 @@ void pick(const vector<P> &g, ll &I, ll &B) {
 
 ll latticeOnSeg(P a, P b) { return __gcd(llabs(a.x - b.x), llabs(a.y - b.y)) + 1; }
 
-// ponto em poligono qualquer (simples). 0 fora, 1 borda, 2 dentro. Regra y_a <= y < y_b.
+// poligono simples: 0 fora, 1 borda, 2 dentro
 int inPoly(const vector<P> &g, P q) {
   int n = g.size(), cnt = 0;
   for (int i = 0; i < n; i++) {
@@ -66,7 +54,7 @@ int inPoly(const vector<P> &g, P q) {
       return 1;
     // raio para a direita de q cruza a aresta?
     if ((a.y <= q.y) != (b.y <= q.y)) {
-      // q esta a esquerda do ponto de cruzamento <=> sinal de cr combinado com a direcao
+      // q a esquerda do cruzamento
       ll c = cr(a, b, q);
       if (b.y > a.y ? c > 0 : c < 0) cnt ^= 1;
     }
@@ -74,7 +62,7 @@ int inPoly(const vector<P> &g, P q) {
   return cnt ? 2 : 0;
 }
 
-// ponto em poligono convexo CCW estrito, n>=3, O(log n). 0 fora, 1 borda, 2 dentro.
+// convexo CCW estrito: 0 fora, 1 borda, 2 dentro
 int inConvex(const vector<P> &g, P q) {
   int n = g.size();
   if (cr(g[0], g[1], q) < 0 || cr(g[0], g[n - 1], q) > 0) return 0;
@@ -102,3 +90,41 @@ ll circleLattice(ll r) {
   }
   return s;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Poligonos - area, centroide, Pick e ponto em poligono**
+Area*2 sinalizada (shoelace), centroide da regiao, Teorema de Pick, ponto em poligono geral
+O(n) e convexo O(log n), pontos de rede em segmento e no circulo. Vertices em ordem, sem
+repetir o primeiro no fim.
+
+Complexidade: area/Pick/inPoly O(n); inConvex O(log n); circleLattice O(r)
+Uso:
+  vector<P> g;
+  ll a2 = area2(g);        // 2*area sinalizada (>0 anti-horario)
+  auto c = centroid(g);    // (cx, cy) em long double
+  pick(g, I, B);           // A2=|area2|; B na borda; I = (A2 - B + 2)/2 interiores
+  int t = inPoly(g, q);    // 0 fora, 1 borda, 2 dentro
+  int u = inConvex(g, q);  // idem; g CCW estrito, n >= 3
+  ll b = latticeOnSeg(a, b);  // gcd + 1
+  ll n = circleLattice(r);    // x^2+y^2 <= r^2
+
+* Sobre o codigo:
+  area2 soma cross(g[i], g[i+1]). centroid pondera cada triangulo (0,p,q) por 2*area. pick
+  soma gcd(|dx|,|dy|) nas arestas (borda) e usa A = I + B/2 - 1. inPoly lanca um raio para a
+  direita e conta cruzamentos; inConvex acha o setor por busca binaria. circleLattice conta
+  por coluna e corrige o erro de sqrt.
+
+* Problemas e reducoes:
+  + Area sinalizada / orientacao de poligono.
+  + Teorema de Pick: I = (A2 - B + 2)/2 e B = soma de gcd.
+  + Ponto em poligono geral O(n) e convexo O(log n).
+  + Centroide da regiao do poligono.
+  + Pontos de rede em segmento e dentro de circulo.
+
+Cuidados: guarde 2*area em inteiro. Poligono simples assumido. inConvex exige CCW e sem
+  vertices colineares (use hull() de hull_andrew.cpp). circleLattice calcula r*r em ll: para
+  r grande use __int128.
+Catalogo: Geometria.
+Digitacao: 83 linhas | dificil. Atalho: o teste de borda de inPoly repete onSeg; usar o mesmo
+  helper reduz o corpo de inPoly.
+*****************************LATEX_DESC_END*/

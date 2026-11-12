@@ -1,16 +1,4 @@
-// Berlekamp-Massey + n-esimo termo de recorrencia linear (Kitamasa O(k^2 log n))
-//
-// O que faz: dado s[0..m) de uma recorrencia linear de ordem L (mod primo), acha os
-//   coeficientes c com s[i] = sum_j c[j]*s[i-1-j]; kth(s, c, n) calcula s[n].
-// Quando usar: "n-esimo termo de DP de estado pequeno": calcule ~2*estados termos por brute,
-//   BM, depois Kitamasa (Catalogo > Algebra, polinomios e FFT: Berlekamp-Massey, Kitamasa,
-//   Recorrencia linear <-> matriz).
-// Complexidade: BM O(m^2); kth O(L^2 log n) (para L grande ver code/algebra/bostan_mori.cpp).
-// Uso: vector<ll> c = berlekampMassey(s); // c.size() = L, pode ser 0 (sequencia nula)
-//      ll x = kth(s, c, n);              // s[n] mod MOD, n 0-based, n ate 1e18
-// Cuidados: precisa de pelo menos 2L termos para o resultado ser confiavel; MOD primo.
-//   Se o chute de L estourar m/2, a recorrencia achada pode ser falsa: gere mais termos.
-//   A ordem minima achada serve tambem para polinomio minimo de matriz (Wiedemann).
+// Berlekamp-Massey + kth termo de recorrencia linear
 const ll MOD = 1000000007;
 ll pw(ll b, ll e) {
     ll r = 1; b %= MOD; if (b < 0) b += MOD;
@@ -37,7 +25,7 @@ vector<ll> berlekampMassey(vector<ll> s) {
     for (ll& x : C) x = (MOD - x) % MOD;
     return C; // s[i] = sum_j C[j] * s[i-1-j]
 }
-// x^k mod f(x), f(x) = x^n - sum_j c[j] x^(n-1-j); devolve vetor de tamanho n
+// x^k mod f(x), f de grau n; vetor de tamanho n
 vector<ll> polmod(vector<ll> a, vector<ll> b, const vector<ll>& c) {
     int n = c.size();
     vector<ll> r(2 * n, 0);
@@ -60,3 +48,33 @@ ll kth(const vector<ll>& s, const vector<ll>& c, ll k) {
     for (int i = 0; i < n; i++) ans = (ans + res[i] * s[i]) % MOD;
     return ans;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Berlekamp-Massey + Kitamasa**
+Dado s[0..m) de uma recorrencia linear de ordem L mod primo, acha os
+coeficientes c com s[i] = sum_j c[j]*s[i-1-j]; kth(s, c, n) calcula s[n]
+0-based, n ate 1e18.
+
+Complexidade: BM O(m^2); kth O(L^2 log n).
+Uso:
+  vector<ll> c = berlekampMassey(s);   // c.size() = L, pode ser 0
+  ll x = kth(s, c, n);                 // s[n] mod MOD
+
+* Sobre o codigo:
+  BM mantem o polinomio de conexao C e o ultimo B; a discrepancia d mede o erro
+  em i e, quando 2L <= i, atualiza L, B, b e zera m. O polinomio f(x) =
+  x^L - sum c[j] x^(L-1-j) define a recorrencia. kth faz exponenciacao binaria
+  de x modulo f com polmod, entao s[n] = sum res[i] s[i].
+
+* Problemas e reducoes:
+  + n-esimo termo de DP de estado pequeno: gere ~2*estados termos por brute,
+    rode BM e depois Kitamasa.
+  + Recorrencia linear <-> matriz (polinomio minimo, Wiedemann).
+  + Fechar formulas de sequencias lineares.
+
+Cuidados: precisa de pelo menos 2L termos para confiar no resultado; MOD primo.
+  Se o chute de L estourar m/2, a recorrencia pode ser falsa: gere mais termos.
+  Para L grande use code/algebra/bostan_mori.cpp.
+Catalogo: Algebra, polinomios e FFT (Berlekamp-Massey, Kitamasa).
+Digitacao: 48 linhas | dificil. Atalho: kth so precisa de polmod; se L e
+  pequeno, uma matriz L x L com exponenciacao tambem serve.
+*****************************LATEX_DESC_END*/

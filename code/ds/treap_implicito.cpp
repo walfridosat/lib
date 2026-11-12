@@ -1,19 +1,4 @@
-// Treap implicito (sequencia) com split/merge, reverse e soma/add lazy
-//
-// O que faz: sequencia dinamica. Insere/remove na posicao, corta/cola
-//   pedacos, reverte intervalo, soma em intervalo, add em intervalo.
-// Quando usar: "Catalogo > Estruturas de dados" (Treap implicito, lazy de
-//   reverse/add): mover bloco, cortar-colar substring, reverter intervalo,
-//   segtree com insercao no meio.
-// Complexidade: O(log n) esperado por operacao.
-// Uso: Treap t; // raiz = t.root (0 = vazio), nos 1..; indices 0-based
-//   t.build(vector<ll> v); t.insert(pos, val); t.erase(pos);
-//   t.reverse(l, r); t.add(l, r, v); t.sum(l, r);   // intervalo [l, r]
-//   t.move(l, r, pos) // move bloco [l,r] para depois de pos elementos restantes
-//   t.get(pos); t.size();  t.dump(vector<ll>&) // em ordem
-// Cuidados: split(t,k) separa primeiros k em L. push() antes de descer.
-//   Para outro agregado (min, max...) edite pull()/apply(). Nos nunca sao
-//   reaproveitados (MAXN = total de insercoes).
+// Treap implicito - sequencia com split/merge e lazy
 struct Treap {
 	struct Nd { int l = 0, r = 0, sz = 0; unsigned pr = 0; ll val = 0, sum = 0, lz = 0; bool rev = false; };
 	vector<Nd> t; int root = 0;
@@ -68,3 +53,34 @@ struct Treap {
 	void dump(vector<ll>& out) { out.clear(); dfs(root, out); }
 	void dfs(int x, vector<ll>& out) { if (!x) return; push(x); dfs(t[x].l, out); out.push_back(t[x].val); dfs(t[x].r, out); }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Treap Implicito**
+Sequencia dinamica com split/merge: insere/remove por posicao, corta/cola
+pedacos, reverte intervalo, soma e add em intervalo. 0-based, [l, r] inclusivo.
+
+Complexidade: O(log n) esperado por operacao.
+Uso:
+  Treap t;                              // raiz = t.root (0 = vazio)
+  t.build(vector<ll> v);
+  t.insert(pos, val); t.erase(pos);
+  t.reverse(l, r); t.add(l, r, v); t.sum(l, r);   // [l, r]
+  t.move(l, r, pos);   // [l,r] vai para depois de pos elementos restantes
+  t.get(pos); t.size(); t.dump(vector<ll>&);      // em ordem
+
+* Sobre o codigo:
+  Cada no guarda tamanho, prioridade, valor, soma e lazies de add/reverse.
+  split(x, k) separa os k primeiros; merge junta por prioridade. on isola
+  [l, r] com dois splits e aplica f na raiz do pedaco.
+
+* Problemas e reducoes:
+  + Mover bloco / cortar e colar substring.
+  + Reverter intervalo (lazy de reverse).
+  + Range add + range sum numa sequencia.
+  + Inserir/remover no meio (segtree com insercao).
+
+Cuidados: split(t, k) separa os primeiros k em L. push() antes de descer.
+  Para outro agregado (min, max) edite pull()/apply(). Nos nunca sao
+  reaproveitados (MAXN = total de insercoes).
+Catalogo: Estruturas de dados (Treap implicito, lazy).
+Digitacao: 54 linhas | dificil. Atalho: sum() pode ler t[b].sum direto.
+*****************************LATEX_DESC_END*/

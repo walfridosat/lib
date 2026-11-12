@@ -1,22 +1,10 @@
-// Two pointers / janela deslizante (templates)
-//
-// O que faz: (1) conta subarrays "bons" quando a propriedade e monotonica (encolher nunca piora);
-//            (2) "no maximo k distintos" e "exatamente k distintos" = atMost(k) - atMost(k-1);
-//            (3) janela com max - min <= K usando dois deques.
-// Quando usar: "subarray com soma <= S (valores >= 0)", "no maximo k distintos", "max-min <= k".
-//              Catalogo > Arrays e guloso (Two pointers / janela, Exatamente k distintos, Janela com max-min)
-// Complexidade: O(n) (ou O(n log) se bad() for pesado)
-// Uso: 0-based. countGood(n, bad): bad(l, r) deve dizer se a janela [l, r] e RUIM; precisa ser monotona
-//      (se [l,r] e ruim, [l,r+1] e [l-1,r] tambem). Devolve o numero de subarrays bons.
-//      atMostK(a, k), exactK(a, k) -> contagem de subarrays com <= k / exatamente k valores distintos.
-//      countMaxMinLE(a, K) -> subarrays com max - min <= K.
-// Cuidados: two pointers NAO vale com negativos (use prefixos + BIT). Contagem pode estourar int (use ll).
+// Two pointers - janela monotonica, k distintos, max-min
 
-// Conta subarrays [l, r] nao ruins. Para cada r, o menor l valido e nao decrescente.
+// conta subarrays nao ruins; menor l valido nao decresce
 template<class F> ll countGood(int n, F bad) {
     ll ans = 0; int l = 0;
     for (int r = 0; r < n; r++) {
-        while (l <= r && bad(l, r)) l++;   // se l > r a janela e vazia (nenhum subarray terminando em r)
+        while (l <= r && bad(l, r)) l++;   // se l > r a janela e vazia
         ans += r - l + 1;
     }
     return ans;
@@ -35,7 +23,7 @@ ll atMostK(const vector<int>& a, int k) {
 }
 ll exactK(const vector<int>& a, int k) { return atMostK(a, k) - atMostK(a, k - 1); }
 
-// subarrays com max - min <= K (deques monotonicos de indices)
+// subarrays com max - min <= K (deques)
 ll countMaxMinLE(const vector<ll>& a, ll K) {
     deque<int> mx, mn; ll ans = 0; int l = 0;
     for (int r = 0; r < (int)a.size(); r++) {
@@ -52,3 +40,29 @@ ll countMaxMinLE(const vector<ll>& a, ll K) {
     }
     return ans;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Two Pointers / Janela Deslizante**
+Conta subarrays bons quando a propriedade e monotonica; "no maximo k distintos"
+(exactK = atMostK(k) - atMostK(k-1)); janela com max - min <= K.
+
+Complexidade: O(n) (ou O(n log n) se bad() for pesado)
+Uso:
+  ll c = countGood(n, bad);   // bad(l, r) diz se [l, r] e RUIM; precisa ser monotonica
+  ll a1 = atMostK(a, k), a2 = exactK(a, k);
+  ll m = countMaxMinLE(a, K);
+
+* Sobre o codigo:
+  countGood para cada r avanca l enquanto a janela for ruim e soma r - l + 1.
+  atMostK usa map de frequencias; exactK subtrai as duas contagens.
+  countMaxMinLE mantem deques monotonos do maximo e do minimo.
+
+* Problemas e reducoes:
+  + Subarray com soma <= S com valores >= 0.
+  + No maximo k valores distintos; exatamente k distintos.
+  + Subarrays com max - min <= K.
+
+Cuidados: two pointers NAO vale com negativos (use prefixos + BIT);
+  a contagem pode estourar int (use ll).
+Catalogo: Arrays e guloso (Two pointers / janela, Exatamente k distintos, Janela com max-min)
+Digitacao: 38 linhas | media.
+*****************************LATEX_DESC_END*/

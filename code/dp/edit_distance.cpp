@@ -1,13 +1,4 @@
-// Edit distance (Levenshtein) com reconstrucao e versao em faixa
-//
-// O que faz: edit_dist: distancia minima (inserir/remover/trocar) entre a e b e uma sequencia de operacoes.
-//   edit_band(a,b,k): O(n*k), retorna distancia se <= k, senao k+1.
-// Quando usar: Catalogo > DP > "LCS/edit distance com distancia <= k pequena", "Reconstrucao do caminho".
-// Complexidade: edit_dist O(nm) tempo/memoria; edit_band O((n+m) k).
-// Uso: int d = edit_dist(a, b, ops); ops e string com 'M' (igual), 'S' (trocar), 'I' (inserir char de b), 'D' (remover char de a),
-//   na ordem da esquerda para a direita. 0-based nas strings.
-// Cuidados: memoria n*m ints (5000x5000 = 100MB); para so o valor use 2 linhas. Para n,m ~1e5 e dist pequena: edit_band.
-//   Pesos diferentes por operacao: troque os "+1". Myers bitset nao incluido.
+// Edit distance (Levenshtein) - distancia e reconstrucao
 int edit_dist(const string& a, const string& b, string& ops){
     int n = a.size(), m = b.size();
     vector<vector<int>> dp(n+1, vector<int>(m+1));
@@ -51,3 +42,31 @@ int edit_band(const string& a, const string& b, int k){
     int r = prv[m - n + k];
     return r > k ? k + 1 : r;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Edit distance (Levenshtein) e versao em faixa**
+edit_dist: distancia minima (inserir/remover/trocar) entre a e b, com uma
+sequencia de operacoes. edit_band: so verifica se a distancia e <= k.
+
+Complexidade: edit_dist O(nm) tempo/memoria; edit_band O((n+m) k).
+Uso:
+  int d = edit_dist(a, b, ops);   // ops: 'M' igual, 'S' troca, 'I' insere, 'D' remove
+  int e = edit_band(a, b, k);     // distancia se <= k, senao k+1
+
+* Sobre o codigo:
+  dp[i][j] = distancia entre a[0..i) e b[0..j). A recorrencia pega remocao,
+  insercao ou troca. A reconstrucao volta de (n,m) para (0,0) escolhendo a
+  transicao que gerou dp[i][j] e inverte ops. edit_band guarda so a diagonal
+  j-i em [-k,k], no indice j-i+k.
+
+* Problemas e reducoes:
+  + Distancia de edicao com custo unitario por operacao.
+  + Testar se duas strings diferem em no maximo k edicoes (edit_band).
+  + Alinhamento de sequencias com substituicao, insercao e remocao.
+
+Cuidados: memoria n*m ints (5000x5000 = 100MB); para so o valor use 2 linhas.
+  edit_band exige |n-m| <= k. Pesos diferentes: troque os "+1". Myers bitset
+  nao incluido.
+Catalogo: DP > LCS/edit distance / reconstrucao do caminho.
+Digitacao: 42 linhas | media. Atalho: para so o valor, descarte a matriz e use
+  duas linhas (ou a banda).
+*****************************LATEX_DESC_END*/

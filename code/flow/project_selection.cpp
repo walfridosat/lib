@@ -1,18 +1,4 @@
 // Fecho maximo / selecao de projetos (closure) via corte minimo
-//
-// O que faz: escolhe conjunto S de itens maximizando soma dos lucros p[i] (podem ser
-//   negativos = custo), com dependencias "escolher i exige escolher j".
-// Quando usar: "projetos x ferramentas", "lucro - custo com dependencias", segmentacao,
-//   Catalogo > Grafos ("Selecao com custo de par", "Maximo closure"), Otimizacao >
-//   "Fecho maximo", "Binario submodular".
-// Complexidade: um Dinic em n+2 vertices.
-// Uso: Closure c(n); c.profit(i,p); c.need(i,j) /* i exige j */;
-//   ll best=c.solve(); vector<bool> pick = c.chosen;
-//   Resposta = soma dos lucros positivos - corte minimo.
-// Cuidados: bonus de par ("ganha w se escolher a E b") -> vertice aux com lucro +w que
-//   exige a e b. Custo de par que so existe se ambos escolhidos idem com lucro -c nao
-//   funciona direto; reveja o modelo (termos binarios so por corte se submodulares,
-//   Catalogo > Otimizacao). INF = 1e15; soma dos lucros deve caber em ll.
 struct Closure {
     int n; ll sum = 0; vector<ll> p; vector<pair<int,int>> dep; vector<bool> chosen;
     Closure(int n) : n(n), p(n, 0) {}
@@ -67,3 +53,48 @@ struct Closure {
         return sum - cut;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Fecho maximo / selecao de projetos (closure)**
+Escolhe um conjunto S de itens maximizando a soma dos lucros p[i] (custos sao
+negativos), com dependencias "escolher i exige escolher j". 0-indexed.
+
+Complexidade: um Dinic em n + 2 vertices.
+Uso:
+  Closure c(n); c.profit(i, p); c.need(i, j); // i exige j
+  ll best = c.solve(); vector<bool> pick = c.chosen;
+  Resposta = soma dos lucros positivos - corte minimo.
+
+* Sobre o codigo:
+  Rede: s -> i com cap p[i] quando p[i] > 0; i -> t com cap -p[i] quando
+  p[i] < 0; i -> j com INF para cada dependencia. O corte minimo paga os
+  projetos abandonados e os custos dos escolhidos; o lado de s no residual
+  e o conjunto escolhido.
+
+* Problemas e reducoes:
+  + Fecho de peso maximo em grafo dirigido: s -> v (w > 0), v -> t (-w se
+    w < 0), arestas originais cap INF; resposta = soma dos positivos -
+    corte.
+  + Project selection: projetos com lucro, maquinas/ferramentas com custo,
+    projeto -> ferramenta cap INF; compre as ferramentas do lado de s.
+  + Dependencia "i exige j": aresta i -> j com INF; se i e escolhido, j fica
+    do lado de s.
+  + Cursos com pre-requisitos: lucro = creditos, custo = esforco; fecho.
+  + Bonus de par ("ganha w se escolher a e b"): vertice auxiliar com lucro w
+    e arestas INF para a e para b; so recebe o bonus se ambos entrarem.
+  + Penalidade/custo de escolher: p[i] negativo vira i -> t com cap -p[i].
+  + Conjunto fechado para tras (ideal) de peso maximo em um DAG.
+  + Maximizar receita com custos fixos de infraestrutura compartilhada:
+    cada item tem lucro, cada infraestrutura tem custo e e exigida por itens.
+  + Verificar se um conjunto e fechado: toda aresta de i em S leva a j em S.
+  + Caso sem dependencias: cada item com lucro positivo entra; com lucro
+    negativo fica fora; o corte reproduz isso.
+
+Cuidados: bonus de par ("ganha w se escolher a E b") -> vertice auxiliar com
+  lucro +w que exige a e b. Custo de par que so existe se ambos escolhidos
+  nao funciona direto (termos binarios so por corte se submodulares).
+  INF = 1e15; soma dos lucros deve caber em ll.
+Catalogo: Grafos (selecao com custo de par, maximo closure), Otimizacao
+  (fecho maximo, binario submodular).
+Digitacao: 54 linhas | media. Atalho: o Dinic interno duplica dinic.cpp;
+  poderia incluir dinic.cpp e reusar a struct.
+*****************************LATEX_DESC_END*/

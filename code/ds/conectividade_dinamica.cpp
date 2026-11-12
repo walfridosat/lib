@@ -1,22 +1,4 @@
-// Conectividade dinamica offline (segtree no tempo + DSU com rollback)
-//
-// O que faz: cada aresta existe em um intervalo de tempo [l, r). Insere a
-//   aresta em O(log T) nos da segtree sobre o tempo; um DFS aplica as unioes
-//   (com rollback) e responde as queries nas folhas.
-// Quando usar: "Catalogo > Estruturas de dados" (DSU offline dinamico);
-//   add/remove aresta com queries de conectividade, numero de componentes,
-//   bipartido (troque pela DSU com paridade com rollback), MST offline.
-// Complexidade: O((m + q) log T log n).
-// Uso: DynCon dc(T);           // tempos 0..T-1
-//   dc.add(l, r, a, b);        // aresta (a,b) viva em tempos [l, r)
-//   dc.run(n, f);              // f(t) chamado em cada folha t (0..T-1)
-//   Dentro de f use dc.comps, dc.find(x), dc.sz[dc.find(x)].
-//   Ex: dc.run(n, [&](int t){ ans[t] = dc.comps; });
-//   DSU com rollback embutida (mesma de code/ds/dsu_rollback.cpp).
-// Cuidados: aresta ainda viva no fim -> r = T. Se a mesma aresta aparece e
-//   some varias vezes, adicione um intervalo por aparicao (use map p/ achar l).
-//   Recursao profundidade log T. Se so quer responder em alguns tempos,
-//   marque e filtre em f.
+// Conectividade dinamica offline - segtree no tempo + DSU rollback
 struct DynCon {
 	int T, comps;
 	vector<vector<pair<int,int>>> seg;
@@ -59,3 +41,32 @@ struct DynCon {
 		dfs(1, 0, T, f);
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Conectividade dinamica offline**
+Cada aresta existe em um intervalo [l,r); ela entra em O(log T) nos da
+segtree sobre o tempo e um DFS com DSU rollback responde as folhas.
+
+Complexidade: O((m + q) log T log n).
+Uso:
+  DynCon dc(T);              // tempos 0..T-1
+  dc.add(l, r, a, b);        // aresta (a,b) viva em tempos [l, r)
+  dc.run(n, [&](int t){ ans[t] = dc.comps; });
+  // dentro de f: dc.comps, dc.find(x), dc.sz[dc.find(x)]
+
+* Sobre o codigo:
+  Segtree sobre o tempo guarda as arestas; o DFS aplica as unioes, chama f
+  nas folhas e desfaz com rollback ao voltar (sem compressao de caminho).
+
+* Problemas e reducoes:
+  + Add/remove aresta com queries de conectividade (offline).
+  + Numero de componentes por tempo.
+  + Grafo bipartido online: use DSU com paridade com rollback.
+  + MST offline e consultas por tempo.
+
+Cuidados: aresta viva ate o fim -> r = T. Se a mesma aresta aparece e some
+  varias vezes, adicione um intervalo por aparicao. Recursao de profundidade
+  log T. Se so quer responder em alguns tempos, marque e filtre em f.
+Catalogo: Estruturas de dados.
+Digitacao: 42 linhas | dificil. Atalho: a DSU com rollback pode ser a de
+  dsu_rollback.cpp, evitando duplicar join/rollback.
+*****************************LATEX_DESC_END*/

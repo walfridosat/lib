@@ -1,13 +1,4 @@
-// Line container (CHT dinamico, estilo KACTL)
-//
-// O que faz: insere retas y=k*x+m em qualquer ordem e consulta o MAXIMO em x.
-// Quando usar: "Catalogo > Estruturas de dados" (CHT insercoes arbitrarias,
-//   set ordenado de retas). Alternativa: code/ds/lichao.cpp.
-// Complexidade: O(log n) amortizado por insercao e consulta.
-// Uso: LineContainer lc; lc.add(k, m); lc.query(x) -> max_i(k_i*x+m_i).
-//   Para MINIMO: add(-k,-m) e negue a resposta.
-// Cuidados: query em container vazio eh indefinido. Divisao usa floor para
-//   inteiros (isec). Valores ate ~1e18 ok; k*x+m deve caber em ll.
+// CHT dinamico - LineContainer (KACTL)
 struct Line {
 	mutable ll k, m, p; // p = ate onde essa reta eh a melhor
 	bool operator<(const Line& o) const { return k < o.k; }
@@ -33,3 +24,29 @@ struct LineContainer : multiset<Line, less<>> {
 		return l.k * x + l.m;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **CHT dinamico (LineContainer)**
+Insere retas y=k*x+m em qualquer ordem e consulta o MAXIMO em x.
+Para MINIMO: add(-k,-m) e negue a resposta.
+
+Complexidade: O(log n) amortizado por insercao e consulta.
+Uso:
+  LineContainer lc; lc.add(k, m);
+  ll v = lc.query(x);   // max_i(k_i*x + m_i)
+
+* Sobre o codigo:
+  multiset ordenado por inclinacao; p = x a partir do qual a reta e melhor.
+  isect calcula a intersecao (divisao floor); add remove vizinhas dominadas.
+
+* Problemas e reducoes:
+  + DP com retas inseridas em ordem arbitraria.
+  + Maximo de k*x+m para consultas em qualquer x.
+  + Minimo via negacao das retas e da resposta.
+  + Manter envelope superior de retas online.
+
+Cuidados: query em container vazio e indefinido. A divisao de isect e floor
+  para inteiros. k*x+m deve caber em ll (valores ate ~1e18 ok).
+  Alternativa: code/ds/lichao.cpp.
+Catalogo: Estruturas de dados.
+Digitacao: 25 linhas | dificil.
+*****************************LATEX_DESC_END*/

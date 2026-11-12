@@ -1,14 +1,4 @@
-// NTT (transformada teorica dos numeros) e convolucao mod 998244353
-//
-// O que faz: multiplica dois polinomios com coeficientes mod 998244353 (g = 3).
-// Quando usar: "contagem vira produto de polinomios", soma de pares a_i+b_j=s
-//   (Catalogo > Algebra, polinomios e FFT: Convolucao de somas, NTT primos amigaveis).
-// Complexidade: O(n log n) por transformada.
-// Uso: vector<int> c = multiply(a, b); // c[k] = sum a[i]*b[k-i] mod MOD, 0-based
-//   ntt(a, false) transforma (tamanho potencia de 2); ntt(a, true) e a inversa.
-//   Outros primos NTT: 167772161 (g=3), 469762049 (g=3), 1004535809 (g=3), 754974721 (g=11).
-// Cuidados: tamanho maximo 2^23 neste primo; entradas devem estar em [0, MOD).
-//   Para modulo arbitrario ver code/algebra/conv_mod.cpp.
+// NTT e convolucao mod 998244353
 const int MOD = 998244353, G = 3;
 ll pw(ll b, ll e) { // b^e mod MOD
     ll r = 1; b %= MOD; if (b < 0) b += MOD;
@@ -61,3 +51,30 @@ vector<int> multiply(vector<int> a, vector<int> b) {
     a.resize(need);
     return a;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **NTT e convolucao mod 998244353**
+Multiplica dois polinomios com coeficientes mod 998244353 (raiz primitiva 3),
+0-based.
+
+Complexidade: O(n log n) por transformada.
+Uso:
+  vector<int> c = multiply(a, b);   // c[k] = sum a[i]*b[k-i] mod MOD
+  ntt(a, false);                   // transformada (tamanho potencia de 2)
+  ntt(a, true);                    // inversa
+
+* Sobre o codigo:
+  ntt faz bit-reversal e os estagios de borboleta com potencias de
+  w = g^((p-1)/len); a inversa usa w^-1 e divide por n. multiply cai no ingenuo
+  quando um dos vetores tem tamanho <= 16.
+
+* Problemas e reducoes:
+  + Convolucao de polinomios e somas de pares a_i + b_j = s.
+  + Contagem que vira produto de polinomios.
+  + Knapsack de contagem via exp/ln (ver poly.cpp).
+
+Cuidados: tamanho maximo 2^23 neste primo; entradas em [0, MOD). Outros primos
+  NTT: 167772161, 469762049, 1004535809 (g=3) e 754974721 (g=11). Para modulo
+  arbitrario ver conv_mod.cpp.
+Catalogo: Algebra, polinomios e FFT (Convolucao de somas / NTT primos).
+Digitacao: 52 linhas | media.
+*****************************LATEX_DESC_END*/

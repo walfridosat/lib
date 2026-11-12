@@ -1,15 +1,6 @@
-// Mediana dinamica em janela deslizante (dois multisets)
-//
-// O que faz: mantem mediana e soma |a_i - mediana| de um multiconjunto com inserir/remover.
-// Quando usar: "custo de igualar elementos a mediana em janela", "mediana de cada janela de tamanho k".
-//              Catalogo > Arrays e guloso (Mediana, Mediana dinamica, Tornar consecutivos)
-// Complexidade: O(log n) por operacao
-// Uso: MedianSet m; m.add(x); m.rem(x); m.median() (mediana inferior); m.cost() = sum |x - mediana|.
-//      slidingMedianCost(a, k) -> vetor com o custo de cada janela de tamanho k.
-// Cuidados: rem exige x presente; mediana inferior (elemento de posicao (n-1)/2 em ordem). Para progressao +1
-//           use b_i = a_i - i antes. Somas em ll.
+// Mediana em janela - dois multisets e custo |x - mediana|
 struct MedianSet {
-    multiset<ll> lo, hi;      // lo guarda a metade menor (tamanho = ceil(n/2)), hi a maior
+    multiset<ll> lo, hi;      // lo = metade menor (ceil(n/2)); hi = maior
     ll slo = 0, shi = 0;
     void bal() {
         while (lo.size() > hi.size() + 1) { auto it = prev(lo.end()); slo -= *it; shi += *it; hi.insert(*it); lo.erase(it); }
@@ -40,3 +31,27 @@ vector<ll> slidingMedianCost(const vector<ll>& a, int k) {
     }
     return res;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Mediana em Janela**
+Mantem a mediana e a soma |x - mediana| de um multiconjunto com inserir/remover.
+
+Complexidade: O(log n) por operacao
+Uso:
+  MedianSet m; m.add(x); m.rem(x);
+  ll med = m.median(); ll c = m.cost();
+  vector<ll> cs = slidingMedianCost(a, k);
+
+* Sobre o codigo:
+  lo guarda a metade menor (ceil(n/2)) e hi a maior; slo/shi sao as somas.
+  bal reequilibra os dois multisets; cost usa a mediana e as somas.
+
+* Problemas e reducoes:
+  + Custo de igualar uma janela a mediana: slidingMedianCost.
+  + Mediana de cada janela de tamanho k.
+  + Tornar consecutivos: use b_i = a_i - i antes.
+
+Cuidados: rem exige x presente; mediana inferior (posicao (n-1)/2);
+  somas em ll.
+Catalogo: Arrays e guloso (Mediana, Mediana dinamica, Tornar consecutivos)
+Digitacao: 32 linhas | media.
+*****************************LATEX_DESC_END*/

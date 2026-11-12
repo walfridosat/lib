@@ -1,15 +1,4 @@
-// Ponto/vetor inteiro + primitivas exatas
-//
-// O que faz: struct P (ll) com cross, dot, orientacao, ordenacao angular exata,
-//   interseção de segmentos, ponto em segmento, distancia ponto-segmento, interseção de retas.
-// Quando usar: Catalogo > Geometria (orientacao, interseção, ordenacao angular, ponto-segmento).
-//   Sempre que coordenadas forem inteiras: evita double completamente.
-// Complexidade: O(1) cada.
-// Uso: P a(1,2), b(3,4); cross(a,b); cr(a,b,c) = cross(b-a,c-a) (>0 anti-horario);
-//   sgn(x); segInter(a,b,c,d) (inclui toque); onSeg(a,b,p); angLess(u,v) como comparador
-//   sort(v.begin(), v.end(), angLess) ordena por angulo em [0,2pi) a partir do eixo +x.
-// Cuidados: coordenadas ate 1e9 => cross cabe em ll (<= 4e18 ~ no limite, use __int128 se 1e18).
-//   lineInter devolve long double e exige retas nao paralelas.
+// Ponto inteiro e primitivas exatas
 
 struct P {
   ll x, y;
@@ -28,7 +17,7 @@ int sgn(ll x) { return (x > 0) - (x < 0); }
 
 // meio-plano: 0 para angulo em [0,pi), 1 para [pi,2pi)
 int half(P p) { return (p.y > 0 || (p.y == 0 && p.x > 0)) ? 0 : 1; }
-// comparador angular exato (p != (0,0)); empate (mesma direcao) => mais perto primeiro
+// comparador angular exato; empate: mais perto antes
 bool angLess(P a, P b) {
   if (half(a) != half(b)) return half(a) < half(b);
   ll c = cross(a, b);
@@ -42,7 +31,7 @@ bool onSeg(P a, P b, P p) {
          min(a.y, b.y) <= p.y && p.y <= max(a.y, b.y);
 }
 
-// segmentos ab e cd se intersectam (inclui toque e colinear sobreposto)?
+// se intersectam (inclui toque/colinear)
 bool segInter(P a, P b, P c, P d) {
   int o1 = sgn(cr(a, b, c)), o2 = sgn(cr(a, b, d));
   int o3 = sgn(cr(c, d, a)), o4 = sgn(cr(c, d, b));
@@ -59,9 +48,44 @@ double distPointSeg(P a, P b, P p) {
   return fabs((double)cross(b - a, p - a)) / sqrt((double)l);
 }
 
-// interseção das retas ab e cd (nao paralelas: cross(b-a,d-c) != 0)
+// intersecao das retas ab e cd (nao paralelas: cross(b-a,d-c) != 0)
 // ponto = a + (b-a)*t, t = cross(c-a, d-c)/cross(b-a, d-c)
 pair<long double, long double> lineInter(P a, P b, P c, P d) {
   long double t = (long double)cross(c - a, d - c) / cross(b - a, d - c);
   return {a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t};
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Ponto inteiro e primitivas exatas**
+Struct P (ll) com cross, dot, orientacao, ordenacao angular exata, intersecao de segmentos,
+ponto em segmento, distancia ponto-segmento e intersecao de retas. Evita double por completo.
+
+Complexidade: O(1) por operacao
+Uso:
+  P a(1,2), b(3,4);
+  ll c = cross(a, b);          // cr(a,b,c) = cross(b-a, c-a)
+  int s = sgn(x);              // -1, 0, 1
+  bool i = segInter(a,b,c,d);  // inclui toque e colinear sobreposto
+  bool on = onSeg(a, b, p);
+  sort(v.begin(), v.end(), angLess);  // angulo em [0,2pi) a partir de +x
+  auto q = lineInter(a, b, c, d);     // long double, retas nao paralelas
+
+* Sobre o codigo:
+  cr(a,b,c) = cross(b-a, c-a): > 0 anti-horario. angLess usa half (semiplano) e cross para
+  ordenar sem float; empate de direcao desempata por norm2. segInter combina sinais opostos
+  com onSeg para cobrir toque e sobreposicao.
+
+* Problemas e reducoes:
+  + Orientacao exata de tres pontos.
+  + Intersecao de segmentos incluindo toque/colinear.
+  + Ponto em segmento.
+  + Ordenacao angular exata (comparador para sort).
+  + Distancia ponto-segmento e intersecao de retas.
+
+Cuidados: coords ate 1e9 => cross cabe em ll (ate ~4e18, perto do limite); para 1e18 use
+  __int128. lineInter devolve long double e exige retas nao paralelas. distPointSeg usa
+  double.
+Catalogo: Geometria.
+Digitacao: 49 linhas | facil. Atalho: distPointSeg e lineInter sao opcionais e podem sair;
+  o resto e a base minima.
+*****************************LATEX_DESC_END*/

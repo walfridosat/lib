@@ -1,17 +1,4 @@
-// Segtree com lazy generica (estilo ACL) + descida max_right
-//
-// O que faz: update em intervalo (aplica tag F) e query de intervalo (monoide S),
-//   com tags que se compoem. Tambem max_right: maior r com pred(prod[l,r)) true.
-// Quando usar: Catalogo > Estruturas de dados (Lazy para update em
-//   intervalo, no como monoide de funcoes, descida na segtree).
-//   Exemplos: add+soma, add+max, atribuicao+soma, afim+soma.
-// Complexidade: O(log n) por op; build O(n).
-// Uso: edite S/F/op/e/mapping/comp/fid no topo (exemplo: add em intervalo,
-//   soma). LazySeg s(vector<S>); s.apply(l,r,f) [l,r) 0-based; s.query(l,r);
-//   s.set(p,v); s.get(p); s.max_right(l, pred) -> indice r (n se vai ate o fim).
-// Cuidados: S precisa carregar o tamanho (len) se mapping depende dele.
-//   comp(f,g) = aplicar g PRIMEIRO e depois f (f mais recente). Para
-//   atribuicao use flag "tem tag" em F. Persistente com lazy: ver seg_persist.
+// Segtree lazy generica (ACL) - update em range e max_right
 struct S { ll sum; ll len; };           // no
 struct F { ll add; };                   // tag
 S op(S a, S b) { return {a.sum + b.sum, a.len + b.len}; }
@@ -80,3 +67,33 @@ struct LazySeg {
         return mr(2 * o + 1, m, hi, l, acc, pred);
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree Lazy Generica (ACL)**
+Update em intervalo aplicando tag F e query de intervalo com monoide S, com
+tags que se compoem; inclui max_right por descida. 0-based, [l, r).
+
+Complexidade: O(log n) por op; build O(n).
+Uso:
+  // edite S, F, op, e, mapping, comp, fid no topo
+  LazySeg s(vector<S>);
+  s.apply(l, r, f);        // [l, r)
+  S q = s.query(l, r);
+  s.set(p, v); s.get(p);
+  int r = s.max_right(l, pred);  // maior r com pred(prod[l,r)), n no fim
+
+* Sobre o codigo:
+  t[o] guarda o monoide e z[o] a tag pendente. ap aplica mapping e comp;
+  push propaga para os filhos. mr desce devolvendo o maior prefixo valido.
+
+* Problemas e reducoes:
+  + Range add + range sum/max.
+  + Range assignment + range sum (com flag "tem tag" em F).
+  + Range affine (a*x + b) + soma.
+  + max_right: maior prefixo com predicado monotonico (ex.: soma <= limite).
+
+Cuidados: S precisa carregar o tamanho (len) se mapping depender dele.
+  comp(f, g) aplica g primeiro e depois f (f e a tag mais recente).
+  Persistente com lazy: veja seg_persist.
+Catalogo: Estruturas de dados (Lazy, descida).
+Digitacao: 68 linhas | dificil. Atalho: ok.
+*****************************LATEX_DESC_END*/

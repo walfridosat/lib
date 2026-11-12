@@ -1,21 +1,5 @@
-// Inclusao-exclusao: utilitarios
-//
-// O que faz: (1) contar inteiros em [1,N] nao divisiveis por nenhum de uma lista
-//   (IE com DFS e poda); (2) "exatamente k" a partir de "pelo menos k" (inversao
-//   binomial); (3) IE sobre subconjuntos por mascara com funcao N(S); (4) min-max:
-//   max(S) = sum_{T} (-1)^{|T|+1} min(T) (esperanca do maximo, coupon desigual);
-//   (5) sum_{k = r mod m} C(n,k) via (1+x)^n mod (x^m - 1).
-// Quando usar: "Catalogo > Combinatoria" (Inclusao-exclusao; Exatamente k; Min-max;
-//   Filtro de raizes da unidade). Sobrejecoes: stirling_bell.cpp (surjections).
-// Complexidade: (1) O(2^m) com poda; (3)(4) O(2^n * n); (5) O(m^2 log n).
+// Inclusao-exclusao - utilitarios
 // Requer: code/combinatorics/binom_mod.cpp (cole antes).
-// Uso: precisa de binom_mod.cpp (MOD, pw, C, init_comb) colado antes.
-//   count_coprime(N, d): # x em [1,N] com x % d_i != 0 para todo i.
-//   exact_from_atleast(g): g[k] = sum_{|S|=k} N(S) (pelo menos); devolve f[k] = # com exatamente k.
-//   ie_subsets(n, N): sum_S (-1)^{|S|} N(mask), N vira lambda mask->ll (mod MOD).
-//   minmax_expect(n, minv): minv[mask] = E[min dos elementos de mask] mod p -> E[max de todos].
-//   sum_binom_mod_class(n, m, r) = sum_{k = r (mod m)} C(n,k) mod MOD (n ate 1e18, m ate ~2000).
-// Cuidados: (1) d_i com lcm > N sao podados (contribuem 0); sem d_i=0. (2) usa binomiais C(j,k).
 ll ce_rec(const vector<ll>& d, size_t i, ll l, ll N, int sg) {
     ll res = 0;
     for (size_t j = i; j < d.size(); j++) {
@@ -30,7 +14,7 @@ ll count_coprime(ll N, vector<ll> d) {
     sort(d.begin(), d.end()); d.erase(unique(d.begin(), d.end()), d.end());
     return N + ce_rec(d, 0, 1, N, -1);   // N - sum |A_i| + sum |A_i ^ A_j| - ...
 }
-// g[k] = sum_{|S|=k} N(S); f[k] = sum_{j>=k} (-1)^{j-k} C(j,k) g[j]
+// inversao binomial de "pelo menos k"
 vector<ll> exact_from_atleast(const vector<ll>& g) {
     int n = g.size();
     vector<ll> f(n, 0);
@@ -41,7 +25,7 @@ vector<ll> exact_from_atleast(const vector<ll>& g) {
         }
     return f;
 }
-template<class F> ll ie_subsets(int n, F N) { // N(mask) = # que satisfazem todos os defeitos de mask
+template<class F> ll ie_subsets(int n, F N) { // N(mask) = satisfaz todos os defeitos
     ll r = 0;
     for (int m = 0; m < (1 << n); m++) {
         ll t = N(m) % MOD;
@@ -69,3 +53,35 @@ ll sum_binom_mod_class(ll n, int m, int r) { // (1+x)^n mod (x^m - 1)
     for (; n > 0; n >>= 1, base = mul(base, base)) if (n & 1) res = mul(res, base);
     return res[r % m];
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Inclusao-exclusao - utilitarios**
+Contagem por IE, inversao "exatamente k", IE sobre subconjuntos, min-max e soma de binomiais por classe.
+
+Complexidade: (1) O(2^m) com poda; (3)(4) O(2^n n); (5) O(m^2 log n).
+Uso:
+  ll c = count_coprime(N, d);
+  vector<ll> f = exact_from_atleast(g);
+  ll s = ie_subsets(n, N);             // N e lambda mask -> ll
+  ll e = minmax_expect(n, minv);
+  ll sb = sum_binom_mod_class(n, m, r);
+
+* Sobre o codigo:
+  count_coprime faz IE por DFS sobre os divisores, podando lcm > N.
+  exact_from_atleast inverte a relacao binomial. ie_subsets e minmax_expect
+  varrem mascaras com sinal. sum_binom_mod_class eleva (1+x) a n modulo
+  x^m - 1 por exponenciacao binaria.
+
+* Problemas e reducoes:
+  + Contar x em [1,N] nao divisiveis por nenhum d_i -> count_coprime.
+  + Passar de "pelo menos k" para "exatamente k" -> exact_from_atleast.
+  + Somar (-1)^|S| N(S) sobre subconjuntos -> ie_subsets.
+  + Esperanca do maximo a partir do minimo de cada subconjunto -> minmax_expect.
+  + Coupon collector com taxas desiguais -> minmax_expect.
+  + Soma de C(n,k) com k = r mod m -> sum_binom_mod_class.
+  + Sobrejecoes e uniao de eventos -> IE classica.
+
+Cuidados: (1) d_i com lcm > N sao podados (contribuem 0); sem d_i = 0.
+  (2) usa binomiais C(j,k) e precisa de init_comb.
+Catalogo: Combinatoria.
+Digitacao: 53 linhas | media. Atalho: ie_subsets e minmax_expect repetem o laco por mascara.
+*****************************LATEX_DESC_END*/

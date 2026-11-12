@@ -1,12 +1,4 @@
-// Fast IO (leitura/escrita manual com buffer)
-//
-// O que faz: leitura de inteiros/strings via fread e escrita via buffer; mais rapida que cin.
-// Quando usar: entradas de 10^6 numeros ou mais, TLE por IO. Catalogo > Quando nada funciona (TLE vs constante)
-// Complexidade: O(tamanho da entrada/saida)
-// Uso: ll x = readInt(); string s = readStr(); writeInt(x); writeChar('\n'); no fim do main: flushOut();
-//      NAO misturar com cin/scanf/printf no mesmo programa.
-// Cuidados: readInt aceita negativos; em interativo NAO use (use cin/cout com flush);
-//           lembrar de chamar flushOut() antes de sair.
+// Fast IO - leitura/escrita manual com buffer
 static char ibuf[1 << 16]; static size_t ipos = 0, ilen = 0;
 inline int gc() {
     if (ipos == ilen) { ilen = fread(ibuf, 1, sizeof ibuf, stdin); ipos = 0; if (!ilen) return -1; }
@@ -33,3 +25,13 @@ inline void writeInt(ll x, char end = '\n') {
     if (end) writeChar(end);
 }
 inline void writeStr(const string& s, char end = '\n') { for (char c : s) writeChar(c); if (end) writeChar(end); }
+/*LATEX_DESC_BEGIN***************************
+-> **Fast IO** - leitura por fread e escrita em buffer, mais rapido que cin.
+Complexidade: O(tamanho da entrada/saida)
+Uso: ll x = readInt(); string s = readStr(); writeInt(x); writeChar('\n'); flushOut();
+* Sobre o codigo: gc() le de ibuf com fread; writeChar/flushOut escrevem em obuf.
+* Problemas e reducoes: + entradas/saidas grandes (mais de 1e6 numeros); + TLE de cin/cout.
+Cuidados: nao misturar com cin/scanf/printf; flushOut() antes de sair; em interativo use cin/cout; LLONG_MIN nao e tratado.
+Catalogo: Quando nada funciona (TLE vs constante)
+Digitacao: 26 linhas | facil.
+*****************************LATEX_DESC_END*/

@@ -1,12 +1,4 @@
-// Existe interseção entre n segmentos? (Shamos-Hoey, sweep + set)
-//
-// O que faz: acha um par de segmentos que se intersectam (inclui toque), ou {-1,-1}.
-// Quando usar: Catalogo > Geometria (sweep line + set, "algum par de segmentos se cruza?").
-// Complexidade: O(n log n).
-// Uso: vector<Seg> s; s[i] = {Pd(x1,y1), Pd(x2,y2), i}; auto r = anyInter(s) -> par de ids ou {-1,-1}.
-// Cuidados: EPS = 1e-9 com double (coords inteiras pequenas ok). Segmentos verticais e pontos
-//   sao tratados pela comparacao em y no x corrente. O comparador depende do x da varredura
-//   (guardado em max dos minimos). Segmentos degenerados (ponto) sao aceitos.
+// Intersecao entre segmentos - sweep (Shamos-Hoey)
 
 const double EPS = 1e-9;
 struct Pd { double x, y; };
@@ -14,7 +6,7 @@ struct Seg {
   Pd p, q;
   int id;
   double gety(double x) const {
-    if (fabs(p.x - q.x) < EPS) return p.y;  // vertical: usa o ponto de baixo (p.y <= q.y apos normalizar)
+    if (fabs(p.x - q.x) < EPS) return p.y;  // vertical: usa o ponto de baixo
     return p.y + (q.y - p.y) * (x - p.x) / (q.x - p.x);
   }
 };
@@ -39,7 +31,7 @@ pair<int, int> anyInter(vector<Seg> a) {
   int n = a.size();
   for (auto &s : a)
     if (s.p.x > s.q.x || (fabs(s.p.x - s.q.x) < EPS && s.p.y > s.q.y)) swap(s.p, s.q);
-  vector<array<double, 3>> ev;  // (x, tipo, indice): abre (+1) antes de fecha (-1) no mesmo x
+  vector<array<double, 3>> ev;  // (x, tipo, indice): abre antes de fecha
   for (int i = 0; i < n; i++) {
     ev.push_back({a[i].p.x, -1, (double)i});
     ev.push_back({a[i].q.x, +1, (double)i});
@@ -55,7 +47,7 @@ pair<int, int> anyInter(vector<Seg> a) {
       if (nxt != s.end() && segsInter(*nxt, a[i])) return {nxt->id, a[i].id};
       if (nxt != s.begin() && segsInter(*--prv, a[i])) return {prv->id, a[i].id};
       where[i] = s.insert(nxt, a[i]);
-    } else {  // fecha: checa os vizinhos que passam a ser adjacentes
+    } else {  // fecha: checa novos vizinhos adjacentes
       auto nxt = next(where[i]), prv = where[i];
       if (nxt != s.end() && prv != s.begin() && segsInter(*nxt, *--prv)) return {prv->id, nxt->id};
       s.erase(where[i]);
@@ -63,3 +55,34 @@ pair<int, int> anyInter(vector<Seg> a) {
   }
   return {-1, -1};
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Intersecao entre segmentos - sweep (Shamos-Hoey)**
+Acha um par de segmentos que se intersectam (inclui toque) ou {-1,-1}. Cada Seg tem dois
+pontos e um id.
+
+Complexidade: O(n log n)
+Uso:
+  vector<Seg> s;
+  s.push_back({{x1,y1}, {x2,y2}, i});
+  pair<int,int> r = anyInter(s);   // ids do par, ou {-1,-1}
+
+* Sobre o codigo:
+  Normaliza cada segmento para comecar no extremo esquerdo (ou inferior, se vertical).
+  Ordena eventos de abertura/fechamento por x; a abertura tem tipo -1 e vem antes. Um set
+  ordena os segmentos ativos pela altura y no x corrente (max dos minimos). Ao abrir, testa
+  os vizinhos; ao fechar, testa os vizinhos que passam a ser adjacentes.
+
+* Problemas e reducoes:
+  + Existe algum par de segmentos que se intersecta? Shamos-Hoey.
+  + Detectar colisao/toque em um conjunto de segmentos.
+  + Checar se uma poligonal tem autointersecao (ignorando extremos comuns).
+  + Filtrar segmentos antes de outra rotina geometrica.
+
+Cuidados: EPS = 1e-9 com double (coords inteiras pequenas ok). Verticais e segmentos
+  degenerados (ponto) sao aceitos. O comparador depende do x da varredura (max dos minimos),
+  entao nao o use fora do sweep. Toque nos extremos conta como intersecao.
+Catalogo: Geometria.
+Digitacao: 54 linhas | dificil. Atalho: operator< chama gety duas vezes para o mesmo x;
+  cachear a altura no evento encurta a comparacao.
+*****************************LATEX_DESC_END*/

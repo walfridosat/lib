@@ -1,11 +1,4 @@
-// Contagem de inversoes (merge sort e BIT) e pares com condicao
-//
-// O que faz: numero de pares i<j com a[i] > a[j]; troca minima de adjacentes para transformar A em B.
-// Quando usar: "swaps adjacentes minimos", "contar pares i<j com condicao".
-//              Catalogo > Arrays e guloso (Contar pares i<j, Minimo de trocas adjacentes de A para B)
-// Complexidade: O(n log n)
-// Uso: ll inv = countInv(a);   (nao altera a)   minAdjSwaps(A, B) -> -1 se nao sao multiconjuntos iguais.
-// Cuidados: inversoes estritas (a[i] > a[j]); para nao estritas troque > por >= no merge. Resultado ate n^2/2: ll.
+// Inversoes - merge sort e minimo de trocas adjacentes
 ll mergeCount(vector<ll>& a, vector<ll>& tmp, int l, int r) {   // ordena a[l, r)
     if (r - l < 2) return 0;
     int m = (l + r) / 2;
@@ -22,7 +15,7 @@ ll countInv(vector<ll> a) {
     vector<ll> tmp(a.size());
     return mergeCount(a, tmp, 0, a.size());
 }
-// Minimo de trocas adjacentes para A virar B: mapeia a k-esima ocorrencia de cada valor de A para a k-esima de B
+// mapeia a k-esima ocorrencia de A para a de B
 ll minAdjSwaps(const vector<ll>& A, const vector<ll>& B) {
     int n = A.size(); if ((int)B.size() != n) return -1;
     map<ll, vector<int>> pos;
@@ -35,3 +28,26 @@ ll minAdjSwaps(const vector<ll>& A, const vector<ll>& B) {
     }
     return countInv(p);
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Contagem de Inversoes**
+Numero de pares i < j com a[i] > a[j]; minimo de trocas adjacentes para A virar B.
+
+Complexidade: O(n log n)
+Uso:
+  ll inv = countInv(a);              // nao altera a
+  ll sw = minAdjSwaps(A, B);         // -1 se nao sao multiconjuntos iguais
+
+* Sobre o codigo:
+  mergeCount divide, conta e ordena; quando a[j] entra, conta m - i.
+  minAdjSwaps mapeia a k-esima ocorrencia de cada valor de A para a de B e conta inversoes.
+
+* Problemas e reducoes:
+  + Minimo de swaps adjacentes para ordenar: countInv.
+  + Transformar A em B por swaps adjacentes: minAdjSwaps.
+  + Contar pares i < j com condicao (adapte a comparacao no merge).
+
+Cuidados: inversoes estritas; para nao estritas troque > por >= no merge;
+  o resultado pode chegar a n^2/2 (use ll).
+Catalogo: Arrays e guloso (Contar pares i<j, Minimo de trocas adjacentes de A para B)
+Digitacao: 29 linhas | media.
+*****************************LATEX_DESC_END*/

@@ -1,18 +1,4 @@
-// K-d tree 2D (estatica): vizinho mais proximo e contagem em retangulo
-//
-// O que faz: constroi arvore balanceada alternando eixos (mediana por
-//   nth_element). nearest(x,y) acha o ponto mais proximo (dist^2 minima);
-//   count(x1,y1,x2,y2) conta pontos no retangulo fechado.
-// Quando usar: "Catalogo > Estruturas de dados" (K-d tree): vizinho mais
-//   proximo, contagem em retangulo online com n ~ 1e5 quando segtree 2D nao
-//   cabe; pontos nao muito adversariais.
-// Complexidade: build O(n log n); count O(sqrt n); nearest O(log n) medio,
-//   O(n) pior caso.
-// Uso: KD kd(vector<pair<ll,ll>> pts); kd.count(x1,y1,x2,y2);
-//   auto [d2, idx] = kd.nearest(x, y, skip_same=false); // idx = indice em pts originais
-//   skip_same=true ignora pontos identicos a consulta (vizinho de si mesmo).
-// Cuidados: dist^2 em ll (coords ate ~1e9 -> 2e18 ok). nearest em kd vazio
-//   devolve {LLONG_MAX,-1}. Sem insercao dinamica (use Bentley-Saxe se precisar).
+// K-d tree 2D - vizinho mais proximo e contagem
 struct KD {
 	struct P { ll x, y; int id; };
 	vector<P> a; // a eh reordenado: no de [l,r) esta em m=(l+r)/2
@@ -68,3 +54,33 @@ struct KD {
 		return best;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **K-d tree 2D**
+Arvore balanceada alternando eixos (mediana por nth_element). nearest acha
+o ponto mais proximo (dist^2) e count conta pontos em retangulo.
+
+Complexidade: build O(n log n); count O(sqrt n); nearest O(log n) medio,
+  O(n) pior caso.
+Uso:
+  KD kd(vector<pair<ll,ll>> pts);
+  kd.count(x1, y1, x2, y2)   // retangulo fechado
+  auto [d2, idx] = kd.nearest(x, y, skip_same=false);
+  // idx = indice em pts originais; skip_same ignora distancia 0
+
+* Sobre o codigo:
+  build escolhe a mediana alternando x/y e guarda a bounding box de cada
+  subarvore. count poda caixas disjuntas e devolve r-l quando contida.
+  nn poda pela distancia a caixa e visita primeiro o lado mais promissor.
+
+* Problemas e reducoes:
+  + Vizinho mais proximo em 2D.
+  + Contagem de pontos em retangulo.
+  + k pontos mais proximos (com heap).
+  + Pontos nao muito adversariais com n ~ 1e5.
+
+Cuidados: dist^2 em ll (coords ate ~1e9 -> 2e18 ok). nearest em kd vazio
+  devolve {LLONG_MAX,-1}. Sem insercao dinamica (use Bentley-Saxe se
+  precisar).
+Catalogo: Estruturas de dados.
+Digitacao: 55 linhas | dificil.
+*****************************LATEX_DESC_END*/

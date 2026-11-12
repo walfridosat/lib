@@ -1,16 +1,4 @@
-// Simulated annealing e hill climbing
-//
-// O que faz: template de recozimento simulado (maximizar score) com T geometrico e limite de tempo;
-//            hill climbing continuo em R^2 com passo decrescente (ponto que minimiza uma funcao).
-// Quando usar: "maximize a pontuacao" sem solucao exata, TL 2-10s; geometria continua (Fermat, minimax).
-//              Catalogo > Aleatorizacao (Simulated annealing, Hill climbing, Gradiente por perturbacao)
-// Complexidade: iteracoes enquanto houver tempo
-// Uso: anneal(state, score, mutate, undo, T0, T1, tl): score(state)->double (maior melhor),
-//      mutate(state)->void aplica vizinho aleatorio, undo(state)->void desfaz o ultimo mutate.
-//      Para delta barato, calcule o score incremental dentro de mutate/undo (troque os lambdas por struct).
-//      hillClimb2D(f, x0, y0, step0, tl): minimiza f(x, y).
-// Cuidados: usar xorshift/rng rapido no laco interno; deixar ~10% de folga no tempo; T0 na escala dos deltas tipicos
-//           (aceita pior com prob exp(delta/T)); funciona melhor com varias reinicializacoes.
+// Simulated annealing e hill climbing - otimizacao por perturbacao aleatoria
 mt19937_64 rngA(chrono::steady_clock::now().time_since_epoch().count());
 double rnd01() { return (rngA() >> 11) * (1.0 / (1ULL << 53)); }
 
@@ -34,7 +22,7 @@ void anneal(S& s, Score score, Mut mutate, Undo undo, double T0, double T1, doub
     s = bestS;
 }
 
-// minimiza f(x, y) em R^2 por perturbacao com passo que cai pela metade quando nao melhora
+// minimiza f(x,y) com passo que cai quando nao melhora
 template<class F> pair<double, double> hillClimb2D(F f, double x, double y, double step, double tl) {
     auto t0 = chrono::steady_clock::now();
     double cur = f(x, y);
@@ -49,3 +37,29 @@ template<class F> pair<double, double> hillClimb2D(F f, double x, double y, doub
     }
     return {x, y};
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Simulated Annealing / Hill Climbing**
+Recozimento simulado com temperatura geometrica e limite de tempo (maximiza score),
+e hill climbing 2D em R^2 com passo decrescente (minimiza f).
+
+Complexidade: itera enquanto houver tempo; O(1) por iteracao
+Uso:
+  anneal(s, score, mutate, undo, T0, T1, tl);  // score(s) double, maior melhor
+  // mutate(s) aplica vizinho aleatorio; undo(s) desfaz o ultimo mutate
+  pair<double,double> p = hillClimb2D(f, x0, y0, step0, tl);
+
+* Sobre o codigo:
+  anneal guarda a melhor solucao vista; aceita piora com probabilidade exp(delta/T).
+  T cai geometricamente de T0 a T1 durante tl; checa o tempo a cada 256 iteracoes.
+  hillClimb2D perturba em 30 direcoes por passo e corta step pela metade se nada melhora.
+
+* Problemas e reducoes:
+  + TSP: estado = permutacao das cidades; mutate faz 2-opt (troca duas arestas).
+  + Atribuicao/particionamento: estado = vetor de escolhas; score = valor - penalidades.
+  + Ponto de Fermat/minimax: hillClimb2D sobre a soma de distancias.
+
+Cuidados: use rng xorshift rapido no laco interno; deixe ~10% de folga no tempo;
+  T0 na escala dos deltas tipicos; varias reinicializacoes costumam ajudar.
+Catalogo: Aleatorizacao (Simulated annealing, Hill climbing, Gradiente por perturbacao)
+Digitacao: 36 linhas | media. Atalho: para score incremental, troque os lambdas por struct.
+*****************************LATEX_DESC_END*/

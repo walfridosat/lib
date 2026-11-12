@@ -1,20 +1,5 @@
-// Lindstrom-Gessel-Viennot (caminhos disjuntos em vertices)
-//
-// O que faz: dado e[i][j] = # caminhos de a_i ate b_j em um DAG, devolve
-//   det(e) = (# familias de caminhos disjuntos em vertices com permutacao identidade)
-//   - ... (com sinais das permutacoes). Se so a identidade pode ser disjunta, e
-//   exatamente o numero de familias. Versao pronta para grid (direita/cima).
-// Quando usar: "Catalogo > Combinatoria" (LGV; ladrilhos de losangos, particoes planas)
-//   e "Repetidas": k caminhos que nao se tocam em grid.
-// Complexidade: O(k^3 + k^2) consultas de binomial.
-// Uso: lgv_det(M) det mod p de matriz k x k (vetor<vector<ll>>).
-//   lgv_grid(A, B): A[i]=(x,y) origens, B[j]=(x,y) destinos, passos (x+1) ou (y+1);
-//   precisa de C(n,k) de binom_mod.cpp (cole antes, init_comb).
+// LGV - caminhos disjuntos em vertices
 // Requer: code/combinatorics/binom_mod.cpp (cole antes, init_comb).
-// Cuidados: so valido se TODA familia disjunta induz a permutacao identidade (origens
-//   e destinos "compativeis": ex. origens ao longo de uma anti-diagonal ordenadas
-//   de forma monotona). Caso contrario o determinante inclui sinais de outras
-//   permutacoes. Dois caminhos disjuntos em VERTICES (nao so em arestas).
 ll lgv_det(vector<vector<ll>> a) {
     int n = a.size(); ll d = 1;
     for (auto& r : a) for (auto& x : r) x = ((x % MOD) + MOD) % MOD;
@@ -41,3 +26,30 @@ ll lgv_grid(const vector<pair<ll,ll>>& A, const vector<pair<ll,ll>>& B) {
     }
     return lgv_det(M);
 }
+/*LATEX_DESC_BEGIN***************************
+-> **LGV - caminhos disjuntos em vertices**
+Determinante de uma matriz de caminhos conta familias de caminhos disjuntos em vertices.
+
+Complexidade: O(k^3 + k^2) consultas de binomial.
+Uso:
+  ll d = lgv_det(M);                  // matriz k x k mod p
+  ll g = lgv_grid(A, B);              // A, B = vector<pair<ll,ll>>
+
+* Sobre o codigo:
+  lgv_det faz Gauss mod p com troca de linhas (sinal). lgv_grid monta
+  M[i][j] = C(dx+dy, dx) quando o destino esta a direita e acima, e chama
+  lgv_det. O determinante soma com sinal as familias de caminhos.
+
+* Problemas e reducoes:
+  + k caminhos disjuntos em vertices em um DAG -> lgv_det.
+  + Caminhos monotonos disjuntos em grid -> lgv_grid.
+  + Ladrilhos de losangos / particoes planas -> LGV.
+  + Contar familias com origens e destinos compativeis -> lgv_grid.
+  + Provar que so a permutacao identidade pode ser disjunta -> determinante.
+
+Cuidados: so vale se toda familia disjunta induz a permutacao identidade
+  (origens e destinos compativeis, ex. anti-diagonal ordenada); senao o
+  determinante inclui sinais de outras permutacoes. Disjuntos em vertices.
+Catalogo: Combinatoria.
+Digitacao: 26 linhas | facil. Atalho: lgv_det e igual a det_mod de matrix_tree.cpp.
+*****************************LATEX_DESC_END*/

@@ -1,14 +1,4 @@
-// mint: struct de inteiro modular
-//
-// O que faz: aritmetica mod MOD (primo) com operadores, pow e inverso.
-// Quando usar: Catalogo > Teoria dos numeros e divisores (aritmetica modular).
-//   Qualquer contagem/DP mod 1e9+7 ou 998244353; evita esquecer %.
-// Complexidade: O(1) por operacao; inv e pow O(log MOD).
-// Uso: mint a = 5, b = a.pow(10) / 3; cout << a; cin >> a;
-//   Compara com == e !=. mint(-1) funciona (normaliza).
-// Cuidados: MOD precisa ser primo para operator/ e inv. Para MOD diferente
-//   mude a constante (ou use mint dinamico: troque MOD por variavel static).
-//   Divisao por 0 mod p da resultado 0 silenciosamente.
+// mint - inteiro modular
 const int MOD = 998244353; // ou 1000000007
 struct mint {
     int v;
@@ -33,3 +23,28 @@ struct mint {
     friend ostream &operator<<(ostream &os, const mint &a) { return os << a.v; }
     friend istream &operator>>(istream &is, mint &a) { ll x; is >> x; a = mint(x); return is; }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **mint - inteiro modular**
+Struct de aritmetica mod MOD com operadores, pow, inv, leitura e impressao.
+
+Complexidade: O(1) por operacao; inv e pow O(log MOD).
+Uso:
+  mint a = 5, b = a.pow(10) / 3;
+  cin >> a; cout << a;
+  a == b, a != b;
+
+* Sobre o codigo:
+  v sempre em [0, MOD). Os operadores += e -= ajustam com uma soma/subtracao.
+  pow e exponenciacao binaria; inv usa Fermat, logo MOD precisa ser primo.
+
+* Problemas e reducoes:
+  + Contagens e DP mod 1e9+7 ou 998244353 -> mint.
+  + Coeficientes de polinomios mod p -> mint.
+  + Probabilidades como fracao mod p -> mint.
+  + Evitar esquecer % em expressoes longas -> mint.
+
+Cuidados: MOD precisa ser primo para / e inv; para outro MOD mude a constante
+  (ou troque MOD por variavel static). Divisao por 0 mod p da 0 silenciosamente.
+Catalogo: Teoria dos numeros e divisores.
+Digitacao: 24 linhas | facil. Atalho: operator!= pode ser !(a == b).
+*****************************LATEX_DESC_END*/

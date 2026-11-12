@@ -1,18 +1,4 @@
-// Konig - cobertura minima de vertices e conjunto independente maximo em bipartido
-//
-// O que faz: a partir do matching maximo (Hopcroft-Karp embutido) constroi cobertura
-//   minima de vertices e independente maximo. Tambem da a antichain maxima (Dilworth)
-//   quando o bipartido e o fecho transitivo de um poset.
-// Quando usar: "cobertura minima", "maior conjunto sem conflito" em bipartido
-//   (Catalogo > Grafos "Konig", "Antichain maxima a partir de Konig", "Hall").
-// Complexidade: O(E sqrt V).
-// Uso: Konig k(nl, nr); k.add(l, r); int m=k.solve();
-//   k.coverL[l] / k.coverR[r] = vertice na cobertura minima (|cobertura| = m);
-//   independente maximo = os que NAO estao na cobertura (tamanho nl+nr-m).
-//   Antichain (poset com fecho transitivo, nl=nr=n, aresta i->j se i<j no poset):
-//   elementos i com !coverL[i] && !coverR[i].
-// Cuidados: construcao: BFS alternada a partir dos L nao casados; cobertura = (L nao
-//   visitados) U (R visitados). 0-indexed.
+// Konig - cobertura minima e independente maximo em bipartido
 struct Konig {
     int nl, nr; vector<vector<int>> g; vector<int> ml, mr, d, it;
     vector<char> coverL, coverR;
@@ -59,3 +45,47 @@ struct Konig {
         return res;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Konig - cobertura minima e independente maximo**
+Matching maximo embutido (Hopcroft-Karp) + construcao da cobertura minima de
+vertices e do conjunto independente maximo em bipartido. Tambem da a
+anticadeia maxima (Dilworth) no comparability bipartido de um poset.
+0-indexed.
+
+Complexidade: O(E sqrt V).
+Uso:
+  Konig k(nl, nr); k.add(l, r); int m = k.solve();
+  k.coverL[l] / k.coverR[r] -> vertice na cobertura minima (|cover| = m);
+  independente maximo = vertices com coverL/coverR falsos (tamanho nl+nr-m).
+  Antichain: poset com fecho transitivo (nl = nr = n, aresta i -> j se i < j);
+  elementos i com !coverL[i] && !coverR[i].
+
+* Sobre o codigo:
+  solve() roda Hopcroft-Karp. Depois faz BFS alternada a partir dos L livres
+  (L -> R por aresta nao casada, R -> L pela aresta casada). A cobertura e
+  (L nao visitados) U (R visitados); o complemento e independente.
+
+* Problemas e reducoes:
+  + Cobertura minima de vertices em bipartido: minimo de vertices que tocam
+    todas as arestas; tamanho = matching; coverL/coverR dao os vertices.
+  + Conjunto independente maximo em bipartido: nl + nr - matching; o
+    complemento da cobertura.
+  + Anticadeia maxima em poset (Dilworth): fecho transitivo em bipartido
+    n x n, aresta i -> j se i < j; anticadeia = independente, tamanho n - m.
+  + Decomposicao minima em cadeias: n - matching; as cadeias saem dos pares
+    do matching no comparability.
+  + Cobertura de arestas por vertices (vertex cover) em bipartido.
+  + Remover o minimo de vertices para eliminar todas as arestas: cobertura.
+  + Maximo de vertices sem aresta entre si: independente.
+  + Torres que nao se atacam: L = linhas, R = colunas, aresta por casa livre;
+    matching = torres; cobertura = linhas/colunas que atacam todas as casas.
+  + Hall: matching satura L sse nao ha S com |N(S)| < |S|; matching = nl.
+  + Verificar um certificado de cobertura: toda aresta tem extremo no cover.
+  + Maximo de elementos de um poset dois a dois incomparaveis: anticadeia.
+
+Cuidados: a construcao da cobertura so vale para bipartido. Para poset, monte
+  o fecho transitivo antes (aresta i -> j se i < j). 0-indexed.
+Catalogo: Grafos (Konig, anticadeia maxima a partir de Konig, Hall).
+Digitacao: 46 linhas | media. Atalho: quase identico a hopcroft_karp.cpp;
+  poderia compartilhar a struct e acrescentar so a BFS da cobertura.
+*****************************LATEX_DESC_END*/

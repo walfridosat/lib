@@ -1,17 +1,4 @@
-// DSU com paridade (bipartido online / equacoes xor)
-//
-// O que faz: mantem, para cada no, a paridade (xor) da distancia ate a raiz.
-//   Detecta se adicionar a aresta "a e b diferentes" (ou "a xor b = w")
-//   gera contradicao (ciclo impar).
-// Quando usar: "Catalogo > Estruturas de dados" (DSU com paridade/potencial);
-//   bipartido online, "mentirosos/verdadeiros", restricoes x_a xor x_b = w.
-// Complexidade: O(alfa(n)) amortizado.
-// Uso: DSUP d(n); // 0-based
-//   d.unite(a,b,w) -> 1 se ok (novo ou consistente), 0 se contradicao.
-//     w=1 significa "diferentes" (aresta de grafo bipartido); w=0 "iguais".
-//   d.diff(a,b) -> -1 se em componentes distintas, senao xor de a e b.
-// Cuidados: para valores nao-binarios (soma/mod k) veja dsu_potencial.cpp.
-//   Se contradicao, o estado nao muda.
+// DSU com paridade - bipartido online / xor
 struct DSUP {
 	vector<int> p, sz, d; // d[x] = xor de x ate p[x]
 	DSUP(int n = 0) : p(n), sz(n, 1), d(n, 0) { iota(p.begin(), p.end(), 0); }
@@ -35,3 +22,30 @@ struct DSUP {
 		return true;
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **DSU com paridade**
+Mantem, para cada no, a paridade (xor) da distancia ate a raiz. Detecta
+contradicao em restricoes x_a xor x_b = w e ciclo impar.
+
+Complexidade: O(alfa(n)) amortizado.
+Uso:
+  DSUP d(n);                 // 0-based
+  d.unite(a, b, w) -> 1 se ok (novo ou consistente), 0 se contradicao
+    w=1 significa "diferentes"; w=0 "iguais"
+  d.diff(a, b) -> -1 se componentes distintas, senao xor de a e b
+
+* Sobre o codigo:
+  d[x] = xor de x ate p[x]; find comprime acumulando a paridade.
+  unite pendura rb em ra com d[rb] = d[a]^d[b]^w.
+
+* Problemas e reducoes:
+  + Bipartido online / detectar ciclo impar.
+  + Restricoes x_a xor x_b = w.
+  + Mentirosos/verdadeiros e coloracao por paridade.
+  + Consistencia de equacoes de xor.
+
+Cuidados: para valores nao-binarios (soma/mod k) veja dsu_potencial.cpp.
+  Se houver contradicao, o estado nao muda.
+Catalogo: Estruturas de dados.
+Digitacao: 23 linhas | media.
+*****************************LATEX_DESC_END*/

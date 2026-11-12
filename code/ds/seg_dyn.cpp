@@ -1,17 +1,4 @@
-// Segtree dinamica (esparsa) com soma, k-esimo e merge de segtrees
-//
-// O que faz: segtree sobre dominio [0, U) enorme (ate 1e18), nos criados sob
-//   demanda. Update pontual (soma), soma de intervalo, k-esimo, e merge
-//   destrutivo de duas arvores (para small-to-large / DP em subarvore).
-// Quando usar: Catalogo > Estruturas de dados (Segtree dinamica/esparsa;
-//   merge de segtrees; multiconjunto sobre valores ate 1e9/1e18).
-// Complexidade: O(log U) por op; memoria O(q log U); merge amortizado
-//   O(total de nos criados).
-// Uso: SegDyn s(U); int root = 0 (0 = arvore vazia);
-//   s.add(root, pos, v) altera root se estava vazia: root = s.add(root,pos,v);
-//   s.sum(root, l, r) [l, r) ; s.kth(root, k) -> menor pos com soma[0..pos]>=k;
-//   root = s.merge(ra, rb) (destrutivo: ra e rb nao valem depois).
-// Cuidados: reserve s.L/s.R/s.C se q grande. Valores >= 0 para kth.
+// Segtree dinamica - soma, k-esimo e merge
 struct SegDyn {
     ll U; vector<int> L, R; vector<ll> C;
     SegDyn(ll U) : U(U) { L.push_back(0); R.push_back(0); C.push_back(0); } // no 0 = nulo
@@ -55,3 +42,31 @@ struct SegDyn {
         return a;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree Dinamica**
+Segtree sobre [0, U) enorme (ate 1e18) com nos criados sob demanda. Update de
+ponto (soma), soma de intervalo, k-esimo e merge destrutivo. 0-based.
+
+Complexidade: O(log U) por op; memoria O(q log U); merge amortizado O(nos).
+Uso:
+  SegDyn s(U); int root = 0;
+  root = s.add(root, pos, v);   // precisa reatribuir se estava vazia
+  ll sum = s.sum(root, l, r);   // [l, r)
+  int p = s.kth(root, k);       // menor pos com soma[0..pos] >= k
+  root = s.merge(ra, rb);       // ra e rb nao valem depois
+
+* Sobre o codigo:
+  Pool L/R/C com no 0 nulo; add cria o caminho ate a folha e soma v. sum
+  decompoe o intervalo. kth desce comparando C[L[o]] com k. merge soma as
+  contagens e liga os filhos, reaproveitando a arvore a.
+
+* Problemas e reducoes:
+  + Multiconjunto sobre valores ate 1e9/1e18 sem comprimir.
+  + Merge de segtrees para small-to-large e DP em subarvore.
+  + K-esimo e soma de intervalo online.
+  + Contar valores em [l,r] em arvores que se unem.
+
+Cuidados: reserve s.L/s.R/s.C se q for grande. kth exige valores >= 0.
+Catalogo: Estruturas de dados (Segtree dinamica/esparsa, merge).
+Digitacao: 43 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

@@ -1,18 +1,4 @@
-// Centroid decomposition (arvore de centroides + distancias por nivel)
-//
-// O que faz: constroi a arvore de centroides (altura <= log n). Para cada vertice v
-//   guarda cpar[v] (pai na arvore de centroides), lvl[v] e dist[v][l] = distancia de v ao
-//   seu ancestral centroide de nivel l. Inclui o exemplo "vertice marcado mais proximo".
-// Quando usar: caminhos com condicao, "distancia ao marcado mais proximo", soma de
-//   distancias a marcados (Catalogo > Arvores, "Centroid tree").
-// Complexidade: build O(n log n), update/query O(log n), memoria O(n log n).
-// Uso: Centroid c(g)  com g[v] = vector<pair<int,int>> (vizinho, peso) -- peso 1 se nao ha.
-//   c.cpar[v] (-1 na raiz), c.lvl[v], c.d[v][l].
-//   Nearest N(c): N.mark(v); N.query(v) = menor dist a um marcado (INF se nenhum).
-//   Para soma de dist a marcados: mantenha cnt[a], sum[a], sumpar[a] (soma das dist ao pai
-//   centroide) e some em cada ancestral a de v: sum[a] + cnt[a]*d[v][lvl[a]] - (sumpar[ch] +
-//   cnt[ch]*d[v][lvl[a]]) para o filho ch no caminho (evita contar duas vezes).
-// Cuidados: 0-based, arestas (viz, peso). Iterativo (sem recursao). Dist em ll.
+// Centroid - decomposicao e distancias por nivel
 struct Centroid {
     int n;
     vector<int> cpar, lvl;
@@ -20,7 +6,7 @@ struct Centroid {
     Centroid(const vector<vector<pair<int,int>>>& g) : n(g.size()), cpar(n, -1), lvl(n, 0), d(n) {
         vector<char> dead(n, 0);
         vector<int> sz(n), par(n), ord;
-        vector<array<int,3>> st = {{0, -1, 0}};      // (qualquer vertice da componente, centroide pai, nivel)
+        vector<array<int,3>> st = {{0, -1, 0}};      // (vertice, centroide pai, nivel)
         while (!st.empty()) {
             auto [s, cp, l] = st.back(); st.pop_back();
             ord.assign(1, s); par[s] = -1;
@@ -63,3 +49,36 @@ struct Nearest {
         return r;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Centroid decomposition**
+Constroi a arvore de centroides (altura <= log n). Para cada v guarda cpar[v]
+(pai na arvore, -1 na raiz), lvl[v] e d[v][l] = distancia de v ao ancestral
+centroide de nivel l. Inclui o exemplo "marcado mais proximo". 0-based.
+
+Complexidade: build O(n log n); update/query O(log n); memoria O(n log n)
+Uso:
+  // g[v] = vector<pair<int,int>> (vizinho, peso); peso 1 se nao ha
+  Centroid c(g);                 // c.cpar[v], c.lvl[v], c.d[v][l]
+  Nearest N(c); N.mark(v); N.query(v);   // menor dist a marcado (INF se nenhum)
+  // soma de dist a marcados: cnt[a], sum[a], sumpar[a] por centroide a; em cada
+  // ancestral a de v some sum[a] + cnt[a]*d[v][lvl[a]] menos a parte do filho ch:
+  // sumpar[ch] + cnt[ch]*d[v][lvl[a]]
+
+* Sobre o codigo:
+  Para cada componente, BFS calcula tamanhos, desce ate o centroide e o marca
+  morto. Nivel l e atribuido na construcao; uma segunda BFS grava d[v][l] de
+  todos os vertices da componente ate o centroide. Pilha explicita, sem recursao.
+
+* Problemas e reducoes:
+  + Distancia ao vertice marcado mais proximo: Nearest.
+  + Soma de distancias a todos os marcados: cnt/sum/sumpar.
+  + Caminhos que passam por um centroide (condicao de distancia): combine
+    subarvores em cada centroide.
+  + Contagem de caminhos com distancia <= K (centroid_paths).
+  + Distancia entre u e v via ancestrais comuns na arvore de centroides.
+
+Cuidados: arestas (vizinho, peso), dist em ll. Iterativo. Cada vertice aparece
+  em O(log n) niveis, dai a memoria O(n log n).
+Catalogo: Arvores (centroid tree, caminhos por centroide).
+Digitacao: 49 linhas | dificil.
+*****************************LATEX_DESC_END*/

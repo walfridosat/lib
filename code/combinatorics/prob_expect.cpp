@@ -1,21 +1,5 @@
-// Probabilidade e esperanca modulo p: utilitarios
-//
-// O que faz: cadeia de Markov absorvente (E[tempos] = (I-Q)^-1 1 por Gauss mod p),
-//   coupon collector (igual e k de n), tempo esperado ate padrao em alfabeto q
-//   (soma de q^k sobre as bordas), ruina do jogador, E[comparacoes quicksort],
-//   E[max de k dados], numero esperado de valores distintos, solve linear mod p.
-// Quando usar: "Catalogo > Combinatoria" (Esperanca como fracao mod p; Cadeia de Markov
-//   absorvente; Coupon collector; Ruina do jogador; Tempo esperado ate padrao; Truques de indicadores).
-// Complexidade: Gauss O(n^3); formulas O(n) a O(n log).
+// Probabilidade e esperanca mod p
 // Requer: code/combinatorics/binom_mod.cpp (cole antes).
-// Uso: precisa de binom_mod.cpp (MOD, pw, inv_, init_comb) colado antes.
-//   solve_mod(A, b) -> x (A quadrada mod p, A x = b); retorna vazio se singular.
-//   markov_absorbing(P, absorb) -> E[i] = passos esperados ate absorver, P[i][j] = prob mod p (P[i] ja em mod p).
-//   coupon(n), coupon_k(n,k), pattern_time(s, q), gambler_win(i,N,p,q) (p,q mod p),
-//   quicksort_cmp(n), expected_max_dice(k, m), expected_distinct(N, n).
-// Cuidados: probabilidades como fracao mod p: a/b -> a * pw(b, MOD-2). Nunca use double
-//   se a saida e mod p. Estados absorventes: linha ignorada. Padrao: E = sum q^k sobre
-//   k com prefixo_k = sufixo_k (inclui k=|s|).
 vector<ll> solve_mod(vector<vector<ll>> A, vector<ll> b) {
     int n = A.size();
     for (int i = 0; i < n; i++) { A[i].push_back(b[i]); for (auto& x : A[i]) x = (x % MOD + MOD) % MOD; }
@@ -35,7 +19,7 @@ vector<ll> solve_mod(vector<vector<ll>> A, vector<ll> b) {
     for (int i = 0; i < n; i++) x[i] = A[i][n];
     return x;
 }
-// E[i] = 1 + sum_j P[i][j] E[j] (j nao absorvente); absorventes tem E=0
+// E[i] = 1 + sum_j P[i][j] E[j]
 vector<ll> markov_absorbing(const vector<vector<ll>>& P, const vector<bool>& absorb) {
     int n = P.size(); vector<int> id(n, -1), who;
     for (int i = 0; i < n; i++) if (!absorb[i]) { id[i] = who.size(); who.push_back(i); }
@@ -50,25 +34,25 @@ vector<ll> markov_absorbing(const vector<vector<ll>>& P, const vector<bool>& abs
     for (int a = 0; a < m; a++) E[who[a]] = x[a];
     return E;
 }
-ll coupon_k(ll n, ll k) { // coletar k tipos distintos de n: sum_{i<k} n/(n-i)
+ll coupon_k(ll n, ll k) { // coletar k tipos distintos de n
     ll r = 0;
     for (ll i = 0; i < k; i++) r = (r + n % MOD * pw(n - i, MOD - 2)) % MOD;
     return r;
 }
 ll coupon(ll n) { return coupon_k(n, n); } // n H_n
-// tempo esperado ate ver a string s (alfabeto q): sum q^k sobre bordas (k = |s| incluso)
+// tempo esperado ate ver s (alfabeto q)
 ll pattern_time(const string& s, ll q) {
     int n = s.size(); ll r = 0;
     for (int k = 1; k <= n; k++) if (s.substr(0, k) == s.substr(n - k)) r = (r + pw(q, k)) % MOD;
     return r;
 }
-// passeio ±1 de i, absorvente em 0 e N: P(chegar a N). p = prob de +1, q = 1-p (mod p)
+// P(chegar a N); p = prob de +1
 ll gambler_win(ll i, ll N, ll p, ll q) {
     if (p == q) return i % MOD * pw(N, MOD - 2) % MOD; // justo: i/N
     ll rr = q * pw(p, MOD - 2) % MOD;
     return (pw(rr, i) - 1 + MOD) % MOD * pw((pw(rr, N) - 1 + MOD) % MOD, MOD - 2) % MOD;
 }
-ll quicksort_cmp(ll n) { // sum_{i<j} 2/(j-i+1) = 2 sum_{d=1}^{n-1} (n-d)/(d+1)
+ll quicksort_cmp(ll n) { // comparacoes esperadas do quicksort
     ll r = 0;
     for (ll d = 1; d < n; d++) r = (r + 2 * (n - d) % MOD * pw(d + 1, MOD - 2)) % MOD;
     return r;
@@ -82,3 +66,39 @@ ll expected_distinct(ll N, ll n) { // N (1 - (1-1/N)^n)
     ll im = pw(N, MOD - 2);
     return N % MOD * ((1 - pw((1 - im + MOD) % MOD, n) + MOD) % MOD) % MOD;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Probabilidade e esperanca mod p**
+Cadeia de Markov absorvente, coupon collector, tempo ate padrao, ruina, quicksort e indicadores.
+
+Complexidade: Gauss O(n^3); formulas O(n) a O(n log).
+Uso:
+  vector<ll> x = solve_mod(A, b);
+  vector<ll> E = markov_absorbing(P, absorb);
+  ll c = coupon(n), ck = coupon_k(n, k);
+  ll t = pattern_time(s, q);
+  ll gw = gambler_win(i, N, p, q);
+  ll qc = quicksort_cmp(n), md = expected_max_dice(k, m);
+  ll ed = expected_distinct(N, n);
+
+* Sobre o codigo:
+  solve_mod faz Gauss-Jordan mod p (vazio se singular). markov_absorbing
+  monta (I-Q)E = 1 so para estados nao absorventes. As formulas usam
+  inversos mod p: coupon = n H_n; pattern_time soma q^k nas bordas; gambler
+  resolve o passeio +-1; quicksort soma 2/(j-i+1).
+
+* Problemas e reducoes:
+  + Tempo esperado ate absorver em cadeia de Markov -> markov_absorbing.
+  + Coupon collector uniforme e com k tipos -> coupon/coupon_k.
+  + Tempo esperado ate ver uma string em alfabeto q -> pattern_time.
+  + Probabilidade de ruina / chegar a N -> gambler_win.
+  + Comparacoes esperadas do quicksort -> quicksort_cmp.
+  + Maximo esperado de k dados de m faces -> expected_max_dice.
+  + Valores distintos esperados em n sorteios -> expected_distinct.
+  + Resolver sistema linear mod p -> solve_mod.
+
+Cuidados: probabilidades como fracao mod p (a/b -> a * pw(b, MOD-2)); nunca
+  use double se a saida e mod p; estados absorventes tem a linha ignorada;
+  no padrao, E = sum q^k sobre k com prefixo_k = sufixo_k (inclui k = |s|).
+Catalogo: Combinatoria.
+Digitacao: 66 linhas | dificil. Atalho: as formulas repetem pw(...,MOD-2); guarde inversos.
+*****************************LATEX_DESC_END*/

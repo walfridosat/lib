@@ -1,18 +1,4 @@
-// Divisores: listar, formulas, altamente compostos, serie geometrica
-//
-// O que faz: divisores de n por sqrt; divisores a partir da fatoracao;
-//   tau/sigma/produto por formula; DFS de numeros altamente compostos;
-//   soma geometrica 1+p+...+p^e mod m sem inverso.
-// Quando usar: Catalogo > Teoria dos numeros (divisores; limites 1344 divisores
-//   ate 1e9 e 103680 ate 1e18; HCN; sigma mod p com p-1 nao invertivel).
-// Complexidade: divs_sqrt O(sqrt n); divs_fact O(tau); hcn O(#candidatos).
-// Uso: fatoracao como vector<pair<ll,int>> (de pollard_rho.cpp ou trial_fact).
-//   divs_fact(f) -> divisores (nao ordenados; sort se precisar).
-//   hcn_max_tau(N) -> {tau, n}: menor n <= N com tau(n) maximo.
-//   geo(p,e,m) = 1+p+...+p^e mod m (m qualquer, nao precisa de inverso).
-// Cuidados: divs_sqrt e O(sqrt n): so ate ~1e12. tau como fórmula
-//   cuida de ll; sigma pode estourar ll (use __int128 ou mod). hcn usa os
-//   15 primeiros primos (suficiente para N <= 1e18).
+// Divisores - listar, formulas e altamente compostos
 vector<ll> divs_sqrt(ll n) {
     vector<ll> a, b;
     for (ll i = 1; i * i <= n; i++) if (n % i == 0) {
@@ -65,7 +51,7 @@ ll sigma_mod(const vector<pair<ll, int>> &f, ll m) {
     for (auto [p, e] : f) r = (__int128)r * geo(p, e, m) % m;
     return r;
 }
-// Numeros altamente compostos: expoentes nao crescentes nos primos 2,3,5,...
+// HCN: expoentes nao crescentes em 2,3,5,...
 const int HP[15] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
 ll hc_best_tau, hc_best_n;
 void hc_dfs(int i, ll n, ll tau, int maxe, ll N) {
@@ -83,3 +69,35 @@ pair<ll, ll> hcn_max_tau(ll N) { // {tau maximo, menor n <= N que o atinge}
     hc_dfs(0, 1, 1, 62, N);
     return {hc_best_tau, hc_best_n};
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Divisores, tau/sigma e altamente compostos**
+Lista divisores por sqrt ou pela fatoracao, calcula tau/sigma/produto e acha o menor n <= N com tau maximo.
+
+Complexidade: divs_sqrt O(sqrt n); divs_fact O(tau); hcn O(#candidatos).
+Uso:
+  vector<ll> d = divs_sqrt(n);                 // ordenado
+  auto f = trial_fact(n);                      // ou factorize de pollard_rho
+  vector<ll> d2 = divs_fact(f);                // nao ordenado
+  ll t = tau_f(f);
+  ll s = sigma_mod(f, m);                      // m qualquer, sem inverso
+  pair<ll,ll> h = hcn_max_tau(N);              // {tau maximo, menor n}
+
+* Sobre o codigo:
+  divs_sqrt junta os pares i e n/i; divs_fact multiplica potencias de cada primo.
+  geo(p, e, m) soma 1 + p + ... + p^e por divisao e conquista, sem inverso,
+  e alimenta sigma_mod. hcn_dfs usa expoentes nao crescentes nos 15 primeiros
+  primos, podando quando n * p passa de N.
+
+* Problemas e reducoes:
+  + Listar todos os divisores de n -> divs_sqrt (n ate ~1e12) ou divs_fact.
+  + Numero/soma de divisores a partir da fatoracao -> tau_f / sigma_mod.
+  + Menor n <= N com o maior numero de divisores -> hcn_max_tau.
+  + Soma de serie geometrica mod m sem inverso -> geo(p, e, m).
+  + Produto dos divisores ou soma dos quadrados -> usar os expoentes.
+  + Divisores de um produto/MMC a partir das fatoracoes -> somar expoentes.
+
+Cuidados: divs_sqrt e O(sqrt n), so ate ~1e12; sigma pode estourar ll (use
+  __int128 ou mod); hcn usa 15 primos (basta para N <= 1e18).
+Catalogo: Teoria dos numeros.
+Digitacao: 70 linhas | media. Atalho: tau_f e uma reducao de expoentes; cabe em uma linha.
+*****************************LATEX_DESC_END*/

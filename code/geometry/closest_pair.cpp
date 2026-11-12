@@ -1,11 +1,4 @@
-// Par de pontos mais proximo (sweep + set)
-//
-// O que faz: menor distancia^2 entre dois pontos (e os indices). Pontos repetidos => 0.
-// Quando usar: Catalogo > Geometria ("pares mais proximos"); tambem checar "algum par a dist < d".
-// Complexidade: O(n log n).
-// Uso: vector<pair<ll,ll>> pts; auto r = closestPair(pts); r = {dist2, {i, j}}.  n >= 2.
-// Cuidados: dist2 em ll (coords ate ~1e9 => dist2 ate 8e18 cabe no limite; cuidado acima).
-//   Indices sao posicoes no vetor original.
+// Par de pontos mais proximo - sweep com set
 
 pair<ll, pair<int, int>> closestPair(const vector<pair<ll, ll>> &pts) {
   int n = pts.size();
@@ -36,3 +29,31 @@ pair<ll, pair<int, int>> closestPair(const vector<pair<ll, ll>> &pts) {
   }
   return {best, bp};
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Par de pontos mais proximo - sweep com set**
+Menor distancia^2 entre dois pontos e os indices. Pontos repetidos dao distancia 0.
+Indices 0-based, posicoes no vetor original.
+
+Complexidade: O(n log n)
+Uso:
+  vector<pair<ll,ll>> pts;
+  auto r = closestPair(pts);   // r = {dist2, {i, j}}, n >= 2
+
+* Sobre o codigo:
+  Ordena por x. Mantem um set (y, indice) com os pontos de x >= x_i - d. Remove da janela
+  quem ja nao pode melhorar (dx^2 >= best) e compara com os candidatos de y em [y-d, y+d].
+  d e uma aproximacao inteira do raio atual (ceil(sqrt(best))).
+
+* Problemas e reducoes:
+  + Par de pontos mais proximo: closestPair direto.
+  + Existe par a distancia < D? Compare o dist2 devolvido com D^2.
+  + Detectar pontos duplicados/colisao: dist2 == 0.
+  + Reduzir para O(n log n) o teste de todos os pares.
+
+Cuidados: dist2 em ll; coords ate ~1e9 dao dist2 ate ~8e18, perto do limite de ll. Para
+  coords maiores use __int128. n >= 2.
+Catalogo: Geometria.
+Digitacao: 29 linhas | media. Atalho: recalcular d (ceil sqrt) so quando best diminui, em
+  vez de a cada iteracao.
+*****************************LATEX_DESC_END*/

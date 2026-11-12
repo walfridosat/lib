@@ -1,18 +1,4 @@
-// ODT / Chtholly (set de intervalos com valor constante)
-//
-// O que faz: mantem a particao de [0,n) em intervalos de valor constante.
-//   split(pos) garante um intervalo comecando em pos; assign(l,r,v) cola.
-// Quando usar: "Catalogo > Estruturas de dados" (Chtholly / ODT): "atribua v
-//   em [l,r]" aleatorio, com outras operacoes feitas varrendo os intervalos.
-// Complexidade: amortizado O((n + q) log n) se ha assign frequente (numero de
-//   intervalos cai); sem assign aleatorio pode virar O(nq).
-// Uso: ODT o(n, v0); // [0,n) com valor v0
-//   o.assign(l, r, v);   // [l, r) semiaberto!
-//   o.apply(l, r, [&](ll len, ll& val){ ... }); // varre pedacos de [l,r)
-//   Ex soma: ll s=0; o.apply(l,r,[&](ll len, ll& v){ s+=len*v; });
-// Cuidados: intervalos semiabertos [l,r). Sempre split(r) antes de split(l)
-//   evita invalidar iterador (aqui ja tratado). Troque ll por outro tipo se
-//   precisar.
+// ODT - set de intervalos com valor constante
 struct ODT {
 	map<int, ll> m; // inicio -> valor; intervalo vai ate o proximo inicio
 	int n;
@@ -33,3 +19,32 @@ struct ODT {
 		for (; il != ir; ++il) f(next(il)->first - il->first, il->second);
 	}
 };
+/*LATEX_DESC_BEGIN***************************
+-> **ODT / Chtholly**
+Mantem [0, n) particionado em intervalos de valor constante. split(pos) cria
+um intervalo comecando em pos; assign(l, r, v) cola [l, r) em v. 0-based.
+
+Complexidade: amortizado O((n + q) log n) com assign frequente; sem assign
+  aleatorio pode degenerar para O(nq).
+Uso:
+  ODT o(n, v0);                // [0, n) com valor v0
+  o.assign(l, r, v);           // [l, r) semiaberto
+  o.apply(l, r, [&](ll len, ll& val){ ... });  // varre os pedacos
+  ll s = 0; o.apply(l, r, [&](ll len, ll& v){ s += len * v; });
+
+* Sobre o codigo:
+  map<int, ll> m guarda inicio -> valor; o intervalo vai ate o proximo inicio
+  (m[n] e sentinela). split(pos) quebra o intervalo que contem pos. assign e
+  apply varrem os pedacos entre split(l) e split(r).
+
+* Problemas e reducoes:
+  + "Atribua v em [l,r]" aleatorio com consultas que varrem os intervalos.
+  + Soma/contagem/min por range com apply sobre os pedacos.
+  + Valor no ponto x: split(x) e leia o valor do iterador.
+  + Operacoes que ficam baratas quando o numero de intervalos cai.
+
+Cuidados: intervalos semiabertos [l,r). Chame split(r) antes de split(l) para
+  nao invalidar iteradores (ja tratado). Troque ll se precisar de outro tipo.
+Catalogo: Estruturas de dados (Chtholly / ODT).
+Digitacao: 20 linhas | media. Atalho: ok.
+*****************************LATEX_DESC_END*/

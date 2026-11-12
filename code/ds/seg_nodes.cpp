@@ -1,20 +1,4 @@
-// Nos prontos para segtree (max subarray, parenteses, funcao afim)
-//
-// O que faz: structs de no + merge para usar com Seg (code/ds/seg_iter.cpp)
-//   ou com qualquer segtree que combine esquerda*direita.
-// Quando usar: Catalogo > Estruturas de dados (Segtree de parenteses,
-//   maximo subarray, no como monoide de funcoes, "pense em qual informacao
-//   do no permite juntar dois filhos").
-// Complexidade: O(1) por merge.
-// Uso: com seg_iter.cpp:
-//   Seg s(n, MS(), [](MS a, MS b){ return merge(a, b); });
-//   s.set(i, MS::leaf(x)); s.query(l, r).best  (maior soma de subarray nao vazio)
-//   Parenteses: Seg s(n, BR(), mergeBR); leaf: BR::leaf('(' ou ')');
-//     balanceada <=> q.sum==0 && q.mn>=0 (mn = menor prefixo, vazio incluso).
-//   Afim x -> a*x+b: Aff compose(f,g) = primeiro f, depois g (ordem do vetor);
-//     query devolve a composicao, aplique em x com ap().
-// Cuidados: elemento neutro deve ser o construtor padrao (MS(), BR(), Aff()).
-//   MS usa NINF para "vazio"; seguro para somas ate ~1e18.
+// Nos prontos para segtree - max subarray, parenteses, afim
 const ll NINF = LLONG_MIN / 4;
 struct MS { // max subarray nao vazio
     ll sum = 0, pre = NINF, suf = NINF, best = NINF; // neutro: best = -inf
@@ -43,3 +27,33 @@ Aff compose(const Aff& f, const Aff& g) { // primeiro f, depois g
     return {g.a * f.a % AMOD, (g.a * f.b + g.b) % AMOD};
 }
 ll ap(const Aff& f, ll x) { return (f.a * x + f.b) % AMOD; }
+/*LATEX_DESC_BEGIN***************************
+-> **Nos Prontos para Segtree**
+Structs de no + funcao de merge para usar com Seg (seg_iter.cpp) ou qualquer
+segtree que combina filho esquerdo e direito.
+
+Complexidade: O(1) por merge.
+Uso:
+  Seg s(n, MS(), [](MS a, MS b){ return merge(a, b); });
+  s.set(i, MS::leaf(x)); s.query(l, r).best;  // maior subarray nao vazio
+  // Parenteses:
+  Seg t(n, BR(), mergeBR);  // leaf: BR::leaf('(' ou ')')
+  // balanceado <=> q.sum == 0 && q.mn >= 0
+  // Afim x -> a*x+b:
+  // query devolve a composicao; aplique com ap(f, x).
+
+* Sobre o codigo:
+  MS guarda soma, melhor prefixo, sufixo e subarray; merge junta os dois
+  filhos. BR guarda soma e menor prefixo. Aff guarda a, b e compose.
+
+* Problemas e reducoes:
+  + Maior soma de subarray (nao vazio) com update de ponto.
+  + Parenteses balanceados em range: soma == 0 e menor prefixo >= 0.
+  + Composicao de funcoes afins em range e aplicacao em x.
+  + Modelar outras informacoes de no que se juntam de forma associativa.
+
+Cuidados: o neutro deve ser o construtor padrao (MS(), BR(), Aff()). MS usa
+  NINF para "vazio"; seguro para somas ate ~1e18.
+Catalogo: Estruturas de dados.
+Digitacao: 28 linhas | facil. Atalho: ok.
+*****************************LATEX_DESC_END*/

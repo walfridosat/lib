@@ -1,19 +1,4 @@
-// Circulos: interseções, tangentes, area de interseção com poligono, area da uniao
-//
-// O que faz: circulo-reta, circulo-circulo, tangentes de ponto e comuns, area de interseção
-//   circulo x poligono (Green), area da uniao de circulos.
-// Quando usar: Catalogo > Geometria (circulo inter reta/circulo, tangentes, area de uniao,
-//   interseção circulo-poligono).
-// Complexidade: inter O(1); circlePolyArea O(n); unionArea O(n^2 log n).
-// Uso: struct C {Pd c; ld r;}.
-//   circleLine(C, a, b) -> pontos de interseção com a reta ab (0, 1 ou 2).
-//   circleCircle(C1, C2) -> pontos de interseção (vazio se disjuntos/contidos; 1 ou 2 pontos;
-//     circulos identicos: devolve vazio).
-//   tangentsFrom(C, p) -> pontos de tangencia a partir de p externo.
-//   commonTangents(C1, C2) -> vector de pares (ponto em C1, ponto em C2), ate 4.
-//   circlePolyArea(C, poly) -> area da interseção do circulo com poligono simples (qualquer sentido).
-//   unionArea(vector<C>) -> area da uniao.
-// Cuidados: EPS=1e-9; clamp em sqrt/acos. Circulos identicos em unionArea: remove duplicatas.
+// Circulos - intersecoes, tangentes e areas
 
 typedef long double ld;
 const ld EPS = 1e-9L;
@@ -57,7 +42,7 @@ vector<Pd> circleCircle(C a, C b) {
   return {m - n, m + n};
 }
 
-// pontos de tangencia nas circunferencia o, vistos do ponto p (fora do circulo)
+// tangencia do ponto p no circulo o (p fora)
 vector<Pd> tangentsFrom(C o, Pd p) {
   Pd d = p - o.c;
   ld D2 = dot(d, d);
@@ -74,7 +59,7 @@ vector<pair<Pd, Pd>> commonTangents(C a, C b) {
   Pd d = b.c - a.c;
   ld D2 = dot(d, d);
   if (D2 < EPS) return res;
-  for (int s : {-1, 1}) {            // s=1: externas (R = r1 - r2); s=-1: internas (R = r1 + r2)
+  for (int s : {-1, 1}) {            // s=1 externas; s=-1 internas
     ld R = a.r - s * b.r;            // n unitaria com dot(n, d) = R
     ld h2 = D2 - sq(R);
     if (h2 < -EPS) continue;
@@ -91,7 +76,7 @@ vector<pair<Pd, Pd>> commonTangents(C a, C b) {
   return res;
 }
 
-// area da interseção do circulo (centro o, raio r) com o triangulo (o, a, b), sinalizada
+// area sinalizada do triangulo (o,a,b)
 ld triCircle(Pd a, Pd b, ld r) {  // centro na origem
   Pd d = b - a;
   ld A = dot(d, d), B = dot(a, d), Cc = dot(a, a) - r * r;
@@ -112,7 +97,7 @@ ld circlePolyArea(C o, const vector<Pd> &g) {
   return fabsl(s);
 }
 
-// area da uniao de circulos (Green: soma das partes visiveis de cada borda)
+// area da uniao (Green)
 ld unionArea(vector<C> cs) {
   // remove circulos contidos em outros (e duplicatas)
   vector<C> v;
@@ -128,7 +113,7 @@ ld unionArea(vector<C> cs) {
   ld total = 0;
   int n = v.size();
   for (int i = 0; i < n; i++) {
-    vector<pair<ld, ld>> iv;  // intervalos angulares cobertos [lo, hi] em [0, 2pi]
+    vector<pair<ld, ld>> iv;  // arcos cobertos [lo, hi] em [0, 2pi]
     for (int j = 0; j < n; j++) {
       if (i == j) continue;
       Pd d = v[j].c - v[i].c;
@@ -144,7 +129,7 @@ ld unionArea(vector<C> cs) {
     }
     sort(iv.begin(), iv.end());
     ld cur = 0;  // percorre arcos livres [cur, lo]
-    auto arc = [&](ld a, ld b) {  // integral de Green do arco de angulo a..b do circulo i
+    auto arc = [&](ld a, ld b) {  // Green do arco a..b do circulo i
       if (b <= a) return;
       Pd c = v[i].c; ld r = v[i].r;
       total += r * r * (b - a) / 2 +
@@ -158,3 +143,40 @@ ld unionArea(vector<C> cs) {
   }
   return total;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Circulos - intersecoes, tangentes e areas**
+Circunferencia-reta, circunferencia-circunferencia, tangentes de ponto e comuns, area de
+intersecao com poligono (Green) e area da uniao de circulos. Coordenadas reais.
+
+Complexidade: intersecao O(1); circlePolyArea O(n); unionArea O(n^2 log n)
+Uso:
+  struct C { Pd c; ld r; };
+  vector<Pd> p = circleLine(c, a, b);      // 0, 1 ou 2 pontos
+  vector<Pd> q = circleCircle(c1, c2);     // vazio se disjuntos/contidos; 1 ou 2
+  vector<Pd> t = tangentsFrom(c, p);       // p externo ao circulo
+  vector<pair<Pd,Pd>> ct = commonTangents(c1, c2);  // ate 4 pares
+  ld a = circlePolyArea(c, poly);
+  ld u = unionArea(vector<C>);
+
+* Sobre o codigo:
+  circleLine projeta o centro na reta e corta por h2 = r^2 - dist^2. circleCircle usa o eixo
+  radical. commonTangents testa s = +1 (externas, R = r1 - r2) e s = -1 (internas, R = r1 + r2).
+  triCircle soma setor + triangulo pela formula de Green. unionArea remove circulos contidos,
+  projeta os arcos cobertos como intervalos angulares e soma os arcos livres.
+
+* Problemas e reducoes:
+  + Tangentes comuns a dois circulos: commonTangents (ate 4).
+  + Tangentes de um ponto externo: tangentsFrom.
+  + Area de poligono intersectado por um circulo: circlePolyArea.
+  + Area da uniao de discos: unionArea.
+  + Intersecao de uma circunferencia com uma reta: circleLine.
+  + Pontos de tangencia para construcoes de retas e circulos tangentes.
+
+Cuidados: EPS = 1e-9; sempre faca clamp em sqrt/acos/asin (sqrtp e min/max ja fazem).
+  Circulos identicos: circleCircle devolve vazio; unionArea remove duplicatas e contidos.
+  Coordenadas grandes com long double ainda podem acumular erro em unionArea.
+Catalogo: Geometria.
+Digitacao: 137 linhas | dificil. Atalho: o bloco Pd/cross/dot/len/perp/rot repete
+  point_dbl.cpp; incluir aquele arquivo e apagar o bloco encurta bastante.
+*****************************LATEX_DESC_END*/

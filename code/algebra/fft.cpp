@@ -1,15 +1,4 @@
-// FFT complexa (double) e convolucao com modulo arbitrario por split
-//
-// O que faz: conv(a,b) convolui vetores de double; convMod(a,b,M) convolui mod M qualquer
-//   (M < 2^31) quebrando cada coeficiente em duas metades de ~15 bits.
-// Quando usar: soma de pares, casamento com curinga, modulo nao-NTT (1e9+7)
-//   (Catalogo > Algebra, polinomios e FFT: Precisao da FFT, Modulo arbitrario).
-// Complexidade: O(n log n); convMod usa 4 FFTs.
-// Uso: vector<double> c = conv(a, b); vector<ll> d = convMod(a, b, 1000000007);
-//   0-based, saida de tamanho |a|+|b|-1.
-// Cuidados: conv em double so e exato se n*(maior coef)^2 <~ 1e14; arredonde com llround.
-//   convMod: coeficientes devem estar em [0, M). Raizes calculadas em long double
-//   (nao acumule por multiplicacao em double).
+// FFT complexa (double) e convolucao mod arbitrario
 typedef complex<double> Cd;
 void fft(vector<Cd>& a) {
     int n = a.size(), L = 31 - __builtin_clz(n);
@@ -66,3 +55,30 @@ vector<ll> convMod(const vector<ll>& a, const vector<ll>& b, ll M) {
     }
     return res;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **FFT complexa e convolucao mod arbitrario**
+conv(a,b) convolui vetores de double; convMod(a,b,M) convolui mod M qualquer
+(M < 2^31) quebrando cada coeficiente em duas metades de ~15 bits.
+
+Complexidade: O(n log n); convMod usa 4 FFTs.
+Uso:
+  vector<double> c = conv(a, b);
+  vector<ll> d = convMod(a, b, 1000000007);   // 0-based, tamanho |a|+|b|-1
+
+* Sobre o codigo:
+  fft e iterativa com bit-reversal e tabela de raizes. conv coloca a na parte
+  real e b na imaginaria e extrai o produto com uma FFT. convMod separa a[i]
+  em a[i]/cut e a[i]%cut, faz as transformadas e recombina as quatro partes
+  (low/low, low/high, high/low, high/high).
+
+* Problemas e reducoes:
+  + Soma de pares a_i + b_j = s.
+  + Casamento de strings com curinga (wildcard).
+  + Convolucao mod 1e9+7 quando nao se quer 3 NTTs.
+
+Cuidados: conv em double so e exato se n*(maior coef)^2 <~ 1e14; arredonde com
+  llround. convMod: coeficientes em [0, M); raizes calculadas em long double.
+  Para modulo arbitrario com mais garantia use conv_mod.cpp.
+Catalogo: Algebra, polinomios e FFT (Precisao da FFT / Modulo arbitrario).
+Digitacao: 56 linhas | dificil.
+*****************************LATEX_DESC_END*/

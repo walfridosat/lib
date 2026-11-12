@@ -1,12 +1,4 @@
-// RNG para gerar testes e stress
-//
-// O que faz: random_a(n) gera n inteiros uniformes em [l, r]; random_perm(n) gera
-//            uma permutacao aleatoria de 0..n-1; rng e mt19937 semeado com time(0).
-// Quando usar: Catalogo > Aleatorizacao (stress test). Use no gerador, nunca na solucao.
-// Complexidade: O(n) por vetor.
-// Uso: ajuste os globais l, r; chame random_a(n) / random_perm(n).
-// Cuidados: standalone (tem #include); para reprodutibilidade semeie com constante;
-//            nao use em solucao que exige aleatorizacao verdadeira (juiz pode repetir seed).
+// RNG para testes - vetores aleatorios e permutacoes
 #include <bits/stdc++.h>
 using namespace std;
 mt19937 rng(time(0));
@@ -24,3 +16,23 @@ vector<int> random_perm(int n){
     shuffle(a.begin(),a.end(),rng);
     return a;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **RNG para Testes**
+random_a(n) gera n inteiros uniformes em [l, r]; random_perm(n) gera uma permutacao
+de 0..n-1. rng e mt19937 semeado com time(0).
+
+Complexidade: O(n) por vetor
+Uso:
+  ajuste os globais l e r; vector<int> a = random_a(n); auto p = random_perm(n);
+
+* Sobre o codigo:
+  random_a usa uniform_int_distribution; random_perm faz iota + shuffle.
+
+* Problemas e reducoes:
+  + Gerador de casos para stress test.
+
+Cuidados: standalone (tem #include); para reprodutibilidade semeie com constante;
+  nao use na solucao (o juiz pode repetir a seed).
+Catalogo: Aleatorizacao (stress test)
+Digitacao: 17 linhas | facil.
+*****************************LATEX_DESC_END*/

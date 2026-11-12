@@ -1,12 +1,4 @@
-// Segtree iterativa (ponto + consulta de intervalo)
-//
-// O que faz: arvore de soma com update pontual O(log n) e query de intervalo O(log n);
-//            base 0-indexada, n arredondado para potencia de 2; versao minima e rapida.
-// Quando usar: Catalogo > Estruturas de dados e queries (Segtree). Para lazy ou
-//            operacoes nao inversiveis use seg_lazy.cpp / segtree.cpp.
-// Complexidade: O(n) para construir, O(log n) por operacao, O(n) memoria.
-// Uso: IterSeg st(a); st.add(i, x); st.set(i, x); st.query(l, r) = soma em [l, r).
-// Cuidados: indices fora de [0, n) sao ignorados no add/set; query exige l <= r.
+// Segtree iterativa - soma, ponto e intervalo
 struct IterSeg {
     int n;
     vector<ll> t;
@@ -31,3 +23,27 @@ struct IterSeg {
         return res;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Segtree Iterativa de Soma**
+Arvore de soma com update de ponto e query de intervalo, ambos O(log n).
+0-based; n arredondado para potencia de 2; versao minima e rapida.
+
+Complexidade: O(n) para construir, O(log n) por operacao, O(n) memoria.
+Uso:
+  IterSeg st(a);
+  st.add(i, x); st.set(i, x);
+  ll s = st.query(l, r);   // soma em [l, r)
+
+* Sobre o codigo:
+  Folhas em [n, 2n); set sobe recombinando; add chama set(p, t[n+p]+v).
+  query acumula os blocos da decomposicao iterativa de [l, r).
+
+* Problemas e reducoes:
+  + Soma/contagem em range com update de ponto.
+  + Prefixo dinamico: query(0, r).
+  + Para min/max nao inversivel use seg_lazy.cpp ou segtree.cpp.
+
+Cuidados: indices fora de [0, n) sao ignorados em add/set; query exige l <= r.
+Catalogo: Estruturas de dados e queries (Segtree).
+Digitacao: 24 linhas | facil. Atalho: ok.
+*****************************LATEX_DESC_END*/

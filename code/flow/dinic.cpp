@@ -1,16 +1,4 @@
-// Dinic (fluxo maximo) + recuperacao do corte minimo
-//
-// O que faz: fluxo maximo s->t; depois do flow() recupera o lado S do corte minimo
-//   e o fluxo passando em cada aresta.
-// Quando usar: "emparelhamento, cobertura, atribuir", Menger (caminhos disjuntos = corte),
-//   corte minimo em grid, closure/project selection (Catalogo > Grafos, Otimizacao).
-// Complexidade: O(V^2 E) geral; O(E*min(V^(2/3),E^(1/2))) cap. unitaria;
-//   O(E sqrt V) em bipartido unitario.
-// Uso: Dinic d(n); int id=d.add(u,v,cap[,rcap]); ll f=d.flow(s,t);
-//   vector<bool> S=d.cut(s) (true = lado de s, valido apos flow);
-//   d.flowOn(id) = fluxo na aresta id. Vertices 0-indexed. Nao-direcionada: add(u,v,c,c).
-// Cuidados: INF grande mas sem estourar (use ~1e18 so em cap de aresta isolada; somas
-//   de INF estouram). Para vertex-cut divida v em in->out cap 1.
+// Dinic - fluxo maximo / corte minimo
 struct Dinic {
     struct E { int to; ll cap, orig; };
     int n; vector<E> e; vector<vector<int>> g; vector<int> lvl, it;
@@ -49,8 +37,7 @@ struct Dinic {
         }
         return tot;
     }
-    // lado S do corte minimo: vertices alcancaveis de s no residual
-    vector<bool> cut(int s) {
+    vector<bool> cut(int s) { // lado S: alcancaveis de s no residual
         vector<bool> vis(n, false); vis[s] = true;
         queue<int> q; q.push(s);
         while (!q.empty()) {
@@ -60,5 +47,38 @@ struct Dinic {
         }
         return vis;
     }
-    ll flowOn(int id) { return e[id].orig - e[id].cap; } // fluxo na aresta id (direta)
+    ll flowOn(int id) { return e[id].orig - e[id].cap; }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Dinic - Max Flow / Min Cut**
+Fluxo maximo s->t por niveis (BFS) + fluxo bloqueante (DFS com ponteiro).
+Vertices 0-indexed.
+
+Complexidade: O(V^2 E) geral | O(E sqrt V) bipartido com cap 1
+Uso:
+  Dinic d(n); int id = d.add(u, v, cap[, rcap]);  // nao-direcionada: add(u,v,c,c)
+  ll f = d.flow(s, t);
+  d.cut(s)[u]  -> u esta no lado de s do corte minimo (chame apos flow)
+  d.flowOn(id) -> fluxo passando na aresta id
+
+* Sobre o codigo:
+  e[] guarda cada aresta e a reversa lado a lado: a reversa de id e id ^ 1.
+  bfs calcula lvl[] (distancia no residual); dfs so anda de lvl k para k + 1.
+  it[u] = proxima aresta de u ainda util; nunca volta, o que garante a complexidade.
+
+* Problemas e reducoes:
+  + Corte minimo = fluxo maximo; lado S = alcancaveis de s no residual.
+  + Caminhos disjuntos em arestas: cap 1 (Menger). Em vertices: v vira v_in -> v_out cap 1.
+  + Matching bipartido: s -> esquerda, direita -> t, tudo cap 1.
+  + Bipartido: cobertura minima de vertices = matching (Konig); independente maximo = n - matching.
+  + Cobertura de DAG por caminhos disjuntos = n - matching em (u_out, v_in);
+    com fecho transitivo vira a maior anticadeia (Dilworth).
+  + Project selection / closure: s -> projeto (lucro), maquina -> t (custo),
+    dependencia com cap INF; resposta = soma dos lucros - flow.
+  + Atribuicao com limites (pessoas x tarefas): camadas s -> A -> B -> t.
+
+Cuidados: somar varios INF estoura ll; dfs recursiva (profundidade <= V).
+Catalogo: Grafos (fluxo/corte), Otimizacao.
+Digitacao: 50 linhas | media. Atalho: cut(s) e dispensavel, apos flow() o lado S
+  e exatamente lvl[u] >= 0 (a ultima bfs falhou e marcou os alcancaveis de s).
+*****************************LATEX_DESC_END*/

@@ -1,16 +1,4 @@
-// Deteccao de ciclos: orientado, nao orientado, girth (menor ciclo nao ponderado)
-//
-// O que faz: find_cycle_dir devolve um ciclo orientado; find_cycle_und um ciclo simples
-//   em grafo nao orientado (multiarestas contam como ciclo de tamanho 2); girth devolve o
-//   comprimento do menor ciclo nao orientado.
-// Quando usar: Catalogo > Grafos ("Ciclos (deteccao, menor ciclo)", "Ciclo minimo em grafo
-//   nao pesado (girth)", "Ciclo unico (m=n) -> pseudofloresta").
-//   Ciclo negativo: code/graph/bellman_ford.cpp. Ciclo de peso minimo: floyd.cpp.
-// Complexidade: dir/und O(n+m); girth O(n*m)
-// Uso: find_cycle_dir(n, g) / find_cycle_und(n, E) -> vertices do ciclo (vazio se nao ha).
-//   girth(n, E) -> INT_MAX se floresta. E = vector<array<int,2>> arestas, g = adj orientada.
-// Cuidados: DFS recursiva em find_cycle_dir (profundidade n). Em girth o candidato
-//   d[u]+d[v]+1 para aresta fora da arvore BFS e exato quando minimizado sobre todas as raizes.
+// Ciclos - deteccao dirigida/nao dirigida e girth
 vector<int> find_cycle_dir(int n, const vector<vector<int>>& g) {
     vector<int> col(n, 0), par(n, -1), cyc;
     function<bool(int)> dfs = [&](int u) {
@@ -75,3 +63,35 @@ int girth(int n, const vector<array<int,2>>& E) {
     }
     return best;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Ciclos - deteccao, ciclo nao orientado e girth**
+find_cycle_dir devolve um ciclo orientado; find_cycle_und um ciclo simples
+em grafo nao orientado; girth da o comprimento do menor ciclo nao orientado.
+Multiarestas contam como ciclo de tamanho 2.
+
+Complexidade: find_cycle_dir/und O(n + m); girth O(n*m)
+Uso:
+  g = adj orientada; E = vector<array<int,2>> arestas nao orientadas; 0-based
+  vector<int> c = find_cycle_dir(n, g);   // vazio se aciclico
+  vector<int> c = find_cycle_und(n, E);   // vazio se floresta
+  int g = girth(n, E);                    // INT_MAX se floresta
+
+* Sobre o codigo:
+  find_cycle_dir: DFS com 3 cores; aresta de retorno (cor 1) fecha o ciclo e
+  os pais reconstroem o caminho. find_cycle_und pula a aresta pai por id e
+  aceita retorno a ancestral. girth roda BFS de cada raiz e testa as arestas
+  nao-arvore com d[u] + d[v] + 1.
+
+* Problemas e reducoes:
+  + Detectar ciclo em grafo dirigido: find_cycle_dir vazio sse DAG.
+  + Pseudofloresta (m == n): cada componente tem no maximo um ciclo.
+  + Girth / menor ciclo nao ponderado: girth.
+  + Ciclo impar / bipartido: use bipartite (code/graph/bipartite.cpp).
+  + Ciclo negativo: Bellman-Ford; ciclo de peso minimo: floyd.
+
+Cuidados: find_cycle_dir usa DFS recursiva (profundidade n). Em girth o
+  candidato d[u]+d[v]+1 e exato ao minimizar sobre todas as raizes.
+Catalogo: Grafos (ciclos, menor ciclo/girth, pseudofloresta).
+Digitacao: 62 linhas | dificil. Atalho: as duas DFS de ciclo compartilham a
+  reconstrucao u->v; extraia um helper.
+*****************************LATEX_DESC_END*/

@@ -1,14 +1,4 @@
-// Crivo segmentado (primos e phi em [L, R])
-//
-// O que faz: primos em [L,R] e phi de cada numero do intervalo, usando so os
-//   primos <= sqrt(R).
-// Quando usar: Catalogo > Teoria dos numeros (crivo segmentado; R ate ~1e12
-//   e R-L ate ~1e7).
-// Complexidade: O(sqrt(R) + (R-L) log log R).
-// Uso: seg_primes(L,R) devolve vector<ll> dos primos em [L,R].
-//   seg_phi(L,R) devolve ph[i-L] para i em [L,R].
-//   Para fatorar, copie o corpo de seg_phi (rem[x] guarda o que sobrou).
-// Cuidados: L>=1. O 1 nao e primo (tratado). Primos ate sqrt(R) gerados aqui.
+// Crivo segmentado
 vector<int> small_primes(ll lim) { // primos <= lim
     vector<char> c(lim + 1, 1); vector<int> p;
     for (ll i = 2; i <= lim; i++) if (c[i]) {
@@ -47,3 +37,30 @@ vector<ll> seg_phi(ll L, ll R) { // phi de todo i em [L,R], L>=1
         if (rem[i - L] > 1) ph[i - L] -= ph[i - L] / rem[i - L];
     return ph;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Crivo segmentado**
+Primos e phi em [L, R] usando apenas os primos <= sqrt(R).
+
+Complexidade: O(sqrt(R) + (R-L) log log R).
+Uso:
+  vector<ll> ps = seg_primes(L, R);
+  vector<ll> ph = seg_phi(L, R);     // ph[i-L] = phi(i)
+
+* Sobre o codigo:
+  small_primes gera os primos pequenos; seg_primes marca o intervalo comecando
+  em max(p*p, ceil(L/p)*p). seg_phi multiplica por (1 - 1/p) e remove os
+  fatores p de rem; o que sobra > 1 e um primo grande.
+
+* Problemas e reducoes:
+  + Primos em [L, R] com R ate 1e12 e R-L ate 1e7 -> seg_primes.
+  + phi de todo i em um intervalo grande -> seg_phi.
+  + Fatorar cada i de um intervalo -> copiar seg_phi e usar rem.
+  + Contar primos em intervalo -> tamanho de seg_primes.
+  + Somar phi em um intervalo -> seg_phi.
+  + Buscar primos gemeos em [L, R] -> seg_primes.
+
+Cuidados: L >= 1; 1 nao e primo (tratado); os primos ate sqrt(R) sao gerados
+  aqui a cada chamada.
+Catalogo: Teoria dos numeros.
+Digitacao: 38 linhas | media. Atalho: small_primes pode vir de sieve.cpp.
+*****************************LATEX_DESC_END*/

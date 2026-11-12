@@ -1,12 +1,4 @@
 // Crivo de Eratostenes
-//
-// O que faz: marca is_prime[0..MAXN] e guarda todos os primos em primes.
-// Quando usar: Catalogo > Teoria dos numeros e divisores (crivo). Para fatoracao
-//            multipla use o menor fator (crivo linear); para 10^9+ use Miller-Rabin.
-// Complexidade: O(MAXN log log MAXN) tempo e O(MAXN) memoria.
-// Uso: sieve(); depois consulte is_prime[x] ou itere primes.
-// Cuidados: MAXN e local deste arquivo (nao redefina ao colar junto); o crivo roda
-//            uma vez por execucao; 1e6 ~ 8 MB com vector<bool>.
 
 
 const int MAXN = 1000000; // ajuste ao limite do problema
@@ -25,3 +17,28 @@ void sieve() {
         }
     }
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Crivo de Eratostenes**
+Marca is_prime[0..MAXN] e guarda todos os primos em primes.
+
+Complexidade: O(MAXN log log MAXN) tempo; O(MAXN) memoria.
+Uso:
+  sieve();
+  if (is_prime[x]) ...; for (ll p : primes) ...;
+
+* Sobre o codigo:
+  Para cada i ainda primo, marca os multiplos a partir de i*i. vector<bool>
+  ocupa ~8 MB para 1e6.
+
+* Problemas e reducoes:
+  + Listar primos ate 1e6/1e7 -> sieve.
+  + Testar primalidade de varios numeros pequenos -> is_prime[x].
+  + Fatorar varios numeros por divisao sobre primes -> sieve + loop.
+  + Contar primos em um intervalo pequeno -> sieve.
+  + Gerar primos para o crivo segmentado -> sieve.
+
+Cuidados: MAXN e local deste arquivo (nao redefina ao colar junto); o crivo
+  roda uma vez por execucao; para 1e7 use bitset/char e cuidado com memoria.
+Catalogo: Teoria dos numeros e divisores.
+Digitacao: 14 linhas | facil.
+*****************************LATEX_DESC_END*/

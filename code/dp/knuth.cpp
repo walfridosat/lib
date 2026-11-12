@@ -1,12 +1,4 @@
-// Knuth optimization (DP em intervalo)
-//
-// O que faz: dp[l][r] = min_{l<=k<r} dp[l][k] + dp[k+1][r] + w(l,r) em O(n^2) usando opt[l][r-1] <= opt[l][r] <= opt[l+1][r].
-// Quando usar: Catalogo > DP > "Knuth (intervalo)", "DP em intervalo classica O(n^3)", arvore de busca binaria otima,
-//   juntar pilhas/arquivos adjacentes com custo = soma do intervalo.
-// Complexidade: O(n^2) tempo e memoria.
-// Uso: knuth(a) com a[0..n-1]; w(l,r) = soma a[l..r] (prefix sums). Retorna custo minimo de juntar tudo. 0-based.
-// Cuidados: w precisa satisfazer quadrangulo (w(a,c)+w(b,d) <= w(a,d)+w(b,c)) e ser monotono em intervalos.
-//   Se so quer a resposta e w e soma, Garsia-Wachs/Hu-Tucker faz O(n log n). Memoria n^2 ll: n=5000 ~ 200MB (cuidado).
+// Knuth optimization - DP em intervalo O(n^2)
 ll knuth(const vector<ll>& a){
     int n = a.size();
     vector<ll> P(n+1, 0);
@@ -19,7 +11,7 @@ ll knuth(const vector<ll>& a){
         for(int l = 0; l + len - 1 < n; l++){
             int r = l + len - 1;
             dp[l][r] = LLONG_MAX;
-            // k varia em [opt[l][r-1], opt[l+1][r]], com k < r
+            // k em [opt[l][r-1], opt[l+1][r]], k < r
             for(int k = opt[l][r-1]; k <= min(opt[l+1][r], r-1); k++){
                 ll v = dp[l][k] + dp[k+1][r] + w(l, r);
                 if(v < dp[l][r]){ dp[l][r] = v; opt[l][r] = k; }
@@ -28,3 +20,28 @@ ll knuth(const vector<ll>& a){
     }
     return n ? dp[0][n-1] : 0;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Knuth optimization (DP em intervalo)**
+dp[l][r] = min_{l<=k<r} dp[l][k] + dp[k+1][r] + w(l,r) em O(n^2), usando
+opt[l][r-1] <= opt[l][r] <= opt[l+1][r], 0-based.
+
+Complexidade: O(n^2) tempo e memoria.
+Uso:
+  ll cost = knuth(a);   // w(l,r) = soma de a[l..r], custo de juntar tudo
+
+* Sobre o codigo:
+  O intervalo [l,r] e dividido em [l,k] e [k+1,r]; opt guarda o melhor k. A
+  monotonicidade de opt reduz o laco de k de O(n) para O(1) amortizado. w usa
+  prefix sums.
+
+* Problemas e reducoes:
+  + Arvore de busca binaria otima (custo de acesso).
+  + Juntar pilhas/arquivos adjacentes com custo = soma do intervalo.
+  + DP em intervalo com quadrangulo e custo aditivo.
+
+Cuidados: w precisa satisfazer a desigualdade do quadrangulo e ser monotonica
+  em intervalos. Memoria n^2 ll: n = 5000 ~ 200MB. Se so quer a resposta e w
+  e soma, Garsia-Wachs/Hu-Tucker faz O(n log n).
+Catalogo: DP > Knuth (intervalo) / DP em intervalo classica O(n^3).
+Digitacao: 20 linhas | media.
+*****************************LATEX_DESC_END*/

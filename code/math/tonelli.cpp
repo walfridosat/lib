@@ -1,13 +1,4 @@
-// Raiz quadrada modular (Tonelli-Shanks) e simbolo de Jacobi
-//
-// O que faz: x com x^2 = a (mod p), p primo; Jacobi (a/n) em O(log).
-// Quando usar: Catalogo > Teoria dos numeros (raiz quadrada mod p, criterio
-//   de Euler, Legendre/Jacobi; x^2 = -1 mod p).
-// Complexidade: O(log^2 p).
-// Uso: sqrt_mod(a,p) -> uma raiz r (a outra e p-r) ou -1 se a nao e residuo.
-//   jacobi(a,n) -> -1,0,1 (n impar positivo). Para mod composto: fatore e
-//   use CRT (crt.cpp); 2^omega solucoes.
-// Cuidados: p=2 tratado. a=0 devolve 0. p ate ~1e18 (usa __int128).
+// Tonelli-Shanks e simbolo de Jacobi
 typedef __int128 LL;
 ll pmod(ll b, ll e, ll m) {
     ll r = 1 % m; b %= m;
@@ -49,3 +40,30 @@ ll sqrt_mod(ll a, ll p) {
     }
     return x;
 }
+/*LATEX_DESC_BEGIN***************************
+-> **Tonelli-Shanks e Jacobi**
+Raiz quadrada modular mod p primo e simbolo de Jacobi em O(log).
+
+Complexidade: O(log^2 p).
+Uso:
+  ll r = sqrt_mod(a, p);        // uma raiz; a outra e p-r; -1 se nao ha
+  int j = jacobi(a, n);         // n impar positivo
+
+* Sobre o codigo:
+  sqrt_mod trata p = 2, a = 0 e p = 3 mod 4; no caso geral escreve p-1 = q*2^s,
+  acha um nao residuo z e itera reduzindo t ate 1. jacobi aplica a
+  reciprocidade quadratica removendo fatores 2.
+
+* Problemas e reducoes:
+  + Resolver x^2 = a (mod p) -> sqrt_mod.
+  + x^2 = -1 mod p -> sqrt_mod(p-1, p).
+  + Testar residuo quadratico (criterio de Euler) -> sqrt_mod != -1.
+  + Resolver x^2 = a mod composto -> fatorar e juntar por CRT.
+  + Calcular Legendre/Jacobi -> jacobi.
+  + Pontos em conica mod p -> sqrt_mod.
+
+Cuidados: p primo; p = 2 tratado; a = 0 devolve 0; sqrt_mod devolve so uma
+  raiz (a outra e p-r); para mod composto fatore e use CRT (2^omega solucoes).
+Catalogo: Teoria dos numeros.
+Digitacao: 41 linhas | media. Atalho: pmod duplica pw/pw_mod de outros arquivos.
+*****************************LATEX_DESC_END*/

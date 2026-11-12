@@ -1,12 +1,4 @@
-// Area e perimetro da uniao de retangulos (sweep + segtree)
-//
-// O que faz: area da uniao de retangulos alinhados aos eixos; perimetro da uniao.
-// Quando usar: Catalogo > Geometria (uniao de retangulos), tambem Estruturas (cobertura+comprimento).
-// Complexidade: O(n log n).
-// Uso: vector<array<ll,4>> r; // {x1, y1, x2, y2} com x1<x2, y1<y2 (retangulo [x1,x2)x[y1,y2))
-//   unionArea(r), unionPerimeter(r).
-// Cuidados: coordenadas compactadas internamente. Area em ll. Perimetro = soma de |variacao
-//   do comprimento coberto| no sweep em x e no sweep em y (feito pela troca de eixos).
+// Uniao de retangulos - area e perimetro
 
 struct CovTree {  // cobertura (contagem) e comprimento coberto
   int n;
@@ -32,7 +24,7 @@ struct CovTree {  // cobertura (contagem) e comprimento coberto
   }
 };
 
-// varre em x; devolve area e, em per, soma de |delta cobertura| (contribuicao ao perimetro)
+// varre em x: area e soma de |delta cobertura|
 ll sweepRect(const vector<array<ll, 4>> &r, ll &per) {
   vector<ll> ys;
   for (auto &a : r) ys.push_back(a[1]), ys.push_back(a[3]);
@@ -40,7 +32,7 @@ ll sweepRect(const vector<array<ll, 4>> &r, ll &per) {
   ys.erase(unique(ys.begin(), ys.end()), ys.end());
   CovTree T;
   T.init(ys);
-  // eventos (x, tipo, y1, y2): abertura antes de fechamento na mesma coordenada
+  // eventos (x, tipo, y1, y2); abre antes de fecha
   vector<array<ll, 4>> ev;
   for (auto &a : r) {
     ev.push_back({a[0], 0, a[1], a[3]});  // 0 = abre (+1)
@@ -56,7 +48,7 @@ ll sweepRect(const vector<array<ll, 4>> &r, ll &per) {
     int b = lower_bound(ys.begin(), ys.end(), ev[i][3]) - ys.begin();
     T.upd(1, 0, T.n, a, b, ev[i][1] == 0 ? 1 : -1);
     lastX = x;
-    if (i + 1 < ev.size() && ev[i + 1][0] == x) continue;  // so mede a variacao apos todos os eventos do mesmo x
+    if (i + 1 < ev.size() && ev[i + 1][0] == x) continue;  // mede variacao apos eventos do mesmo x
     per += llabs(T.cov[1] - prev);
     prev = T.cov[1];
   }
@@ -78,3 +70,34 @@ ll unionPerimeter(const vector<array<ll, 4>> &r) {
   sweepRect(t, p2);
   return p1 + p2;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Uniao de retangulos - area e perimetro**
+Area e perimetro da uniao de retangulos alinhados aos eixos. Retangulo [x1,x2) x [y1,y2),
+com x1 < x2 e y1 < y2.
+
+Complexidade: O(n log n)
+Uso:
+  vector<array<ll,4>> r;   // {x1, y1, x2, y2}
+  ll a = unionArea(r);
+  ll p = unionPerimeter(r);
+
+* Sobre o codigo:
+  CovTree e uma segtree sobre y comprimido que guarda cnt (cobertura) e cov (comprimento
+  coberto). sweepRect varre x, acumula area = cov[1] * dx e perimetro = |variacao de cov|.
+  A abertura (tipo 0) vem antes do fechamento no mesmo x; a variacao so e medida depois de
+  todos os eventos daquele x. unionPerimeter repete o sweep com os eixos trocados.
+
+* Problemas e reducoes:
+  + Area da uniao de retangulos alinhados aos eixos.
+  + Perimetro da uniao de retangulos.
+  + Cobertura de comprimento por intervalos (a segtree serve de base).
+  + Area total coberta em uma faixa/grade retangular.
+
+Cuidados: coordenadas compactadas internamente. Area em ll (cuidado com estouro em muitas
+  sobreposicoes). Retangulos degenerados (x1 == x2 ou y1 == y2) nao sao tratados. Eventos no
+  mesmo x precisam ser todos processados antes de medir a variacao.
+Catalogo: Geometria; Estruturas.
+Digitacao: 67 linhas | dificil. Atalho: CovTree.upd e recursiva; a mesma segtree pode ser
+  escrita iterativa para encurtar.
+*****************************LATEX_DESC_END*/

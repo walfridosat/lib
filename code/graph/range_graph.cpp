@@ -1,20 +1,9 @@
-// Grafo com arestas para intervalos (segtree de arestas) + Dijkstra
-//
-// O que faz: permite arestas u -> [l,r] e [l,r] -> v com custo w usando duas arvores
-//   (out: pai->filho custo 0; in: filho->pai custo 0), em O(log n) arestas por consulta.
-// Quando usar: Catalogo > Grafos ("Arestas de um vertice para um intervalo -> segtree de
-//   arestas", "Grafo de intervalos/arestas implicitas por faixas").
-// Complexidade: O((n + q log n) log) para Dijkstra
-// Uso: RangeGraph g(n); g.to_range(u,l,r,w) (u -> cada v em [l,r], custo w);
-//   g.from_range(l,r,v,w) (cada u em [l,r] -> v, custo w); g.edge(u,v,w).
-//   d = g.dijkstra(s); d[v] para v em 0..n-1 (folhas). 0-based, intervalo inclusivo.
-// Cuidados: no total 4n..8n vertices. Se so precisa de "proximo nao visitado" em BFS,
-//   prefira DSU/set (ver code/graph/bfs_complemento.cpp).
+// Range Graph - arestas vertice-intervalo
 struct RangeGraph {
     int n, sz;                        // sz = potencia de 2 >= n
     vector<vector<pair<int,ll>>> g;
-    // ids: folhas 0..n-1 (compartilhadas); out-tree no i (1..2sz-1) -> n + i ;
-    // in-tree no i -> n + 2sz + i. Folha da out-tree/in-tree ligada a folha real.
+    // ids: folhas 0..n-1; out-tree i -> n + i
+    // in-tree i -> n + 2sz + i
     int OUT(int i) { return n + i; }
     int IN(int i) { return n + 2 * sz + i; }
     RangeGraph(int n_) : n(n_) {
@@ -53,3 +42,35 @@ struct RangeGraph {
         return d;
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Range Graph - arestas vertice-intervalo**
+Arestas u -> [l,r] e [l,r] -> v com custo w, usando duas segtrees de arestas
+(out: pai->filho custo 0; in: filho->pai custo 0). Cada consulta vira
+O(log n) arestas. 0-based, intervalo inclusivo.
+
+Complexidade: O((n + q log n) log) para o Dijkstra
+Uso:
+  RangeGraph g(n);
+  g.to_range(u, l, r, w);     // u -> cada v em [l, r]
+  g.from_range(l, r, v, w);   // cada u em [l, r] -> v
+  g.edge(u, v, w);            // aresta comum
+  auto d = g.dijkstra(s);     // d[v] para v em 0..n-1 (folhas)
+
+* Sobre o codigo:
+  sz = potencia de 2 >= n. IDs: folhas reais 0..n-1; out-tree n + i; in-tree
+  n + 2sz + i. Out-tree desce de pai para filho com custo 0, in-tree sobe.
+  go(l, r, f) decompoe o intervalo em O(log n) nos; to_range liga u a OUT(x)
+  e from_range liga IN(x) a v.
+
+* Problemas e reducoes:
+  + Arestas de um vertice para um intervalo: to_range.
+  + Arestas de um intervalo para um vertice: from_range.
+  + Grafo implicito por faixas / intervalos.
+  + Dijkstra sobre o grafo expandido; resposta nas folhas 0..n-1.
+
+Cuidados: o grafo tem cerca de 4n..8n vertices. Para "proximo nao visitado"
+  em BFS, prefira DSU/set (bfs_complemento). Pesos >= 0 para Dijkstra.
+Catalogo: Grafos (segtree de arestas, arestas para intervalos).
+Digitacao: 43 linhas | dificil. Atalho: as duas arvores compartilham os lacos
+  de construcao; una com um offset.
+*****************************LATEX_DESC_END*/

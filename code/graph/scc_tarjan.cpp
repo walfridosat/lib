@@ -1,15 +1,4 @@
-// SCC (Tarjan iterativo) + condensacao
-//
-// O que faz: componentes fortemente conexas. comp[v] em 0..C-1, numeradas em ORDEM
-//   TOPOLOGICA REVERSA (comp 0 = sumidouro: se u->v entre comps distintas, comp[u] > comp[v]).
-// Quando usar: Catalogo > Grafos ("Direcionado com ciclos -> condense em SCC e vire DAG",
-//   "SCC: ordem topologica de Tarjan", 2-SAT, "minimo de arestas para fortemente conexo").
-// Complexidade: O(n + m)
-// Uso: SCC s(n); s.add(u,v); s.build(); s.comp[v], s.C; DAG: s.dag (adj entre comps,
-//   sem duplicatas); s.min_edges_strong() = arestas a adicionar p/ ficar fortemente conexo.
-//   0-based.
-// Cuidados: iterativo (sem estouro de pilha). Para DP no DAG: como comp[u] > comp[v] nas
-//   arestas, processe comps de 0 a C-1 (sumidouros primeiro).
+// Tarjan - SCC e condensacao
 struct SCC {
     int n, C = 0;
     vector<vector<int>> g, dag;
@@ -49,7 +38,7 @@ struct SCC {
             for (int v : g[u]) if (comp[u] != comp[v]) dag[comp[u]].push_back(comp[v]);
         for (auto& a : dag) { sort(a.begin(), a.end()); a.erase(unique(a.begin(), a.end()), a.end()); }
     }
-    // minimo de arestas para tornar fortemente conexo = max(#fontes, #sumidouros) (0 se C==1)
+    // min arestas p/ fortemente conexo = max(src,snk)
     int min_edges_strong() {
         if (C == 1) return 0;
         vector<int> in(C, 0);
@@ -59,3 +48,33 @@ struct SCC {
         return max(src, snk);
     }
 };
+/*LATEX_DESC_BEGIN***************************
+-> **Tarjan - SCC e condensacao**
+Componentes fortemente conexas. comp[v] em 0..C-1, em ORDEM TOPOLOGICA
+REVERSA (comp 0 = sumidouro: se u->v entre comps, comp[u] > comp[v]). 0-based.
+
+Complexidade: O(n + m)
+Uso:
+  SCC s(n); s.add(u, v); s.build();
+  s.comp[v]   -> SCC de v;  s.C = numero de SCCs
+  s.dag       -> adj entre comps (sem duplicatas)
+  s.min_edges_strong() -> arestas a adicionar para ficar fortemente conexo
+
+* Sobre o codigo:
+  Tarjan iterativo com pilha cs e indices idx/low; quando low[u] == idx[u],
+  desempilha ate u formando um SCC. A pilha st guarda os vertices ainda nao
+  atribuidos; on[] marca os que estao nela. dag e montada e deduplicada.
+
+* Problemas e reducoes:
+  + Condensar grafo dirigido com ciclos em DAG.
+  + DP no DAG: processe comps de 0 a C-1 (sumidouros primeiro).
+  + 2-SAT: x verdadeiro sse comp[2x] < comp[2x+1] (Tarjan, sink primeiro).
+  + Minimo de arestas para fortemente conexo: max(#fontes, #sumidouros), 0 se C==1.
+  + Ordem topologica das comps: a numeracao reversa ja a da.
+
+Cuidados: iterativo, sem estouro de pilha. A numeracao e o oposto da de
+  Kosaraju. dag pode ter duplicatas antes da deduplicacao final.
+Catalogo: Grafos (SCC, condensacao, 2-SAT, minimo de arestas).
+Digitacao: 49 linhas | dificil. Atalho: o laco de Tarjan tambem aparece em
+  two_sat; extraia um helper de SCC.
+*****************************LATEX_DESC_END*/

@@ -1,15 +1,4 @@
-// Interseção de semiplanos (HPI) O(n log n)
-//
-// O que faz: acha o poligono convexo (vertices CCW) = interseção de semiplanos "a esquerda de p->p+d".
-// Quando usar: Catalogo > Geometria (HPI, kernel de poligono estrelado, viabilidade de LP 2D,
-//   "regiao onde todas as condicoes valem").
-// Complexidade: O(n log n).
-// Uso: vector<HP> H; H.push_back(HP(Pd(px,py), Pd(dx,dy)));  // esquerda da reta p + t*d
-//   vector<Pd> poly = hpi(H);  // vazio se interseção vazia/degenerada
-//   Regiao ilimitada: adicione 4 semiplanos de uma caixa grande (ex.: 1e9).
-// Cuidados: interseções de area ~0 (ponto/segmento) podem sair vazias ou com <3 pontos.
-//   EPS = 1e-9; coordenadas muito grandes (1e9) com long double ok. Para teste exato de
-//   viabilidade com inteiros, use fracoes (nao feito aqui).
+// Intersecao de semiplanos (HPI) O(n log n)
 
 typedef long double ld;
 const ld EPS = 1e-9L;
@@ -57,3 +46,35 @@ vector<Pd> hpi(vector<HP> H) {
   for (size_t i = 0; i < dq.size(); i++) r.push_back(hpInter(dq[i], dq[(i + 1) % dq.size()]));
   return r;
 }
+
+/*LATEX_DESC_BEGIN***************************
+-> **Intersecao de semiplanos (HPI) O(n log n)**
+Devolve os vertices CCW do poligono convexo que e a intersecao dos semiplanos a esquerda
+de cada reta p -> p + d.
+
+Complexidade: O(n log n)
+Uso:
+  vector<HP> H;
+  H.push_back(HP(Pd(px,py), Pd(dx,dy)));  // esquerda da reta p + t*d
+  vector<Pd> poly = hpi(H);               // vazio se vazia/degenerada
+  // regiao ilimitada: adicione 4 semiplanos de uma caixa grande (ex.: 1e9)
+
+* Sobre o codigo:
+  Ordena por angulo e mantem um deque. Ao inserir h, remove do fim e do inicio os semiplanos
+  cuja intersecao ficou fora de h. Trata paralelas (direcoes opostas => vazio; mesma direcao
+  => fica o mais restritivo). No fim, fecha o deque e calcula os vertices por intersecao.
+
+* Problemas e reducoes:
+  + Intersecao de semiplanos em geral.
+  + Kernel de poligono estrelado: um semiplano por aresta, do lado interno.
+  + Viabilidade de LP 2D / regiao factivel de restricoes lineares.
+  + "Regiao onde todas as condicoes valem".
+  + Recorte incremental: equivalente a aplicar cutPoly (polygon_cut.cpp) em sequencia.
+
+Cuidados: EPS = 1e-9. Intersecao de area ~0 (ponto/segmento) pode sair vazia ou com < 3
+  pontos. Coordenadas grandes (1e9) com long double ok. Para viabilidade exata com inteiros
+  use fracoes (nao feito aqui).
+Catalogo: Geometria.
+Digitacao: 44 linhas | dificil. Atalho: hpInter e chamado 4 vezes com pares do deque;
+  extrair a intersecao de duas arestas do deque em um helper.
+*****************************LATEX_DESC_END*/
