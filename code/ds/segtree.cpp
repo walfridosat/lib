@@ -1,10 +1,12 @@
-// Segtree lazy
+// Segtree lazy (soma em intervalo + soma em range)
 //
-// 
-// 
-// 
-// 
-// 
+// O que faz: arvore recursiva com lazy para somar val em [l, r] e consultar a soma
+//            de [l, r] em O(log n); 0-indexada.
+// Quando usar: Catalogo > Estruturas de dados e queries (Segtree, lazy propagation).
+//            Para update pontual use code/ds/seg_t.cpp (iterativa, mais rapida).
+// Complexidade: O(n) para construir, O(log n) por update/query, O(n) memoria.
+// Uso: SegTree st(a); st.update(l, r, val); ll s = st.query(l, r); (intervalos inclusivos)
+// Cuidados: n >= 1; a soma pode estourar int (use ll); a arvore usa indices 1..4n.
 
 class SegTree {
     private:

@@ -1,4 +1,14 @@
-ll dp[2][19][170];
+// Digit DP (soma dos digitos de 0..k)
+//
+// O que faz: conta/otimiza sobre os digitos de 0..k com estado (posicao, soma, tight);
+//            aqui retorna a soma das somas de digitos de 0 ate k.
+// Quando usar: Catalogo > DP (DP de digitos). Gatilhos: "quantos numeros <= k com ...",
+//            "soma dos digitos", propriedades que dependem dos digitos decimais.
+// Complexidade: O(digitos * estados * 10); digitos <= 19 para ll.
+// Uso: ll ans = solve(k); chame solve uma vez por limite (memset a cada chamada).
+// Cuidados: limite[19] cabe ll (19 digitos); ajuste o segundo estado (aqui soma <= 170);
+//            digitDP devolve a soma, nao a contagem; para contar troque o retorno para 1.
+ll dp[2][19][171]; // soma maxima de digitos de um ll e 170
  
 int limite[19];
 ll digitDP(int idx, int sum, bool flag){

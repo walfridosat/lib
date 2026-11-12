@@ -1,6 +1,24 @@
+// NTT (Number Theoretic Transform) modulo 998244353
+//
+// O que faz: convolucao/multiplicacao de polinomios com raiz primitiva 3; prep_roots
+//            pre-calcula raizes e rev guarda a bit-reversal; suporta tamanho ate 2^23.
+// Quando usar: Catalogo > Algebra, polinomios e FFT (NTT). Para coeficientes grandes
+//            ou modulo arbitrario use 3 NTTs + CRT (ver o proprio catalogo).
+// Complexidade: O(n log n); memoria O(n).
+// Uso: prep_roots(n); ntt(a, invert); veja as funcoes do arquivo (convolution etc.).
+// Cuidados: trecho sem includes/constantes globais proprias (usa MOD, G, MAXCOEF);
+//            n deve ser potencia de 2 <= 2^23; roots precisa comecar {0, 1};
+//            nao misture com outro arquivo que defina MOD/roots/power com outro sentido.
 const int MOD = 998244353;
 const int G = 3;
 const int MAXCOEF = 1e6 + 1; // pra calcular mod x^n
+
+vector<int> roots{0, 1}, rev; // roots[1]=1; prep_roots completa
+ll power(ll b, ll e) {
+    ll r = 1; b %= MOD;
+    for (; e > 0; e >>= 1, b = b * b % MOD) if (e & 1) r = r * b % MOD;
+    return r;
+}
 
 void prep_roots(int n) {
     if ((int)roots.size() >= n) return;

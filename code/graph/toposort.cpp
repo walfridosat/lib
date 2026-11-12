@@ -1,10 +1,14 @@
-// toposort
+// Ordenacao topologica (Kahn)
 //
-// 
-// 
-// 
-// 
-// 
+// O que faz: devolve uma ordem topologica de um DAG; se sobrar vertice, ha ciclo
+//            (o vetor retornado tem tamanho < n).
+// Quando usar: Catalogo > Grafos (DAG, SCC, DP em DAG). Para ordem lexicografica
+//            troque queue por priority_queue.
+// Complexidade: O(n + m) tempo e O(n) memoria.
+// Uso: vector<ll> ord = topoSort(adj); if (ord.size() < adj.size()) tem ciclo.
+// Cuidados: grafo dirigido 0-indexado; arestas duplicadas contam em dobro no grau
+//            (ok para Kahn, mas remova-as se precisar de semantica exata).
+
 
 vector<ll> topoSort(vector<vector<ll>> &adj) {
     ll n = adj.size();
@@ -37,7 +41,7 @@ vector<ll> topoSort(vector<vector<ll>> &adj) {
         }
     }
 
-    if (order.size() != n) {
+    if ((ll)order.size() != n) {
         cout<<"Ciclo"<<endl;
         return {};
     }

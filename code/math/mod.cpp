@@ -1,10 +1,16 @@
-// Aritmetica modular
+// Aritmetica modular e utilidades de inteiros
 //
-// 
-// 
-// 
-// 
-// 
+// O que faz: gcd, lcm, soma/subtracao/multiplicacao mod MOD, exponenciacao e inverso
+//            modular (quando o restante do arquivo define); constantes locais.
+// Quando usar: Catalogo > Teoria dos numeros e divisores (aritmetica modular).
+//            Para binomiais use code/combinatorics/binom_mod.cpp.
+// Complexidade: O(log) por exponenciacao/inverso; O(1) nas demais.
+// Uso: ajuste MOD (primo) no topo; mod_add/mod_sub/mod_mul, fexp(b, p), mod_inv(a).
+// Cuidados: MOD e local deste arquivo (nao redefina em outro trecho colado junto);
+//            para multiplicacao de dois ll use __int128 quando MOD ~ 1e9.
+
+
+const ll MOD = 1000000007; // primo; ajuste conforme o problema
 
 ll gcd(ll a, ll b) {
     return b == 0 ? a : gcd(b, a % b);

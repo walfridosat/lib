@@ -1,3 +1,13 @@
+// Frog 3 com CHT (exemplo completo, standalone)
+//
+// O que faz: resolve o DP dp[i] = c + h[i]^2 + min_j (dp[j] + h[j]^2 - 2*h[i]*h[j])
+//            com convex hull trick; inclui leitura, CHT e main.
+// Quando usar: Catalogo > DP (CHT / Li Chao) como exemplo de montagem; para o trecho
+//            reutilizavel use code/ds/cht_monotono.cpp ou code/ds/lichao.cpp.
+// Complexidade: O(n log n) (insercao/consulta binaria no hull).
+// Uso: programa completo: le n, c e h[0..n-1], imprime a resposta em dp[n-1].
+// Cuidados: e standalone (tem main); inclinacoes sao inseridas em ordem, mas a query
+//            usa busca binaria, entao funciona tambem fora de ordem; use ll.
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long

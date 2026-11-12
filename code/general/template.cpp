@@ -1,3 +1,12 @@
+// Template base para colar no inicio do arquivo
+//
+// O que faz: includes, macros (FORI, FORJ, endl, pb, all, pii), solve() vazio e main
+//            com fast IO e laco de T casos (T = 1 por padrao).
+// Quando usar: Catalogo > Como usar quando travar, e o prelude de todos os trechos.
+// Complexidade: O(1).
+// Uso: cole este arquivo e escreva o corpo em solve(); descomente cin >> t para T casos.
+// Cuidados: endl aqui e '\n' (sem flush); em interativos use '\n' << flush explicitamente;
+//            evite nomes que colidam com as macros (all, pii) em funcoes da biblioteca.
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;

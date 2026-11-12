@@ -1,10 +1,10 @@
-// dijkstra
+// Soma de prefixo 2D (prefix sum em matriz)
 //
-// 
-// 
-// 
-// 
-// 
+// O que faz: prefix[i][j] = soma do retangulo [0..i] x [0..j]; consulta de retangulo em O(1).
+// Quando usar: Catalogo > Estruturas de dados e queries (Retangulo -> 4 prefixos + BIT).
+// Complexidade: O(n*m) para construir, O(1) por consulta, O(n*m) memoria.
+// Uso: auto p = ps2d(a); ps2d_query(p, x1, y1, x2, y2) com coordenadas inclusivas e 0-indexadas.
+// Cuidados: matriz nao vazia; nao use se a matriz muda (para updates use BIT 2D).
 
 vector<vector<ll>> ps2d(vector<vector<ll>>& palao){
     ll n=palao.size();

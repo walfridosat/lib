@@ -1,3 +1,12 @@
+// RNG para gerar testes e stress
+//
+// O que faz: random_a(n) gera n inteiros uniformes em [l, r]; random_perm(n) gera
+//            uma permutacao aleatoria de 0..n-1; rng e mt19937 semeado com time(0).
+// Quando usar: Catalogo > Aleatorizacao (stress test). Use no gerador, nunca na solucao.
+// Complexidade: O(n) por vetor.
+// Uso: ajuste os globais l, r; chame random_a(n) / random_perm(n).
+// Cuidados: standalone (tem #include); para reprodutibilidade semeie com constante;
+//            nao use em solucao que exige aleatorizacao verdadeira (juiz pode repetir seed).
 #include <bits/stdc++.h>
 using namespace std;
 mt19937 rng(time(0));

@@ -1,14 +1,13 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
-#define ll long long
-#define int long long
-#define endl '\n'
-
-#define pii pair<ll,ll>
-#define pb push_back
-
+// SOS DP recursivo (soma sobre submascaras)
+//
+// O que faz: gen_submask(b, mask) = soma de F[s] para todas as submascaras s de mask
+//            considerando os bits 0..b (com memoizacao).
+// Quando usar: Catalogo > Bits e XOR (SOS). Para a versao iterativa O(B*2^B) e mais
+//            rapida/segura, use o laco padrao do catalogo (para cada bit, para cada mask).
+// Complexidade: O(B * 2^B) estados; memoria O(B * 2^B) (aqui 21 * 2^21 ll ~ 350 MB).
+// Uso: preencha F[0..(1<<B)-1], memset(dp, -1, sizeof dp) e chame gen_submask(B-1, mask).
+// Cuidados: SEMPRE memset dp para -1 antes (o codigo nao inicializa); reduza MAXN ao B real;
+//            a recursao inclui a propria submask (F[mask]); para excluir, subtraia F[mask].
 const ll MAXN = 21;
 ll F[1<<MAXN]; //guarda a resposta pra uma submask
 ll dp[MAXN][1<<MAXN];
