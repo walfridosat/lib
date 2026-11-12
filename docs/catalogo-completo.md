@@ -1,6 +1,6 @@
 # Catálogo de ideias — quando travar
 
-> Aviso: os blocos 'adicionado em 2026-11-10 por agentes' estão marcados como 'revisado', mas a auditoria de 2026-11-11 encontrou erros neles; este catálogo já foi corrigido. Ver docs/AUDITORIA-2026-11-11.md.
+> Aviso: blocos marcados com 'adicionado em 2026-11-10 por agentes; não revisado' vieram de geração automática sem conferência. Revisar antes de confiar em fórmulas e complexidades.
 
 Nov 10, 2026 · @Walfrido
 
@@ -23,28 +23,28 @@ O limite de n quase sempre entrega a complexidade-alvo; um limite estranho quase
 
 | Limite | Complexidade-alvo | O que tentar |
 | --- | --- | --- |
-| n ≤ 10–12 | n!, n!·n (este só até n = 10) | Permutações, backtracking |
+| n ≤ 10–12 | n!, n!·n | Permutações, backtracking |
 | n ≤ 18–22 | 2^n·n | Bitmask DP, SOS, brute force de subconjuntos |
 | n ≤ 40 | 2^(n/2) | Meet in the middle |
 | n ≤ 100–500 | n³ | DP em intervalos, Floyd, DP com 3 índices |
 | n ≤ 2000–5000 | n² | DP quadrática, todos os pares, O(n²) com bitset |
 | n ≤ 10⁵ | n·√n, n log² n | Mo, sqrt decomposition, D&C, CDQ |
 | n ≤ 2·10⁵–10⁶ | n log n, n | Sort, segtree, two pointers, guloso, prefix sums |
-| n, x ≤ 10¹⁸ | log, polylog | Fórmula, exponenciação de matriz, digit DP, binária na resposta; fatoração com Miller–Rabin + Pollard–Rho (√x só até 10¹²) |
+| n, x ≤ 10¹⁸ | log, √x, polylog | Fórmula, exponenciação de matriz, digit DP, binária na resposta |
 | n ≤ 10⁷ | n (linear, sem log) | Crivo linear, prefix sums, two pointers; evite map/set; leitura rápida (fread) |
 | n ≤ 10⁸ | n com constante minúscula | Só laço simples, crivo em bitset/segmentado; sem memória por elemento |
 | n ≤ 10¹⁰–10¹¹ | n^(2/3), √n·log | Soma de funções multiplicativas: Dirichlet, Min_25, Lucy; contagem de primos |
 | n ≤ 10¹² | √n, n^(1/3) | Fatorar por tentativa até 10⁶, depois Miller–Rabin; divisão em blocos |
-| n ≤ 60 (ou 64) | operações em uint64, base linear, branching (2^(n/2)/3^(n/3) só até n ≈ 40–50) | Máscara cabe em palavra; base linear de 60 bits; bits de 10¹⁸; cliques máximas por Bron–Kerbosch |
-| n ≤ 30 | 2^(n/2)·n (2^n só n ≲ 20–22) | Subconjuntos com bit hacks; meet in the middle vira 2^15; DP de máscara sem log (só n ≲ 20–22) |
+| n ≤ 60 (ou 64) | 2^(n/2), 3^(n/3), operações em uint64 | Máscara cabe em palavra; base linear de 60 bits; bits de 10¹⁸; cliques máximas por Bron–Kerbosch |
+| n ≤ 30 | 2^n·pouco, 2^(n/2)·n | Subconjuntos com bit hacks; meet in the middle vira 2^15; DP de máscara sem log |
 | n ≤ 50 | 2^(n/2), branching | Meet in the middle em 2^25 com sort; conjunto independente máximo por branching e poda |
-| n ≤ 300 | n³ (n⁴ só n ≲ 100) | Floyd, DP em intervalo, Hungarian O(n³), matriz inversa; n⁴ só com n ≲ 100 e operações triviais |
-| n ≤ 3·10⁴–10⁵ com TL 3 s | n³/64 (fecho geral) ou n·m/64 (DAG esparso); n²/64 (mochila/LCS) | Bitset em fecho transitivo: geral só n ≲ 3000–5000; em DAG esparso até 3·10⁴–10⁵; mochila booleana, LCS bit-parallel |
+| n ≤ 300 | n³ (n⁴ com constante pequena) | Floyd, DP em intervalo, Hungarian O(n³), matriz inversa; n⁴ só com 1 s e operações triviais |
+| n ≤ 3·10⁴–10⁵ com TL 3 s | n²/64 | Bitset em fecho transitivo, mochila booleana, LCS bit-parallel |
 | n ≤ 2000, TL 1 s | n² simples | DP dp[i][j] com poucos acessos; n² log só com cuidado |
 | k ≤ 10, n grande | k·n, 2^k·n, 3^k·n | k no estado: Steiner (3^k), TSP parcial, DP sobre cores |
-| min(n, m) ≤ 20 (com n·m ≤ 10⁵) ou n ≤ 5 e m grande | profile DP, matriz | DP em perfil (broken profile) por coluna; transição linear → matriz 2^n × 2^n e exponenciação (só n ≤ 5–8) |
+| n·m ≤ 10⁵ ou n ≤ 5 e m grande | profile DP, matriz | DP em perfil (broken profile) por coluna; transição linear → matriz 2^n × 2^n e exponenciação |
 | Resposta ≤ 20 ou "no máximo log" | iterar a resposta | Para cada candidato, checagem O(n log n); ou BFS em camadas até 20 |
-| Operações "no máximo 10⁶" e n ≤ 10³ | O(n²) total; O(1) ou O(log n) por operação | Construtivo; a quantidade permite n² trocas simples (bubble sort) |
+| Operações "no máximo 10⁶" e n ≤ 10³ | O(n²) ou O(n log n) por operação | Construtivo; a quantidade permite n² trocas simples (bubble sort) |
 | T testes, n pequeno por teste | precompute global | Tabelas por tamanho (factoriais, Grundy, padrões) uma vez; não zere arrays de tamanho máximo a cada teste |
 | Modulo m ≤ 100–1000 | dp[i][r] em m·n | Estado = resto; resposta por pigeonhole; ciclo de x^k mod m |
 | Valores de peso ≤ W pequenos (W ≤ 10–100) | BFS com W filas, Dial | Caminho mínimo em O(m + n·W); expandir aresta de peso w em w arestas unitárias só se m·w couber |
@@ -55,24 +55,24 @@ Sinais escondidos nas constraints:
 - Valores a\_i ≤ 10⁶ (bem menores que 10⁹) → itere sobre valores, crivo, contagem por valor, divisores de cada valor.
 - k ≤ 20 ou "no máximo 3 cores" num problema grande → o k vai no estado ou na máscara.
 - n·m ≤ 10⁶ com n e m livres → min(n, m) ≤ 1000; troque linhas e colunas se preciso.
-- "a\_i distintos" ou "é uma permutação" → posição do valor v, ciclos, inversões (ver também "Todos distintos" abaixo).
+- "a\_i distintos" ou "é uma permutação" → posição do valor v, ciclos, inversões.
 - Grafo com m = n − 1 ou m ≤ n + 20 → árvore mais poucas arestas extras.
-- Soma dos valores ≤ 10⁵ (com a\_i ≥ 0 inteiros) → há no máximo √(2·10⁵) ≈ 450 valores distintos.
+- Soma dos valores ≤ 10⁵ → há no máximo √(2·10⁵) ≈ 450 valores distintos.
 - Queries Q grande e offline permitido → ordene queries (Mo, sweep, DSU offline).
 - Resposta "mod 998244353" → NTT pode aparecer; "mod p" → contagem, quase nunca guloso.
-- TL alto (4–5 s) e n = 10⁵ → provavelmente √ ou bitset (ver o bullet de TL abaixo).
+- TL alto (4–5 s) e n = 10⁵ → provavelmente √ ou bitset.
 - Memória baixa (32–64 MB) → DP com rolling array, sem armazenar tudo.
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
-- **Módulo pequeno (m ≤ 100–1000)** → estado = resto; ou pigeonhole (entre m+1 prefixos há dois iguais mod m ⇒ existe subarray com soma ≡ 0); ou x → x^k mod m com ciclo curto (ver também a linha "Modulo" da tabela).
+- **Módulo pequeno (m ≤ 100–1000)** → estado = resto; ou pigeonhole (entre m+1 prefixos há dois iguais mod m ⇒ existe subarray com soma ≡ 0); ou x → x^k mod m com ciclo curto.
 - **k ≤ 5 ou 6** → k! permutações cabem no estado; ou k distinguíveis sem custo; ou o problema difícil só aparece em k ≥ 3.
 - **Queries ≤ 10 (ou muito poucas)** → pode fazer O(n log n) ou O(n√n) por query, sem estrutura; às vezes a ideia é rodar o algoritmo de uma query inteira cada vez.
 - **Σ tamanhos limitada em vários objetos** (Σ|s|, Σk, Σ deg) → quase sempre a ideia é pesado/leve ou "tamanhos distintos ≤ √(2S)"; a soma limitada permite O(Σ·log) mas não O(n·Σ).
 - **Grid n × m com n ≤ 5–8 e m enorme** → DP em perfil por coluna e, se m ≥ 10⁹, exponenciação de matriz da transição de colunas.
-- **Pesos pequenos (w ≤ 10–100)** → Dial / BFS em camadas; "valor pequeno × peso grande" → troque o estado da mochila; grafo com pesos 1..W → distância em (vértice, tempo) só até n·W (ver também a linha "Dial" da tabela).
+- **Pesos pequenos (w ≤ 10–50)** → Dial / BFS em camadas; "valor pequeno × peso grande" → troque o estado da mochila; grafo com pesos 1..W → distância em (vértice, tempo) só até n·W.
 - **"Todos distintos" / "permutação"** → o conjunto de valores é conhecido: soma, xor, produto são fixos; posição→valor é bijeção e ciclos aparecem; "distinto" também limita multiplicidade a 1 (hash por soma de aleatórios).
-- **TL de 3 s ou mais** com n ≤ 10⁵ → √ decomposition, bitset n²/64, ou um log a mais que o ótimo; TL de 0,5–1 s com n = 10⁶ → O(n log n) ainda passa; só O(n) para n ≥ 10⁷ ou constante alta.
+- **TL de 3 s ou mais** com n ≤ 10⁵ → √ decomposition, bitset n²/64, ou um log a mais que o ótimo; TL de 0,5–1 s com n = 10⁶ → só O(n) com leitura rápida.
 - **Resposta mod 2** → paridade: cancele em pares (involução), C(n,k) é ímpar ⇔ k ⊆ n em bits (Lucas), determinante mod 2 por Gauss em bitset; muitos problemas "conte as paridades" caem em xor.
 - **"Imprima qualquer"** → existe um critério simples de existência; ache a condição de impossível e depois uma construção que a dispense; teste n pequeno com brute force que lista todas as soluções para ver o padrão.
 - **"Se existir"** → a decisão pode ser mais fácil que a construção: faça primeiro o teste de existência (paridade, Hall, matching), depois reconstrua por backtrack do certificado.
@@ -91,50 +91,50 @@ Sinais escondidos nas constraints:
 Estas servem para qualquer tipo de problema; teste todas antes de procurar técnica.
 
 - **Fixe algo.** Fixe o máximo, o mínimo, o elemento do meio, a posição da resposta, o primeiro passo, o valor do gcd. Depois conte/otimize o resto.
-- **Contribuição.** "Soma sobre todos os subarrays/pares/caminhos de f" → troque a ordem da soma: quanto cada elemento/aresta contribui? (ex.: a\_i é máximo em (i − L)·(R − i) subarrays, com L = anterior estritamente maior e R = próximo maior ou igual).
+- **Contribuição.** "Soma sobre todos os subarrays/pares/caminhos de f" → troque a ordem da soma: quanto cada elemento/aresta contribui? (ex.: a\_i é máximo em (i − L)·(R − i) subarrays).
 - **Complemento.** Contar "pelo menos um" ou "algum par ruim" → total menos o ruim; ruim com vários defeitos → inclusão-exclusão.
 - **Inverta o tempo.** Remoções → adições ao contrário (DSU offline). Processo que destrói → rode de trás pra frente.
-- **Inverta a pergunta.** "Mínimo k tal que dá" → binária em k + checagem (confirme que a factibilidade é monótona em k antes). "Qual valor é o maior possível" → "dá pra atingir ≥ x?".
+- **Inverta a pergunta.** "Mínimo k tal que dá" → binária em k + checagem. "Qual valor é o maior possível" → "dá pra atingir ≥ x?".
 - **Troque papéis.** Itere sobre valores em vez de índices; sobre a resposta em vez da entrada; sobre arestas em vez de vértices.
 - **Invariante.** Operação que se repete → o que nunca muda? (paridade, soma mod k, xor total, número de inversões mod 2, gcd).
 - **Monovariante.** Algo que sempre cresce/decresce → prova término e limita o número de passos.
 - **Caso extremo.** Olhe o maior elemento, a folha, o vértice de grau 1, a primeira/última posição. Quem é forçado?
 - **Simplifique.** Resolva com n = 2, com valores só 0/1, sem a query de update, com o array ordenado. Depois generalize.
 - **Transforme o array.** Prefix sums, diferenças (a\_i − a\_{i−1}), a\_i − i, a\_i·i, troque sinal, tome log.
-- **Mude a condição.** "Soma = 0" → prefixos iguais. "Média ≥ k" → subtraia k e veja soma ≥ 0. "Mediana ≥ x" → vire ±1 (testa a mediana superior; para a média dos centrais com n par, ajuste o critério).
+- **Mude a condição.** "Soma = 0" → prefixos iguais. "Média ≥ k" → subtraia k e veja soma ≥ 0. "Mediana ≥ x" → vire ±1.
 - **Modele como grafo.** Restrições entre pares → arestas; estados → vértices; "trocar a\_i por a\_j" → ciclos da permutação.
 - **Separe as dimensões.** Distância Manhattan → x e y independentes; rotacione 45° para Chebyshev (u = x + y, v = x − y).
 - **Encontre o limite pequeno escondido.** "Cada valor dobra" → log passos; "gcd muda" → log mudanças; "divisores" → ≈ 240 para 10⁶.
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
-- **Troque a ordem dos fors (do pensamento).** Escreva o brute force como laços aninhados e pergunte: e se o laço de dentro virasse o de fora? "Para cada i, quais j contam?" vira "para cada j, quantos i contam?". O laço de fora deve ser aquele que deixa o de dentro virar fórmula fechada, prefixo, BIT ou contagem. Ex.: Σ_{i≤n} Σ_{d|i} f(d) = Σ_d f(d)·⌊n/d⌋; Σ de max de todos os subarrays = Σ_i a\_i·(i − L)·(R − i), com L = anterior estritamente maior e R = próximo maior ou igual (sentinelas 0 e n+1).
+- **Troque a ordem dos fors (do pensamento).** Escreva o brute force como laços aninhados e pergunte: e se o laço de dentro virasse o de fora? "Para cada i, quais j contam?" vira "para cada j, quantos i contam?". O laço de fora deve ser aquele que deixa o de dentro virar fórmula fechada, prefixo, BIT ou contagem. Ex.: Σ_{i≤n} Σ_{d|i} f(d) = Σ_d f(d)·⌊n/d⌋; Σ de max de todos os subarrays = Σ_i a\_i·(i − L)·(R − i).
 - **Quais são os laços possíveis?** Índice · valor · bit · divisor/múltiplo · tempo · query · aresta · vértice · tamanho do bloco · resposta candidata. Liste todos os laços que o brute force poderia ter e teste cada um como o mais externo.
-- **Fatiar por camadas.** Para a\_i inteiro não negativo, Σ a\_i = Σ_{t≥1} #{i : a\_i ≥ t}. Histogramas, áreas, "soma de mínimos" e E\[X\] = Σ_{k≥1} P(X ≥ k) (X inteiro não negativo) ficam fáceis ao iterar sobre o nível t em vez do elemento i.
+- **Fatiar por camadas.** Σ a\_i = Σ_{t≥1} #{i : a\_i ≥ t}. Histogramas, áreas, "soma de mínimos" e E\[X\] = Σ_{k≥1} P(X ≥ k) ficam fáceis ao iterar sobre o nível t em vez do elemento i.
 - **Queries × elementos.** Em vez de "para cada query, percorra os elementos", faça "para cada elemento, atualize as queries que ele afeta" (offline, sweep, diferenças). Inverta quando o número de queries ou de elementos for o lado difícil.
 - **Pares (i, j): fixe um lado.** Fixe j e conte i com a propriedade (BIT, map, two pointers). Se f(i, j) é separável, Σ_{i,j} f(i)·g(j) = (Σ f)(Σ g); se tem uma condição, ordene e vire prefixo.
-- **DP: ordem de preenchimento e eixo externo.** Itere por valor em vez de índice (dp\[valor\]\[...\]), por comprimento em vez de início, ou por fim em vez de começo. Em knapsack, itens fora/capacidade dentro conta combinações (no 0/1, capacidade decrescente); capacidade fora/itens dentro conta sequências (ordem importa) no caso ilimitado, não no 0/1. Ordem trocada muda o que é contado.
+- **DP: ordem de preenchimento e eixo externo.** Itere por valor em vez de índice (dp\[valor\]\[...\]), por comprimento em vez de início, ou por fim em vez de começo. Em knapsack, itens fora/capacidade dentro conta combinações; capacidade fora/itens dentro conta sequências (ordem importa). Ordem trocada muda o que é contado.
 - **Push vs pull.** Se "quem chega em v" é difícil, calcule "para quem u contribui" (e vice-versa). Também vale para BFS/DP em grafo e para somas sobre divisores/múltiplos.
-- **Agrupe por valor igual.** Troque "para cada elemento" por "para cada valor distinto × multiplicidade". Com a\_i ≥ 0 e soma limitada, o número de valores distintos é O(√Σ), o que limita as iterações a √.
+- **Agrupe por valor igual.** Troque "para cada elemento" por "para cada valor distinto × multiplicidade". Com Σ restrita, isso limita o número de iterações a √.
 - **Transposta.** Troque linhas por colunas e trabalhe com a menor dimensão (n·m ≤ 10⁶ ⇒ min(n, m) ≤ 1000); vale também para matrizes de adjacência e tabelas de DP.
 - **∃ e ∀ trocados.** "Existe i tal que para todo j" × "para todo j existe i" são problemas diferentes; ao reescrever a condição, confira qual quantificador está dentro de qual. Min-max e max-min só coincidem sob dualidade (jogos, LP, fluxo).
-- **Soma por partes (Abel).** Σ a\_i·b\_i = A\_n·b\_n + Σ\_{i=1}^{n−1} A\_i·(b\_i − b\_{i+1}), com A\_i = Σ\_{j≤i} a\_j (b não precisa ser monótono). Troca "valor × peso" por "prefixos × saltos", mais o termo de borda.
+- **Soma por partes (Abel).** Σ a\_i·b\_i com b monótono = Σ (prefixo de a)·(diferença de b). Troca "valor × peso" por "prefixos × saltos".
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
 - **Dualidade.** Um min vira um max do problema dual quando há teorema de igualdade: König (cobertura mínima = matching máximo), max-flow = min-cut, Dilworth (cadeias = antichain máxima), LP dual. Se o primal é difícil, o dual muitas vezes é um fluxo/greedy.
-- **Min-max theorems.** König (bipartido), Hall (bipartido com |L| = |R|: existe matching perfeito ⇔ ∀S ⊆ L, |N(S)| ≥ |S|), Dilworth/Mirsky, Menger (caminhos disjuntos = corte mínimo), Gallai (independente + cobertura = n), Erdős–Szekeres. "Cobrir com o menor número de X" pede o pior caso (antichain) como certificado.
+- **Min-max theorems.** König (bipartido), Hall (existe matching perfeito ⇔ |N(S)| ≥ |S|), Dilworth/Mirsky, Menger (caminhos disjuntos = corte mínimo), Gallai (independente + cobertura = n), Erdős–Szekeres. "Cobrir com o menor número de X" pede o pior caso (antichain) como certificado.
 - **Relaxação.** Resolva o problema relaxado (fracionário, sem uma restrição) e prove que o ótimo relaxado é atingível; matrizes totalmente unimodulares (bipartido, intervalos consecutivos, fluxo) garantem que LP = inteiro.
 - **Forma paramétrica.** Se há uma restrição de quantidade ("exatamente k"), Lagrange/Aliens; se é "razão", binária em λ; se é "mínimo do máximo", binária na resposta; todas trocam a restrição por penalidade.
 - **Lifting de dimensão.** Acrescente uma dimensão (tempo, nível, estado extra) para tornar o problema local: grafo de estados (v, t), duplicar o grafo para "usei k bônus", DP em (posição, valor).
 - **Escala log.** Uma operação multiplicativa vira soma em log; ou processe bit a bit de cima para baixo (potências de 2), e binary lifting resume saltos 2^k.
-- **Amortização.** Se cada elemento entra e sai um número limitado de vezes (pilha monotônica, two pointers, potencial), o custo é O(n) total; DSU custa O((n+m)α(n)) para n elementos e m operações; procure o potencial que só decresce.
+- **Amortização.** Se cada elemento entra e sai um número limitado de vezes (pilha monotônica, two pointers, DSU, potencial), o custo é O(n) total; procure o potencial que só decresce.
 - **Extremal principle.** Considere o objeto extremo (maior elemento, par mais próximo, caminho mais longo, ciclo mais curto) e mostre que ele tem uma propriedade; frequentemente é a ordem do guloso ou o vértice a processar primeiro.
 - **Descida infinita / Vieta jumping.** Dada uma solução (a, b) de uma equação quadrática simétrica, (a, b') com b' = (coef) − b é outra; vá descendo até o caso mínimo. Em programação: operações que reduzem o par (Euclides) → o mínimo é caso base.
 - **Indução forte.** "Assuma que vale para todo tamanho menor" é um algoritmo recursivo: ache a parte menor (remover folha, maior elemento, par) e verifique que a construção estende; vale como prova e como implementação.
 - **Pigeonhole.** Mais objetos que gavetas ⇒ repetição: prefixos mod n, estados repetidos (ciclo ≤ nº de estados), "n + 1 números em [1, 2n] contêm dois onde um divide o outro". Use para provar existência e para limitar passos.
 - **Double counting.** Conte um mesmo conjunto de pares de duas formas e iguale: Σ grau = 2m, número de pares (elemento, conjunto), e Σ_i f(i) = Σ_j g(j); frequentemente troca duas somas.
-- **Linearização.** Termo quadrático Σ_{i<j} a_i·a_j → ((Σa)² − Σa²)/2; produto de dois indicadores → indicador da interseção (I_A·I_B = I_{A∩B}); esperança de produto de variáveis inteiras não negativas (dependentes) → ainda soma de pares de indicadores; max (inteiro não negativo) → soma de indicadores [max ≥ k].
+- **Linearização.** Termo quadrático Σ_{i<j} a_i·a_j → ((Σa)² − Σa²)/2; produto de dois eventos → soma de indicadores; esperança de produto de variáveis dependentes → ainda soma de pares de indicadores; max → soma de indicadores [max ≥ k].
 - **Soma de potências / polinômio em n.** Se uma contagem é polinomial em n de grau d (soma de potências, contagem em grade), calcule d+1 pontos por brute force e interpole por Lagrange.
 - **Escolha de coordenadas.** Origem no ponto crítico, eixos rotacionados (x+y, x−y), posições como diferenças, tempo como terceira coordenada; muitas condições viram condições independentes por eixo.
 - **Fixe o par.** Fixe dois elementos (extremos, ou o par que realiza a resposta) e conte o resto livre. Quando o par é "o mais distante" (diâmetro), todas as outras posições ficam em uma região fácil.
@@ -149,14 +149,9 @@ Estas servem para qualquer tipo de problema; teste todas antes de procurar técn
 - **Reflexão (unfolding).** Trajetória que reflete em paredes = reta no espaço espelhado (bolas em tabuleiro, luz em espelhos); bolas idênticas colidindo = atravessam, só os nomes trocam.
 - **Cancelamento por involução.** Pareie objetos de sinais opostos (swap de um par) e o que sobra são os pontos fixos: soma alternada, determinantes, contagem mod 2.
 - **Limite inferior = construção.** Prove cota fácil (máximo de linhas, de passos) e tente construir exatamente esse valor; se não der, o gap mostra o invariante.
-- **Telescopia e soma por partes (Abel).** Σ a_i·(b_i − b_{i−1}) = a_n·b_n − a_1·b_0 − Σ_{i=1}^{n−1}(a_{i+1} − a_i)·b_i (terminais incluídos); reduz soma de produtos a diferenças de somas parciais; também transforma Σ ⌊·⌋ e somas com mudança de limite em bloco.
+- **Telescopia e soma por partes (Abel).** Σ a_i·(b_i − b_{i−1}) = ... + terminais; reduz soma de produtos a diferenças de somas parciais; também transforma Σ ⌊·⌋ e somas com mudança de limite em bloco.
 - **Estrutura algébrica.** Operação associativa → segtree, doubling, matriz; com identidade e inversa → prefix; idempotente (min, gcd, or) → sparse table; comutativa → Mo e ordem livre.
 - **Corte na árvore de decisão.** Para limites de queries/comparações use a árvore de decisão: k respostas possíveis exigem log_b k queries; o enunciado costuma dar exatamente esse limite.
-
-*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
-
-- **Valores atingíveis andam de 2 em 2.** Se cada operação muda a quantidade em ±2 (ou preserva a paridade) e dá para ir de um extremo ao outro passo a passo, os atingíveis são todos os de \[mín, máx\] com a paridade certa: calcule só mín, máx e paridade. Ex.: CF 2114B.
-- **Operação em todos menos um.** Aplicar uma involução (negar, inverter, complementar) em n − 1 de n itens = aplicar em todos e desfazer em um: escolha o melhor item para "devolver". Ex.: CF 2218B (negar n − 1 números).
 
 ## Cadeias de pulos (gatilho → observação → técnica)
 
@@ -177,11 +172,11 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Operação reversível | Estados formam classes | Forma canônica para os dois lados | Construtivos, Strings, Grafos |
 | Operação em intervalo \[l, r\] | Vira 2 pontos no array de diferenças | Raciocinar nas diferenças; BIT | Arrays, Estruturas |
 | "Soma = 0" / "balanceado" | Prefixos iguais | Contar prefixos com map | Arrays, Strings, Bits |
-| Mediana ≥ x | Troque por ±1 | Binária em x; P[r] − P[l−1] > 0 (mediana inferior) ou ≥ 0 (superior) | Busca binária, Arrays |
+| Mediana ≥ x | Troque por ±1 | Binária em x + soma de prefixo ≥ 0 | Busca binária, Arrays |
 | Resposta não depende da raiz? Depende | Recalcule mudando 1 aresta | Rerooting | Árvores, DP |
 | Caminhos em árvore com condição | Todo caminho passa por um centroide | Centroid decomposition | Árvores, Estruturas |
 | Queries sem updates | Dá para ordenar | Offline + sweep, Mo | Estruturas, Strings, Árvores |
-| s repetida k vezes / infinita | Transiente pode ser O(\|p\|/\|s\|), não 2–3 cópias | Calcule ⌈\|p\|/\|s\|⌉+1 cópias e extrapole | Strings, DP |
+| s repetida k vezes / infinita | Resposta estabiliza em 2–3 cópias | Calcule poucas cópias e extrapole | Strings, DP |
 | n ≤ 20 em problema de conjunto | 2^n cabe | Máscara, SOS, meet in the middle | DP, Bits, Combinatória |
 | Restrições "a ou b" em pares | Implicações booleanas | 2-SAT | Grafos, Construtivos |
 | Soma dupla / laços aninhados em O(n²) ou pior | Inverta qual índice é o externo | Contribuição, camadas, ou agrupar por valor/divisor | Arrays, Teoria dos números, Combinatória, DP |
@@ -190,13 +185,13 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Valor esperado de variável inteira não negativa | E\[X\] = Σ_k P(X ≥ k) | Calcule P(X ≥ k) para cada k | Combinatória |
 | Tarefas com duração, peso ou prazo e "ordem das tarefas" | A ordem ótima é decidida por uma comparação de pares | Exchange argument: ordene por t/w (Smith) ou prazo (EDF) | Arrays, DP |
 | "Max de k intervalos / k máquinas" ou "salas mínimas" | Máquina livre com maior fim ≤ início | Multiset ordenado por fim | Arrays, Estruturas |
-| "Pelo menos k", "exatamente k itens" com custo convexo | f(k) convexa em k (minimização) | Aliens: penalidade λ, g(λ)=min_k[f(k)+λk], resposta g(λ)−λk; desempate consistente | Busca binária, DP |
+| "Pelo menos k", "exatamente k itens" com custo convexo | f(k) é convexa em k | Aliens (λ) com desempate consistente | Busca binária, DP |
 | Razão Σa/Σb ou média máxima | max Σ(a − r·b) é monótona em r | Binária em r ou Dinkelbach | Busca binária, Arrays |
 | n ≤ 40 e subconjuntos | 2^20 por metade | Meet in the middle + two pointers/ordenar | Arrays, Bits, Combinatória |
 | Permutação e "operações de troca" | Ciclos = componentes | n − ciclos trocas; inversões para adjacentes; p^k quebra ciclos em gcd(c, k) | Arrays, Construtivos, Combinatória |
 | Escolher itens não adjacentes de soma máxima | Escolha local pode ser desfeita | Heap + lista ligada com nó v_l + v_r − v_i | Arrays, DP |
-| Tornar não decrescente com custo Σ\|Δ\| | f_i convexa em x | Slope trick com max-heap | Arrays, DP, Busca binária |
-| Query "primeiro índice com prefixo ≥ x" | Soma de prefixo é monótona (exige a_i ≥ 0) | Descida no BIT/segtree em O(log) | Busca binária, Estruturas |
+| Tornar não decrescente com custo Σ|Δ| | f_i convexa em x | Slope trick com max-heap | Arrays, DP, Busca binária |
+| Query "primeiro índice com prefixo ≥ x" | Soma de prefixo é monótona | Descida no BIT/segtree em O(log) | Busca binária, Estruturas |
 | "Primeiro instante em que conecta/ocorre" para muitas queries | Resposta monótona no tempo | Binária paralela ou Kruskal reconstruction tree | Busca binária, Grafos, Árvores |
 | Cobrir todas as strings/estados com uma sequência curta | Estados = vértices, símbolo = aresta | Ciclo Euleriano (de Bruijn) | Construtivos, Grafos, Strings |
 | Todo número como soma de poucas peças | Representação em base b / Fibonacci | Construção por dígitos (binária, ternário balanceado) | Construtivos, Bits, Teoria dos números |
@@ -205,7 +200,7 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Colocar itens com distância mínima / dividir recursos em blocos | check(d) é monótono e guloso | Binária na resposta + guloso O(n) | Busca binária, Arrays |
 | dp[i] = min_j (dp[j] + (S_i − S_j)²) ou produto cruzado | Abra o quadrado: termo S_i·S_j é reta em x = S_i | CHT (deque se S monótono) / Li Chao / D&C se só Monge | DP, Estruturas |
 | dp[k][i] com custo de segmento C(j, i) e k ≤ 100 | opt monótono se C é Monge | D&C DP (O(kn log n)); Knuth em intervalo; se k grande, Aliens | DP, Busca binária |
-| "Exatamente k" itens/segmentos e n grande | f(k) costuma ser convexa (minimização: fluxo, Monge, matroide) | Aliens/WQS: g(λ)=min_k[f(k)+λk] (penalidade λ) + DP de 1 camada; confira convexidade com brute force | DP, Busca binária |
+| "Exatamente k" itens/segmentos e n grande | f(k) costuma ser convexa (fluxo, Monge, matroide) | Aliens/WQS + DP de 1 camada; confira convexidade com brute force | DP, Busca binária |
 | Mochila com Σ pesos ≤ S ou peso ≤ √S | ≤ √(2S) pesos distintos | Binary splitting/deque por peso distinto + bitset | DP, Números |
 | Árvore + "escolha k vértices" | merge de filhos por tamanho é O(n²) total | dp[v][k] com loops limitados por tamanho (ou ordem DFS pegar/pular em O(nk)) | DP, Árvores |
 | Árvore e estado é profundidade/altura (dist, nível) | Vetor por altura reaproveitado do filho mais profundo | Long-path decomposition, O(n) total | DP, Árvores |
@@ -218,37 +213,37 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Esperança de um tempo/contagem total | Linearidade: Σ P(evento k ainda ativo) | Fórmula em vez de DP de estados | DP, Combinatória |
 | Soma sobre subconjuntos / pares com AND = 0 / cobertura | Zeta e Möbius sobre máscaras | SOS (2^n n); k-colorações/cobertura por IE sobre SOS | DP, Bits, Combinatória |
 | Partições de conjunto/union disjunta com peso | Primeiro bloco contém o menor bit | 3^n submáscaras ou subset convolution 2^n n² | DP, Bits |
-| Partição de n em partes (distintas, ≤ k, ímpares) | Nº de partes distintas ≤ √(2n); conjugado troca "nº de partes" por "maior parte" | dp[soma][nº de partes] O(n√n); pentagonal para p(n) | DP, Combinatória |
-| Heap/lista ligada resolve k=1 e dp côncava em k (maximização) | Arrependimento dá resposta para todo k | Escolha k não adjacentes por heap + lista, ou Aliens: bônus λ, g(λ)=max_k[f(k)+λk], resposta g(λ)−λk | DP, Arrays, Busca binária |
-| Minimizar Σ\|a_i − b_i\| com b monótono/regra de vizinhança | f(x) convexa linear por partes | Mesmo slope trick de "tornar não decrescente" acima, com heaps (O(n log n)) | DP, Arrays |
+| Partição de n em partes (distintas, ≤ k, ímpares) | Partes distintas ≤ √(2n); conjugado troca "nº de partes" por "maior parte" | dp[soma][último] O(n√n); pentagonal para p(n) | DP, Combinatória |
+| Heap/lista ligada resolve k=1 e dp côncava em k | Arrependimento dá resposta para todo k | Escolha k não adjacentes por heap + lista, ou Aliens | DP, Arrays, Busca binária |
+| Minimizar Σ\|a_i − b_i\| com b monótono/regra de vizinhança | f(x) convexa linear por partes | Slope trick com heaps (O(n log n)) | DP, Arrays |
 | Grid com m ≤ 12–15 e vizinhança local | Perfil de m bits processado célula a célula | Broken profile (plug DP; conectividade → parênteses em base 3/4) | DP |
 | dp[i] depende de ciclo de volta / caminho com custo ≥ 0 | Não é DAG por posição | Dijkstra/0-1 BFS sobre estados | DP, Grafos |
 | Guloso com contraexemplo pequeno, "exatamente k" ou capacidade | Escolha local depende do futuro | DP (mochila/estado extra); se côncava em k, guloso com arrependimento ou Aliens | DP, Arrays |
 | Mochila com itens entrando e saindo no tempo | Cada item vive num intervalo | Segtree no tempo + dp copiada por nível (ou "undo" modular) | DP, Estruturas |
 | Mochila com Σ valor pequeno e peso gigante | dp[v] = menor peso | Troca estado e valor, O(n·Σv) | DP |
-| Sequência cíclica / circular com custo de fechamento | Corte um ponto e feche | Duplicar, ou fixar estado inicial e rodar linear (\|S\| vezes), ou tr(M^n) | DP, Combinatória |
+| Sequência cíclica / circular com custo de fechamento | Corte um ponto e feche | Duplicar, ou fixar estado inicial e rodar linear (|S| vezes), ou tr(M^n) | DP, Combinatória |
 | dp[i][c] = custo + min c' ≠ c | Só o melhor e o segundo melhor importam | Top-2 por camada, O(nk) | DP |
-| Contar objetos rotulados conexos/DAGs | Conexos: fixe o vértice 1 e sua componente; DAGs: IE sobre fontes/sorvedouros | Conexos: conn[n] = total − Σ_{k=1}^{n−1} C(n−1,k−1)·conn[k]·total_{n−k}; DAG: recorrência por fontes | DP, Combinatória, Grafos |
+| Contar objetos rotulados conexos/DAGs | Fixe o menor rótulo ou conte total − não conexos | Recorrência com binomial e IE (conn[n] = total − Σ C(n−1,k−1)·conn[k]·…) | DP, Combinatória, Grafos |
 | a^b^c… mod m | Expoente enorme: reduza mod φ(m) somando φ(m) | Recursão pela cadeia φ(φ(·)) (≤ 2 log₂ m níveis) com expoentes truncados | Combinatória |
 | Σ f(⌊n/i⌋) ou Σ sobre pares com gcd | ⌊n/i⌋ tem 2√n valores; gcd → φ ou μ | Blocos + prefixos de φ/μ; para n ≥ 10¹⁰ Dirichlet sieve O(n^{2/3}) | Combinatória |
 | Soma de função multiplicativa até n ≈ 10¹⁰–10¹² | Só 2√n valores ⌊n/i⌋ importam | Lucy → Min_25, ou powerful numbers, ou f = g∗h | Estruturas |
 | Σ ⌊(a i + b)/m⌋ ou pontos de rede sob reta | Euclides dobra os parâmetros | Floor sum recursivo O(log) | Geometria |
 | Equação em inteiros "sem solução" | Resíduos limitados (mod 3, 4, 7, 8, 9) | Testar todos os resíduos pequenos; LTE para v_p | Construtivos |
 | Pares com lcm ou gcd = g em array com a_i ≤ 10⁶ | Zeta sobre múltiplos/divisores | GCD/LCM convolution + Möbius | Estruturas |
-| "Quantos colares/giros/espelhos distintos" | Contagem por órbitas | Só giros: (1/n)Σ_{d\|n} φ(d)k^{n/d}; com espelhos (diédrico): (1/(2n))[Σ_{d\|n} φ(d)k^{n/d} + R], R = n·k^{(n+1)/2} (n ímpar) ou (n/2)(k^{n/2}+k^{n/2+1}) (n par) | Teoria dos números |
+| "Quantos colares/giros/espelhos distintos" | Contagem por órbitas | Burnside: Σ_{d|n} φ(d)k^{n/d}/n | Teoria dos números |
 | "Conte estruturas conexas" (grafos, perms) | Conte todas e tire as com componente de vértice 1 de tamanho k | Recorrência c(n) = total − Σ C(n−1, k−1)c(k)·resto; ou log de EGF | Grafos |
 | "Conte árvores/ligações entre componentes" | Árvores rotuladas = Prüfer | Fórmula n^{k−2}∏ s_i, ou Matrix-Tree se pesos | Grafos, Árvores |
 | Contar circuitos eulerianos | Cada vértice ordena suas saídas | BEST: t_w·∏(deg−1)!, t_w por Matrix-Tree | Grafos |
 | Caminhos não-cruzantes em grid | Troca de rotas nos cruzamentos | LGV: det[C(·)] | Grafos |
-| Sequência (ou DP) com n ≤ 10¹⁸ e ordem pequena | GF racional | Mesma receita de "recorrência linear" acima: Berlekamp–Massey + Kitamasa | DP, Estruturas |
-| Valor é polinômio em n | Diferenças finitas constantes | Mesma interpolação de "dp(n) polinômio" acima: Lagrange com d+1 pontos | DP |
+| Sequência (ou DP) com n ≤ 10¹⁸ e ordem pequena | GF racional | Berlekamp–Massey + Kitamasa | DP, Estruturas |
+| Valor é polinômio em n | Diferenças finitas constantes | Lagrange com d+1 pontos | DP |
 | E[tempo] em passeio ou processo com ganho linear | Existe potencial Φ com E[ΔΦ] = −1 (ou martingale) | Optional stopping: E[T] = Φ₀ − Φ_fim | Teoria dos jogos, Grafos |
-| Probabilidade de "n eventos aleatórios sem coincidência" | Aniversário | e^{−n²/(2N)} ("sem coincidência"); 1 − e^{−n²/(2N)} = colisão; 64 bits não basta para n ≈ 10⁹ | Aleatorização, Strings |
+| Probabilidade de "n eventos aleatórios sem coincidência" | Aniversário | 1 − e^{−n²/2N}; hash 64 bits suficiente | Aleatorização, Strings |
 | "Existe construção com ≥ metade" | Média acima do limiar | Método probabilístico + esperanças condicionais | Construtivos, Aleatorização |
-| C(n, k) mod m composto ou p^e | Fatore m; separe v_p(n!) e o fatorial sem p | n!_p por blocos de p^e (Granville); o sinal (−1)^{⌊n/p⌋} só vale mod p; junte por CRT | Teoria dos números |
+| C(n, k) mod m composto ou p^e | Fatore m, tire a parte p de n! | n!_p recursivo (−1)^{⌊n/p⌋}(n mod p)! + CRT | Teoria dos números |
 | Perm/estrutura com "pai < filho" | Cada subárvore tem mínimo na raiz com prob. 1/sz | n!/∏ sz(v) | Árvores |
-| Soma com \|a_i − a_j\| ou (a_i − a_j)² | Ordenar / completar quadrado | Σ a_(i)(2i−n−1) ou nΣa² − (Σa)² | Arrays |
-| n+1 prefixos em 2^k valores, com n+1 > 2^k (não "n > nº de bits") | Pigeonhole: dois prefixos xor iguais | Existe subarray/subconjunto de xor 0; limita o brute force | Bits, Combinatória |
+| Soma com |a_i − a_j| ou (a_i − a_j)² | Ordenar / completar quadrado | Σ a_(i)(2i−n−1) ou nΣa² − (Σa)² | Arrays |
+| n > nº de bits (ou n+1 prefixos em 2^k valores) | Pigeonhole: dois prefixos xor iguais | Existe subarray/subconjunto de xor 0; limita o brute force | Bits, Combinatória |
 | Dado s = a+b e x = a⊕b | s − x = 2(a&b) | Checar paridade/subconjunto de bits; 2^popcount(x) soluções | Bits, Teoria dos números |
 | Max/min xor de passeio em grafo | Passeio = caminho da árvore + ciclos fundamentais | Base linear dos ciclos + px | Bits, Grafos |
 | Max xor em [l, r] / com versões | Prefixos são versões | Trie persistente ou base com índice mais recente | Bits, Estruturas |
@@ -258,18 +253,18 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Distância de Hamming mínima/≤ d em 2^k máscaras | Hipercubo é grafo | BFS multi-fonte por flip de bit | Bits, Grafos |
 | Operação a_i ← a_i⊕a_j | Span é invariante | Base linear, rank; resposta em função de n − rank | Bits, Construtivos |
 | Contar ocorrências de vários padrões | Nó do AC sobe pelos links | Árvore de links + soma de subárvore (BIT/Euler) | Strings, Árvores, Estruturas |
-| Ocorrências de p em texto de tamanho ≤ 2\|p\| | Se duas estão a distância < \|p\|, d é período | Ocorrências formam PA; guardar (início, razão, qtd) | Strings |
+| Ocorrências de p em texto de tamanho ≤ 2|p| | Se duas estão a distância < |p|, d é período | Ocorrências formam PA; guardar (início, razão, qtd) | Strings |
 | Bordas de s / períodos | Borda b ⇔ período n − b; Fine–Wilf | Bordas ≥ n/2 em PA; O(log n) PAs; série link | Strings |
 | Problema pede "ocorrências de t" e "substring t de s" | Estado do SAM = classe de endpos | cnt na subárvore da link tree; binary lifting por len | Strings, Árvores |
 | Suffix tree de s | Link tree do SAM de rev(s) | Construa SAM de rev(s) em vez de Ukkonen | Strings |
 | SA + LCP, "todos os pares de sufixos" | LCP(i, j) = min no intervalo do array lcp | Soma de mínimos de subarrays por pilha monotônica | Strings, Arrays |
 | Palíndromos terminando/começando em cada posição | Manacher dá um raio por centro | Adicionar PAs por segunda diferença | Strings, Arrays |
 | Partição em palíndromos / fatores | Palíndromos-sufixo em O(log n) PAs | Série link na eertree, dp em O(n log n) | Strings, DP |
-| String definida recursivamente (Fibonacci, SLP) | Só \|p\|−1 caracteres de borda importam | Recorrência cnt_n = cnt_{n−1} + cnt_{n−2} + cruzamento | Strings, DP |
-| Rotações / "é potência" | Rotação de s é substring de s+s | A menor ocorrência de s em s+s (p > 0) dá a raiz primitiva; qualquer p dá uma raiz de comprimento gcd(p, n) | Strings |
+| String definida recursivamente (Fibonacci, SLP) | Só |p|−1 caracteres de borda importam | Recorrência cnt_n = cnt_{n−1} + cnt_{n−2} + cruzamento | Strings, DP |
+| Rotações / "é potência" | Rotação de s é substring de s+s | Ocorrência de s em s+s sem pos 0 dá a raiz primitiva | Strings |
 | Árvore de parênteses / árvore ↔ sequência | DFS escreve ( ao entrar e ) ao sair | Subárvore = intervalo, LCA = RMQ do balanço | Strings, Árvores |
 | Substring válida de parênteses com updates | Válida ⇔ soma 0 e min prefixo ≥ 0 | Segtree com (soma, min prefixo) | Strings, Estruturas |
-| LCS/LIS ou LCS com n·m/64 viável | Linha da DP é bitset monotônico | Fórmula V = (V + (V & M)) \| (V & ~M) | Strings, Bits, DP |
+| LCS/LIS ou LCS com n·m/64 viável | Linha da DP é bitset monotônico | Fórmula V = (V + (V & M)) | (V & ~M) | Strings, Bits, DP |
 | Mismatch ≤ k entre padrão e texto | Cada erro é um salto de LCE | Kangaroo O(k) por posição; ou FFT por letra | Strings |
 | Operação "desfazer último caractere" | Amortização de KMP/Z quebra | Autômato completo ou pilha de estados | Strings |
 | m ≤ n + k pequeno, queries de distância | O grafo é uma árvore + poucas arestas | Árvore geradora + Dijkstra/BFS dos ≤ 2k + 2 extremos, distância em árvore por LCA | Grafos, Árvores |
@@ -287,7 +282,7 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Dependência por grupos de ancestral (primeiro ancestral com propriedade) | Monotonia ao subir | Binary lifting com busca em O(log); ou grafo de saltos | Árvores, Grafos |
 | Remover vértice/aresta, "e se esta aresta sumisse" | Árvore de caminhos mínimos / DFS tree | Aresta fora da árvore cobre caminho (replacement path com DSU de pulo) | Grafos, Árvores |
 | "Cada elemento tem 2 opções" com conflitos pareados | 2-SAT | Cláusulas + SCC; cardinalidade ≤ 1 por variáveis de prefixo | Grafos |
-| Soma de f(i) em intervalo com histórico de versões | Tempo como dimensão | Segtree com soma histórica (acumulado ao longo das versões) ≠ persistente por versão (consulta por versão) | Estruturas |
+| Soma de f(i) em intervalo com histórico de versões | Tempo como dimensão | Segtree com soma histórica / persistente por versão | Estruturas |
 | Pontos sob reta, "acima/abaixo" em muitas queries | Dualidade (a, b) ↔ y = ax − b | CHT / Li Chao / hull | Geometria, Estruturas, DP |
 | Retângulo/união/cobertura em plano | Sweep em x, eventos de abertura/fechamento | Segtree em y com (cobertura, comprimento) | Geometria, Estruturas |
 | Ordenar pontos por ângulo | Semiplano + cross (não atan2) | Sweep angular com dois ponteiros | Geometria |
@@ -308,12 +303,12 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | 2n−1 inteiros (ou mais) e "n com soma divisível por n" | Erdős–Ginzburg–Ziv | Existência garantida; construção por indução em fatores primos / brute | Combinatória, Construtivos |
 | Ordem de aplicar operações em árvore/floresta com precedência pai → filho | Ordens topológicas = n!/Π tamanho(v) | Multiplique inversos modulares dos tamanhos de subárvore | Árvores, Combinatória |
 | Contar árvores com graus dados | Código de Prüfer | (n−2)!/Π(d_i−1)!; Cayley n^(n−2) | Árvores, Combinatória |
-| Contar spanning trees de um grafo | Matrix-tree | Determinante do Laplaciano (menor) por Gauss mod p primo (pivôs invertíveis); p composto → CRT/Bareiss; n ≤ 400 | Grafos, Combinatória |
-| Caminhos disjuntos em vértices, k pares (s_i, t_i) em DAG | Lema LGV | Det da matriz de contagem de caminhos; exige fontes/sumidouros compatíveis (ordem não cruzada), senão o determinante é assinado e pode zerar | Combinatória, Grafos |
+| Contar spanning trees de um grafo | Matrix-tree | Determinante do Laplaciano (menor) por Gauss mod p; n ≤ 400 | Grafos, Combinatória |
+| Caminhos disjuntos em vértices, k pares (s_i, t_i) em DAG | Lema LGV | Det da matriz de contagem de caminhos | Combinatória, Grafos |
 | Domino/ladrilhos em tabuleiro n × m com n ≤ 10 | Estado = perfil de bordas | DP broken profile O(n·m·2^n); m enorme → matriz | DP, Combinatória |
 | Soma Σ_i Σ_j f(gcd(i, j)) ou Σ gcd(i, n) | Agrupe por d = gcd | Σ_d f(d)·(contagem de pares com gcd d) via φ ou Möbius | Teoria dos números, Combinatória |
 | C(n, k) mod 2, resposta mod 2 | Lucas p = 2 | Ímpar ⇔ k & (n − k) = 0 ⇔ k ⊆ n; paridade de soma de binomiais por bits | Combinatória, Bits |
-| Xor de todos os subarrays/pares/subconjuntos | Cada valor aparece uma quantidade c de vezes | Só importa c mod 2: conte quais têm contagem ímpar (subarrays: i·(n − i + 1); pares não ordenados: n − 1; ordenados: 2(n − 1); subconjuntos: 2^{n − 1}) | Bits, Arrays |
+| Xor de todos os subarrays/pares/subconjuntos | Cada valor aparece uma quantidade c de vezes | Só importa c mod 2: conte quais têm contagem ímpar (fórmula i·(n − i + 1)) | Bits, Arrays |
 | "Maximizar xor de caminho" em grafo geral | Qualquer caminho = caminho da árvore + combinação de ciclos | Base linear dos ciclos fundamentais; guloso do bit alto | Bits, Grafos |
 | Operação "a_i ^= a_j" repetida | Espaço gerado é invariante | Gauss em GF(2) com bitset; posto, base canônica | Bits, Construtivos |
 | Contagem polinomial em n de grau d pequeno | Resposta é polinômio de grau ≤ d | Calcular d+1 valores por brute e interpolar (Lagrange); "n até 10¹⁸" | Combinatória, DP |
@@ -324,7 +319,7 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Torneio (um sentido por par) e "caminho passando por todos" | Rédei: todo torneio tem caminho hamiltoniano | Inserção binária ou merge sort com comparador "u vence v" | Grafos, Construtivos |
 | Grafo conexo com m par, "decomponha em caminhos de 2 arestas" | DFS pós-ordem | Pareie arestas incidentes no filho; sobra a aresta ao pai | Grafos, Construtivos |
 | Orientar arestas para ficar fortemente conexo | Sem pontes (2-aresta-conexo) é condição necessária e suficiente | DFS: árvore para baixo, retorno para cima | Grafos |
-| k vértices de grau ímpar em um grafo conexo | Cobertura por max(1, k/2) trilhas (k = 0: 1, grafo euleriano) | Ligar pares de ímpares com arestas virtuais e achar Euler | Grafos, Construtivos |
+| k vértices de grau ímpar em um grafo conexo | Cobertura por ⌈k/2⌉ trilhas | Ligar pares de ímpares com arestas virtuais e achar Euler | Grafos, Construtivos |
 | Cobrir caminhos/DAG com menos caminhos | V − matching no grafo split | Disjunto em vértices; se podem se sobrepor, fecho transitivo antes | Grafos, Combinatória |
 | Maior antichain / maior conjunto sem relação em poset | Dilworth | Tamanho = n − matching no fecho transitivo (ou min cadeias) | Grafos, Combinatória |
 | Maior conjunto independente em grafo bipartido | König | n − matching máximo; reconstrua pelo corte (alcançáveis no residual) | Grafos |
@@ -333,11 +328,11 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Tarefas com prazo e lucro, 1 unidade de tempo | Matroide de agendamento | Ordene por lucro e use DSU para o último slot livre | Arrays, Estruturas |
 | Rotular cada vértice com A/B, custo unário e custo se vizinhos diferem | Energia submodular | Corte mínimo s-t (segmentação, "projeto" generalizado) | Grafos |
 | Custo convexo por unidade numa aresta | Marginais crescentes | Duplique a aresta em cópias de custo marginal, min cost flow | Grafos, DP |
-| Restrição de razão (min Σa/Σb) num ciclo | Binária em λ | Karp só para média por aresta (Σa / número de arestas); com b arbitrário, binária em λ + Bellman-Ford com custo a − λb | Grafos, Busca binária |
+| Restrição de razão (min Σa/Σb) num ciclo | Binária em λ | Ciclo de custo médio mínimo: Karp, ou Bellman-Ford com custo a − λb | Grafos, Busca binária |
 | Vários agentes se espalham ao mesmo tempo, "quem chega antes" | Frente simultânea | BFS/Dijkstra multi-fonte guardando a origem (Voronoi em grafo) | Grafos |
 | "Se removermos o vértice v, u ainda é alcançável?" | Pertinência na árvore dominadora | Árvore dominadora (Lengauer–Tarjan) em grafo direcionado/DAG | Grafos |
 | Restrições "maior aresta no caminho" / "caminho de gargalo" | MST contém o gargalo | Árvore de reconstrução de Kruskal: LCA = peso do gargalo | Grafos, Árvores |
-| Grafo com pesos de aresta pequenos W, distâncias grandes | Dial | Bucket queue por distância em O(m + nW); estados (v, tempo) até n·W são outra técnica (DP em camadas) | Grafos |
+| Grafo com pesos de aresta pequenos W, distâncias grandes | Dial | Bucket queue em O(m + nW); estados (v, tempo) até n·W | Grafos |
 | Passos grande k em grafo, "caminho com exatamente k arestas" | Potência da matriz de adjacência | Min-plus ou contagem, exponenciação por doubling | Grafos, DP |
 | Terminais k ≤ 10 e custo mínimo para conectá-los | Árvore de Steiner | dp[mask][v] com 3^k·n + 2^k·m log | Grafos, DP |
 | Grafo com m arestas e "triângulos / pequenos subgrafos" | Oriente de menor para maior grau | Grau de saída ≤ √(2m); triângulos em O(m√m) | Grafos, Estruturas |
@@ -345,7 +340,7 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Formigas/bolas idênticas que colidem e voltam | Atravessam sem interagir | Trajetória livre; a ordem relativa fica, só os rótulos trocam | Arrays, Construtivos |
 | Jogador A e B alternam, últimos a mover perde | Misère | Nim: igual ao normal exceto todas as pilhas ≤ 1; outros: brute força a diferença | Teoria dos jogos |
 | Tokens independentes em DAG ou pilhas somadas | Sprague-Grundy | xor dos Grundy; token único sem soma → só vitória/derrota | Teoria dos jogos, Grafos |
-| Jogo com lance que o oponente pode desfazer | Lance reversível exige definição precisa (posição ≤ original, jogo finito) | Não é simplesmente apagar o lance: substitua-o pelas opções da resposta | Teoria dos jogos |
+| Jogo com lance que o oponente pode desfazer | Ignore o lance reversível | Classificação é a do jogo sem ele (se o jogo termina) | Teoria dos jogos |
 | Jogo em tabuleiro retangular de alinhamento/conexão | Roubo de estratégia | 1º nunca perde; Chomp, Hex: 1º ganha, a questão é construtivo ou espelho | Teoria dos jogos, Construtivos |
 | Jogo "token em grafo não-direcionado, vértices não repetem" | Geography bipartido | Ganha quem move de v ⇔ v está em todo matching máximo | Teoria dos jogos, Grafos |
 | Jogo de Euclides ou subtração com números grandes | Quociente ≥ 2 dá escolha | Simule Euclides e conte lances forçados por paridade | Teoria dos jogos, Teoria dos números |
@@ -353,16 +348,16 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Jogo de palavras (prefixo de dicionário) com k rodadas | Trie + (pode forçar ganhar, pode forçar perder) | Se ambos → 1º ganha; só ganhar → paridade de k; senão → 2º | Teoria dos jogos, Strings |
 | Jogo com itens usados de 1..n e soma-alvo | Estado = máscara | popcount dá a vez; dp[mask] com n ≤ 20 | Teoria dos jogos, DP |
 | Jogo infinito/ciclos, resultado "empate" | Retrógrada com contador de saídas | Vitória se algum sucessor é derrota; derrota se todos são vitória; resto empate | Teoria dos jogos, Grafos |
-| Grundy grande demais ou n 10¹⁸ | Eventual periodicidade (só garantida com conjunto de subtração finito) | Brute 10⁴ valores é heurístico: ache período e pré-período, confirme e depois consulte por mod | Teoria dos jogos, Teoria dos números |
+| Grundy grande demais ou n 10¹⁸ | Eventual periodicidade | Brute 10⁴ valores, ache período e pré-período, depois consulte por mod | Teoria dos jogos, Teoria dos números |
 | Operação associativa sem inversa em janela deslizante | Duas pilhas | Fila a partir de duas pilhas guardando agregado; O(1) amortizado | Estruturas, Arrays |
 | Operação associativa sem inversa, queries estáticas, n 5·10⁵ | Disjoint sparse table / sqrt tree | Query O(1) com 2 acessos | Estruturas |
 | Estrutura só suporta insert e rollback, mas dados têm remoção arbitrária | Segtree no tempo | Offline: cada item vive num intervalo; DFS na segtree com rollback | Estruturas, Grafos |
-| Elemento majoritário em subarray, sem estrutura pesada | Boyer–Moore não é associativo (o merge preserva só a maioria estrita) | Segtree de (candidato, contagem); verificação final por posições + binária | Estruturas, Aleatorização |
+| Elemento majoritário em subarray, sem estrutura pesada | Boyer–Moore é associativo | Segtree de (candidato, contagem); verificação final por posições + binária | Estruturas, Aleatorização |
 | Transformações compostas x → a·x + b sobre intervalos | Monoide não comutativo | Segtree que guarda (a, b) respeitando a ordem de composição | Estruturas, Combinatória |
 | Computar sobre pares com a_i = a_j em vez de todos | Limite de multiplicidade | Σ c_v² ≤ n·max c; agrupa por valor; pesado/leve em c_v | Estruturas, Arrays |
 | Pontos e retas em y = ax + b, "melhor reta num x" | Dualidade ponto-reta | (a, b) viram pontos; envelope = fecho convexo ⇒ CHT / Li Chao | Geometria, DP |
 | Restrições lineares em 2 variáveis, maximizar linear | Programação linear 2D | Interseção de semiplanos; ótimo em um vértice | Geometria |
-| Minimize Σ \|x_i − t_i\| com restrições x_i ≤ x_{i+1} | Slope trick | Heap com pontos de quebra; ótimo O(n log n) | DP, Arrays |
+| Minimize Σ |x_i − t_i| com restrições x_i ≤ x_{i+1} | Slope trick | Heap com pontos de quebra; ótimo O(n log n) | DP, Arrays |
 | Custo convexo em cadeia de variáveis (Lipschitz, monotônico) | f convexa por partes | Slope trick: guarde as inclinações em heaps | DP, Estruturas |
 | Mochila com Σ pesos pequena e muitos itens iguais | Pesos distintos ≤ √(2S) | Binary splitting ou deque por resto; bitset para viabilidade | DP |
 | Partição em somas com n 10⁵ e soma ≤ 10⁵ | Subset sum com multiplicidades | bitset com divisão binária (n√n/64) | DP, Estruturas |
@@ -378,18 +373,18 @@ Cada linha é um salto que você costuma dar em vários passos; a coluna "Aparec
 | Resposta é polinomial em n (parece) | grau d ⇒ d+1 pontos bastam | Brute força d+2 valores, depois Lagrange | Álgebra, Combinatória, Olimpíada |
 | Σ_{k≤n} kᵈ com n enorme | Polinômio de grau d + 1 em n | Lagrange O(d) ou Bernoulli | Álgebra, Teoria dos números |
 | Contar árvores geradoras / ciclos eulerianos | Determinante do Laplaciano | Matrix-tree, BEST | Álgebra, Grafos, Combinatória |
-| k caminhos disjuntos em DAG/grid | Sinal de permutação cancela cruzamentos | LGV (determinante) com fontes/sumidouros compatíveis; senão o determinante é assinado e pode zerar | Álgebra, Grafos |
+| k caminhos disjuntos em DAG/grid | Sinal de permutação cancela cruzamentos | LGV (determinante) | Álgebra, Grafos |
 | Sistema de equações xor | Linear sobre GF(2) | Gauss com bitset, 2^{n − posto} | Álgebra, Bits |
 | "Todo subconjunto" com n ≤ 20 e combinação OR/AND/XOR | Transformadas de conjuntos | zeta/Möbius, subset convolution, Walsh | Álgebra, DP, Bits |
 | Existência garantida por pombal / Erdős–Szekeres | Só precisa construir | Prefixos mod n, LIS/LDS, EGZ | Olimpíada, Construtivos |
 | Operação que sempre reduz uma grandeza inteira | Monovariante limita passos | Simule até estabilizar ou conte inversões | Olimpíada, Construtivos, Arrays |
-| Grafo/instância sem K_{2,2} ou sem triângulo (separar) | Sem K_{2,2}: m = O(n^{3/2}) e Σ C(d_v,2) = O(n²); sem triângulo: m ≤ n²/4 | Pares de vizinhos em O(n²) só vale para K_{2,2}-free; triangle-free pode ter Σ C(d_v,2) = Θ(n³) (K_{n/2,n/2}) | Olimpíada, Grafos |
+| Grafo/instância sem K_{2,2} ou sem triângulo | m = O(n^{3/2}) ou ≤ n²/4 | Iterar pares de vizinhos em O(n²) | Olimpíada, Grafos |
 | Grafo planar com n grande | m ≤ 3n − 6, degenerescência ≤ 5 | Orientação grau ≤ 5; dual para corte/fluxo | Olimpíada, Grafos |
 | "Maximize/minimize" com certificado | Dual do LP | Fluxo = corte, Hall/König, potenciais da Hungarian | Otimização, Grafos |
-| Escolhas sem ciclo / ≤ c por cor / lin. independentes | Conjuntos formam matroide | Guloso por peso (1 matroide) ou interseção de 2 matroides (polinomial; 3+ é NP-difícil) | Otimização, Grafos, Bits |
+| Escolhas sem ciclo / ≤ c por cor / lin. independentes | Conjuntos formam matroide | Guloso por peso ou interseção de matroides | Otimização, Grafos, Bits |
 | f(k) com k itens parece convexa | Penalize cada item com λ | Aliens/WQS + busca binária em λ | Otimização, DP, Busca binária |
 | Custo convexo por unidade de fluxo | Divida em arestas unitárias crescentes | Min-cost flow com custos marginais | Otimização, Grafos |
-| Mover unidades em linha ou círculo | Custo = Σ \|prefixo\| | Mediana dos prefixos (círculo) | Otimização, Arrays |
+| Mover unidades em linha ou círculo | Custo = Σ |prefixo| | Mediana dos prefixos (círculo) | Otimização, Arrays |
 | Piso/teto com a·i + b e n ≈ 10⁹ | Reta com pontos de rede | Floor sum (Euclides) | Olimpíada, Teoria dos números |
 | Sequência {kα}, "girar por α" | Equidistribuição / três intervalos | Frações contínuas, Stern–Brocot | Olimpíada, Teoria dos números |
 | Esperança de tempo em passeio linear | Existe potencial com Δ = −1 | Martingal / optional stopping | Olimpíada, Combinatória |
@@ -408,7 +403,7 @@ Primeira pergunta: a ordem dos elementos importa? Se não, ordene.
 - **Ordenar** por valor, por fim de intervalo, por razão a/b, ou pela comparação de troca (a antes de b se a+b < b+a). Prove com exchange argument.
 - **De trás pra frente.** O último elemento costuma ser forçado; decisões do fim não dependem do começo.
 - **Two pointers / janela.** "Subarray com soma ≤ S", "no máximo k distintos" → se encolher a janela nunca piora, é janela deslizante.
-- **Prefix sums + map.** Contar subarrays com soma/xor = k → para soma, conte prefixos iguais a pref − k; para xor, prefixos iguais a pref ⊕ k.
+- **Prefix sums + map.** Contar subarrays com soma/xor = k → conte prefixos iguais a pref − k.
 - **Pilha monotônica.** Próximo maior/menor, maior retângulo, contribuição de cada elemento como máximo/mínimo.
 - **Deque monotônico.** Máximo em janela deslizante; DP com transição de janela.
 - **Heap guloso.** Escolher o melhor disponível a cada passo; "arrependimento" (tire do heap e troque se vale a pena).
@@ -427,13 +422,13 @@ Primeira pergunta: a ordem dos elementos importa? Se não, ordene.
 - **Jobs com prazo e lucro, 1 unidade cada.** Ordene por prazo, empurre lucros num min-heap e, se o tamanho passar do prazo atual, remova o menor. O heap final é a resposta.
 - **Intervalos: mínimo de pontos para furar todos.** Ordene por fim e coloque o ponto no fim do primeiro intervalo não furado. Mesmo problema que "máximo de disjuntos", em dupla.
 - **Intervalos: mínimo de salas = máxima sobreposição.** Para atribuir de fato, ordene por início e use heap com os fins; reaproveite a sala cujo fim ≤ início.
-- **Intervalos com k máquinas, maximizar quantos atender.** Ordene por fim; para cada intervalo escolha a máquina livre com maior fim < início (intervalos fechados; use multiset + lower_bound e recue um; semiabertos usam ≤ e upper_bound); se não há, descarte.
+- **Intervalos com k máquinas, maximizar quantos atender.** Ordene por fim; para cada intervalo escolha a máquina livre com maior fim ≤ início (multiset + upper_bound); se não há, descarte.
 - **Cobrir \[0, L\] com o mínimo de intervalos.** Ordene por início; entre os que começam ≤ cobertura atual, pegue o que alcança mais longe; se nenhum avança, impossível.
 - **Empates em sweep de eventos.** Intervalos fechados \[l, r\]: processe abertura antes de fechamento no mesmo ponto; semiabertos \[l, r): fechamento antes. Errar isso muda a sobreposição máxima por 1.
 - **Pareamento na reta (pontos com pontos).** Minimizar Σ|a_i − b_σ(i)| ou o max |a_i − b_σ(i)| → ordene os dois lados e case em ordem; vale pela desigualdade do rearranjo.
 - **Desigualdade do rearranjo.** Σ a_i·b_σ(i) é máximo com ambos ordenados do mesmo jeito e mínimo com ordens opostas. Serve para "atribuir pesos a posições/arestas por frequência de uso".
 - **Pontos × segmentos (atribuir cada ponto a um segmento que o contém).** Varra por x; heap dos segmentos abertos ordenado por fim; dê o ponto ao segmento que expira primeiro.
-- **Heap com arrependimento: comprar/vender ações.** O push duplo (vender e empurrar p duas vezes) superconta vendas sobrepostas: \[0,1,4,7\] retorna 10, mas o máximo é 7. Para o modelo "uma ação em mãos por vez", some as diferenças positivas adjacentes: Σ max(0, p_i − p_{i−1}).
+- **Heap com arrependimento: comprar/vender ações.** Em cada preço p, use min-heap: se top < p, acumule p − top, remova o top e empurre p (venda); em todo caso empurre p de novo (compra possível). O push extra após a venda permite "desfazer" a venda mais tarde.
 - **Escolher k elementos não adjacentes de soma máxima.** Lista ligada + heap; ao escolher i, substitua os vizinhos e i por um nó de valor v_l + v_r − v_i (arrependimento). Repita k vezes.
 - **Cortar em k segmentos minimizando/maximizando soma de custos que dependem dos cortes.** Se o custo é aditivo nos cortes, escolha os k − 1 melhores cortes com sort; vale para "soma de (último − primeiro) por bloco" → soma total menos os k − 1 maiores buracos.
 - **Tornar array não decrescente com mínimo Σ|a_i − b_i| (slope trick).** Max-heap: empurre a_i; se top > a_i, ans += top − a_i, pop e empurre a_i de novo. Estritamente crescente: troque a_i por a_i − i.
@@ -457,7 +452,7 @@ Primeira pergunta: a ordem dos elementos importa? Se não, ordene.
 - **Maior soma de submatriz.** Fixe duas linhas, comprima colunas por prefixo e rode Kadane: O(min(n, m)²·max(n, m)).
 - **Transponha** quando n·m ≤ 10⁶ mas n ≫ m: itere sobre o lado pequeno e deixe o loop interno no grande (cache e complexidade).
 - **Rotações/reflexões de grid**: 8 simetrias em quadrado; para "mesmo padrão a menos de rotação" tome a forma canônica (mínima entre as 4/8).
-- **Meet in the middle (n ≤ 40 com 2 escolhas; n ≈ 24–26 com 3).** Gere as somas das duas metades, ordene e use dois ponteiros; contagem de subconjuntos com soma ≤ S, ou xor/max mod M, cabem aqui. 3^(n/2) quando cada item tem 3 escolhas.
+- **Meet in the middle (n ≤ 40).** Gere as somas das duas metades, ordene e use dois ponteiros; contagem de subconjuntos com soma ≤ S, ou xor/max mod M, cabem aqui. 3^(n/2) quando cada item tem 3 escolhas.
 - **4-sum / soma de quatro (n ≤ 2000).** Armazene todas as somas de pares em hash/sorted e procure o complemento: O(n²); com três listas A + B + C ≥ x faça n² + two pointers.
 - **Permutação é um conjunto de ciclos.** Trocas arbitrárias mínimas = n − #ciclos; trocas adjacentes mínimas = #inversões; paridade da permutação = (n − #ciclos) mod 2.
 - **Potência de permutação.** p^k quebra um ciclo de tamanho c em gcd(c, k) ciclos de tamanho c/gcd(c, k); ciclo de c e gcd(c,k)=1 vira um ciclo só. Raiz quadrada: ciclos ímpares podem ficar sozinhos, ciclos pares só existem aos pares do mesmo tamanho.
@@ -467,7 +462,7 @@ Primeira pergunta: a ordem dos elementos importa? Se não, ordene.
 - **Dilworth em arrays.** Mínimo de subsequências estritamente crescentes que cobrem o array = tamanho da maior subsequência não crescente; o guloso "anexe x à subsequência cujo último elemento é o maior < x; se não houver, abra uma nova" (multiset) constrói a partição.
 - **LIS com restrições extras (k-LIS, LIS em subárvore, LIS pesada)** → dp\[v\] = max sobre valores < v indexado por valor comprimido num BIT de max; peso entra como soma.
 - **Permutação com k inversões exatas.** Insira os valores do menor ao maior; ao inserir o i-ésimo você escolhe quantas inversões novas (0..i−1), então qualquer k ≤ n(n−1)/2 é construível por guloso.
-- **Inversões de a + b ou "inversões após operação"**: separe em pares que mudam e pares que não; swap de i, j com valores distintos muda inversões por um número ímpar (paridade sempre inverte); trocar iguais não muda nada.
+- **Inversões de a + b ou "inversões após operação"**: separe em pares que mudam e pares que não; swap de i, j muda inversões por um número ímpar (paridade sempre inverte).
 - **Cuidado com overflow** em contagens de pares (n² com n = 2·10⁵ = 4·10¹⁰), somas de prefixos (2·10⁵ × 10⁹) e produtos cruzados (a·d vs b·c com valores 10⁹ → __int128).
 - **Comparador do sort deve ser ordem fraca estrita.** `<=` ou comparador não transitivo (ex.: com razão em double) causa UB/crash; use cross-multiplication em inteiros e desempate por índice.
 - **Off-by-one em intervalos.** Padronize \[l, r) em código e converta na entrada; prefixos P\[0\] = 0 com tamanho n + 1; diferenças com tamanho n + 2.
@@ -477,14 +472,6 @@ Primeira pergunta: a ordem dos elementos importa? Se não, ordene.
 - **Ordenar por comparação de concatenação.** Menor/maior número formado por concatenar strings: ordene por a+b < b+a; prova por transitividade da comparação numérica.
 - **Pilha para colisões e cancelamentos** (robôs que se anulam, parênteses reduzidos, apagar pares adjacentes): o resultado final é canônico e independe da ordem.
 - **Sparse table / pré-cômputo antes do guloso**: se o guloso consulta max/min de intervalo, não reordene o array, use RMQ O(1) para manter n log n.
-
-*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
-
-- **Intervalos ocupados → olhe as lacunas.** Com k intervalos disjuntos ordenados, o espaço livre está nos k + 1 buracos: antes do primeiro, entre consecutivos e depois do último. Ex.: CF 1999C.
-- **Substituir prefixo pelo mínimo / sufixo pelo máximo.** Um elemento pode sobreviver sse é mínimo do seu prefixo ou máximo do seu sufixo (um "recorde"); marque com prefix min e suffix max. Ex.: CF 2241D.
-- **Equilibrar por transferências unitárias.** Se cada passo tira 1 de quem está acima do alvo e dá a quem está abaixo, o nº de passos é Σ max(0, a\_i − alvo). Ex.: CF 2131A.
-- **a\_i + a\_{i+1} constante ⇒ período 2.** Subtraindo duas equações vizinhas, a\_{i+2} = a\_i: o array é determinado pelos dois primeiros valores. Vale para qualquer relação em que o termo do meio se cancela. Ex.: CF 2256B.
-- **Recuperar pesos de Σ w\_j·|i − x\_j|.** Com f(i) dado em todos os inteiros, a segunda diferença f(i+1) − 2f(i) + f(i−1) = 2·(peso total em x = i); as pontas saem por substituição. Ex.: CF 2254D.
 
 Repetidas de outras seções:
 
@@ -515,23 +502,23 @@ Gatilho principal: "minimizar o máximo" ou "maximizar o mínimo" → binária n
 - **Binária em array bitônico ou rotacionado.** Compare a\[m\] com a\[m+1\] (pico) ou com a\[0\] (rotação); platôs de valores iguais quebram a monotonicidade e forçam O(n) no pior caso.
 - **Dinkelbach para razão máxima Σa/Σb.** Itere r ← (Σa)/(Σb) do conjunto ótimo para o r atual; converge superlinearmente em poucas iterações e dá o valor exato, sem binária em real.
 - **k-ésimo de A\[i\] + B\[j\].** Binária em x, conte pares ≤ x com dois ponteiros nos dois arrays ordenados; para k-ésimo de A\[i\]·B\[j\] com sinais, divida em quatro casos.
-- **k-ésimo em matriz com linhas e colunas ordenadas / tabela de multiplicação n × m.** Binária em valor + "escada" O(n + m) ou soma min(m, ⌊x / i⌋) por linha.
-- **k-ésima menor fração p/q com q ≤ n.** Binária em real x, conte frações ≤ x com dois ponteiros e guarde a maior fração ≤ x vista; se as frações são reduzidas/distintas, a contagem por piso repete representações — use Farey/Stern–Brocot (ou Möbius) para o rank exato, pois só a maior ≤ x não basta.
+- **k-ésimo em matriz com linhas e colunas ordenadas / tabela de multiplicação n × m.** Binária em valor + "escada" O(n + m) ou soma ⌊x / i⌋ por linha.
+- **k-ésima menor fração p/q com q ≤ n.** Binária em real x; conte frações ≤ x com dois ponteiros e guarde a maior fração ≤ x vista para recuperar o valor exato.
 - **Mediana/k-ésimo de dois arrays ordenados** → binária na partição (quantos tirar do primeiro) em O(log min(n, m)), comparando as bordas cruzadas.
-- **Binária em estruturas.** BIT (só com frequências não negativas): descida por potências de 2 acha o menor prefixo com soma ≥ x em O(log); segtree: descida pelo nó em vez de binária + query; sparse table: saltos 2^k decrescentes; árvore: binary lifting para "primeiro ancestral que viola".
+- **Binária em estruturas.** BIT: descida por potências de 2 acha o menor prefixo com soma ≥ x em O(log); segtree: descida pelo nó em vez de binária + query; sparse table: saltos 2^k decrescentes; árvore: binary lifting para "primeiro ancestral que viola".
 - **Binária sobre o tempo com DSU** ("primeiro instante em que u e v conectam"): Kruskal reconstruction tree, ou binária paralela com um DSU percorrido uma vez por nível.
-- **Binária paralela (variante D&C).** Em vez de rodar a estrutura log vezes, resolva(lo, hi, queries): aplique os eventos de \[lo, mid\], decida cada query para esquerda/direita, desfaça (rollback) e recurse; O((n + q) log² n), pois o DSU rollback sem compressão de caminho paga O(log n) por operação.
+- **Binária paralela (variante D&C).** Em vez de rodar a estrutura log vezes, resolva(lo, hi, queries): aplique os eventos de \[lo, mid\], decida cada query para esquerda/direita, desfaça (rollback) e recurse; O((n + q) log).
 - **Monotonicidade precisa ser provada.** Se check(x) = "existe solução com valor x" e esticar x pode piorar (ex.: tamanho exato em vez de ≤), a binária falha; reformule como ≥ ou ≤.
 - **Check mais barato que n log.** Pré-ordene fora da binária; um check O(n) + binária bate sort dentro do check. Dois ponteiros costuma tirar a binária interna ("menor janela" não precisa de binária + prefixo).
 - **Maximizar a menor distância** (colocar k itens numa reta, "vacas agressivas") → binária em d + guloso que coloca o próximo ponto o mais cedo possível.
 - **Partição em k blocos minimizando o maior soma** → binária em S + guloso que fecha o bloco quando estoura; é o padrão de "minimizar o máximo" com 2 níveis.
 - **Gargalo (bottleneck).** Caminho que minimiza a maior aresta = caminho na MST; binária + DSU/BFS funciona mas é mais lenta; "min cap de fluxo ≥ F" → binária na capacidade + max-flow.
-- **Aliens com empates.** Se há vários k ótimos para o mesmo λ, escolha sistematicamente o menor (ou o maior) número de itens e compare com K; fixe a convenção: com val(λ) = max\_k [f(k) − λ·k] a resposta é val(λ) + λ·K, e com val(λ) = min\_k [f(k) + λ·k] é val(λ) − λ·K. λ inteiro basta quando custos são inteiros.
+- **Aliens com empates.** Se há vários k ótimos para o mesmo λ, escolha sistematicamente o menor (ou o maior) número de itens e compare com K; a resposta é val(λ) + λ·K, não val(λ). λ inteiro basta quando custos são inteiros.
 - **Aliens clássicos.** Escolher exatamente k subarrays disjuntos de soma máxima; MST com exatamente k arestas vermelhas (somar λ às vermelhas); fatiar o array em k blocos com custo quadrangular; "exatamente k trocas/compras" em ações.
 - **Teste de convexidade para Aliens.** Calcule f(k) por brute force para k pequeno e verifique f(k+1) − f(k) monótona; se for côncava/convexa só por trechos, Aliens falha.
 - **Ternária em inteiros.** Platôs que não estão no ótimo quebram a ternária; use binária em f(m) vs f(m+1) se estritamente unimodal, ou golden section com 1 avaliação por passo.
 - **Convexidade fecha por soma e max.** Soma de convexas é convexa (Σ|x − a_i| convexa), max de convexas é convexa, composição afim também; isso justifica ternária em "minimizar a maior distância" e em "ponto ótimo de custo agregado".
-- **Ternária aninhada** em duas variáveis (f conjuntamente convexa — Hessiana PSD; convexidade separada em x e em y não garante que g(x) = min\_y f(x, y) seja convexa/unimodal): O(log² · custo), ou resolva um eixo analiticamente.
+- **Ternária aninhada** em duas variáveis (f convexa em x e, para x fixo, em y): O(log² · custo), ou resolva um eixo analiticamente.
 - **Convex hull trick por binária.** Consultas arbitrárias numa envoltória de retas em ordem de inclinação → lower\_bound por interseção; consultas monótonas → ponteiro; sem ordem → Li Chao.
 - **Sqrt inteiro e raiz k-ésima** → calcule com sqrtl e corrija ±1 em um while, ou binária inteira; double perde precisão acima de 2⁵³.
 - **Binária em ângulo / raio / tempo contínuo** quando o check é "círculo de raio r cobre tudo" ou "distância no tempo t": o check geométrico costuma ser sweep angular ou interseção de intervalos.
@@ -554,7 +541,7 @@ Escolhendo o estado:
 Otimizando a transição:
 
 - dp\[i\] = min\_j (dp\[j\] + b\_j·a\_i) → **CHT / Li Chao**.
-- opt(i) monótono em dp\[k\]\[i\] = min\_j dp\[k−1\]\[j\] + cost(j, i) → **D&C DP**; em intervalos, com quadrangle inequality e w monótono → **Knuth** (não misture com o D&C).
+- opt(i) monótono em dp\[k\]\[i\] = min\_j dp\[k−1\]\[j\] + cost(j, i) → **D&C DP**; com quadrangle inequality → **Knuth** em intervalos.
 - Transição sobre um intervalo de j → **prefix min / deque / segtree** sobre dp.
 - Transição linear com n até 10¹⁸ → **exponenciação de matriz** (também em semi-anel min-plus).
 - Somas sobre subconjuntos/supermáscaras → **SOS DP**.
@@ -576,7 +563,7 @@ Otimizando a transição:
 - **Plug DP com conectividade.** Para caminho/ciclo hamiltoniano em grid ou "um único ciclo": estado = emparelhamento de plugs (parênteses) na fronteira, codificado em base 3 ou 4 (0 = sem plug, 1 = abre, 2 = fecha). Estados alcançáveis são poucos (Motzkin): guarde em hash map.
 - **Máscara por linha com compatibilidade.** dp[linha][máscara] com máscaras válidas pré-filtradas (sem bits vizinhos): só Fib(m) máscaras; transição vira soma sobre máscaras compatíveis (pré-calcule listas ou use SOS no complemento).
 - **Subconjuntos de máscara, 3^n.** dp[mask] = melhor partição de mask em grupos: itere submáscaras (3^n). Para n até 16–18 cabe; se o grupo contém sempre o menor bit de mask, corta um fator constante (fixa o menor elemento).
-- **TSP / hamiltoniano contando.** dp[mask][último] em 2^n·n²; para contar ciclos hamiltonianos com memória polinomial, IE sobre subconjuntos de vértices com contagem de passeios fechados em 2^n·n³ — inviável em n = 25; use n ≲ 20 ou variante O(2^n·n²).
+- **TSP / hamiltoniano contando.** dp[mask][último] em 2^n·n²; para contar ciclos hamiltonianos com memória polinomial (n ≤ 20–25), IE sobre subconjuntos de vértices com contagem de passeios fechados em 2^n·n³ ou menos.
 - **Bitmask DP sobre posição + máscara de últimos k elementos.** Quando a restrição envolve só vizinhança de comprimento k (ex.: sem k iguais seguidos, k ≤ 10–20) → a máscara é a janela, deslizante.
 - **Permutações como máscara de "já usados" com custo por posição** (alocação, atribuição com n ≤ 20): dp[mask] = custo mínimo para colocar os |mask| primeiros itens; a posição é popcount(mask), não precisa ir no estado.
 - **Árvore knapsack O(n²).** dp[v][k] = melhor com k vértices da subárvore; ao fundir filho c, limite os loops por min(k, sz): a soma total é O(n²) (cada par de vértices é "visto" uma vez no LCA). Vale também para "k folhas / k arestas / k componentes".
@@ -584,11 +571,11 @@ Otimizando a transição:
 - **DP sobre ordem DFS (pegar/pular subárvore).** Para "escolher conjunto fechado para cima / dependência pai→filho com orçamento": dp[i][j] sobre a posição i na ordem de Euler; escolher i desce para i+1, não escolher salta para tout[i]. Vira knapsack linear.
 - **DP em árvore com estado "o que sobe".** O que a subárvore precisa comunicar ao pai (cor da raiz, se a raiz está coberta, comprimento da cadeia aberta). Cobertura de vértices/dominating set: 3 estados (escolhido, dominado por filho, ainda precisa de pai).
 - **Rerooting com operação não invertível.** Calcule para cada vértice prefix e suffix dos resultados dos filhos; up[c] = combine(up[v], prefix[i−1], suffix[i+1]). Com max/min/gcd é o único jeito sem divisão.
-- **Rerooting com contribuição.** Resposta para toda raiz de Σ dist, Σ f(dist): mantenha cnt e soma por subárvore e mova a raiz da aresta (v→c) atualizando ±sz[c]; quando f não é linear, guarde os momentos de f (centroide é alternativa, não obrigação).
+- **Rerooting com contribuição.** Resposta para toda raiz de Σ dist, Σ f(dist): mantenha cnt e soma por subárvore e mova a raiz da aresta (v→c) atualizando ±sz[c]; quando f não é linear, precisa de centroide.
 - **DP em DAG de estados implícito.** Se o grafo de estados é um DAG (tempo/posição cresce), dp com memo recursiva evita ordenar; verifique profundidade da recursão e converta para iterativa se > 10⁵.
-- **DP em intervalo clássica O(n³).** dp[l][r] = min_k dp[l][k] + dp[k+1][r] + custo(l, r,): multiplicação de matrizes, estourar balões (escolha o ÚLTIMO a estourar, não o primeiro), triangulação de polígono; remover caixas precisa de dp[l][r][k] (tipicamente O(n⁴)), não cabe em 2D.
+- **DP em intervalo clássica O(n³).** dp[l][r] = min_k dp[l][k] + dp[k+1][r] + custo(l, r,): multiplicação de matrizes, remover caixas, estourar balões (escolha o ÚLTIMO a estourar, não o primeiro), triangulação de polígono.
 - **Intervalo: escolha o último elemento a ser tratado.** Quando remover no meio muda vizinhos, pense em qual elemento é removido por último no intervalo: então os dois lados ficam independentes. Balões, cortar vara, merge de pilhas.
-- **Intervalo com string: dp[l][r] para palíndromos, edição, "strange printer".** Se s[l] = s[r] une os extremos (dp[l+1][r−1] + c); impressora estranha: dp[i][i] = 1, dp[l][r] = dp[l][r−1] + 1 e, para k com s[k] = s[r], dp[l][r] = min(dp[l][r], dp[l][k] + dp[k+1][r−1]).
+- **Intervalo com string: dp[l][r] para palíndromos, edição, "strange printer".** Se s[l] = s[r] une os extremos (dp[l+1][r−1] + c); impressora estranha: dp[l][r] = min sobre k com s[k] = s[l] de dp[l][k−1] + dp[k+1][r].
 - **Intervalo com n grande mas estrutura de pilha.** "Remover pares adjacentes casáveis" pode virar DP O(n²) se a forma canônica é única (parênteses), ou O(n) guloso com pilha. Teste se algum guloso funciona antes.
 - **Intervalo circular.** Duplique o array (tamanho 2n) e calcule dp[l][r] com r − l < n; a resposta é o melhor dp[i][i+n−1]. Para otimização em círculos de remoção ("matar vizinhos"), fixe um elemento como ponto de corte.
 - **Knuth (intervalo).** opt[l][r−1] ≤ opt[l][r] ≤ opt[l+1][r] dá O(n²) total para dp[l][r] = min_k dp[l][k] + dp[k+1][r] + w(l, r) com w satisfazendo desigualdade do quadrângulo e monotonia. Árvore de busca binária ótima, merge ótimo de arquivos adjacentes.
@@ -613,7 +600,7 @@ Otimizando a transição:
 - **Esperança por linearidade em vez de DP.** Antes de montar DP de esperança, tente somar probabilidades de indicadores (E[#inversões], E[#componentes], E[tempo] = Σ P(passo k ainda ativo)). Muitos problemas que parecem DP de estados viram fórmula O(n).
 - **Passeio aleatório em linha/árvore.** Tempo esperado de atingir vértice em árvore: E(v→pai) = 2·sz − 1 (arestas na subárvore + 1); equações de diferença em cadeia resolvem com telescópio sem Gauss. Cover time/hitting time: use resistência elétrica (hitting em grafo: E_ij + E_ji = 2m·R_ij).
 - **Probabilidade de vitória com estado pequeno + soma de 1 − p.** Para esperança de "repita até sucesso" com custo por tentativa, E = custo/p_sucesso; com várias etapas independentes, soma de E por etapa (linearidade, não multiplique).
-- **Coupon collector generalizado.** E[passos para ver todos de n] = n·H_n; para completar o conjunto (tipos distintos) ou um subconjunto fixo: dp[j] = esperança dado j já coletados, E[j] = (n/(n−j)) + E[j+1], de trás pra frente; para k cópias de cada tipo o estado é o vetor de contagens, não só j.
+- **Coupon collector generalizado.** E[passos para ver todos de n] = n·H_n; para precisar de k cópias ou subconjunto: dp[j] = esperança dado j já coletados, E[j] = (n/(n−j)) + E[j+1], de trás pra frente.
 - **Contar sem esperança: dp[estado] como distribuição, não valor.** "Probabilidade de terminar com valor = x" → dp[i][x] com transições por probabilidade (mod p usa inverso); só vira esperança se só o valor médio interessa (reduz uma dimensão).
 - **DP em autômato.** Contar/otimizar strings de comprimento L que evitam/contêm padrões: dp[pos][estado do Aho-Corasick] com L ≤ 10³ e Σ|padrões| ≤ 10³; para L enorme use matriz (estados) com potência.
 - **DP no autômato do KMP (um padrão).** dp[i][j] = nº de strings de comprimento i com borda j; ou "mínimo de trocas para não conter p": construa tabela de transições aut[j][c] em O(|p|·26) e use dp[i][j].
@@ -633,11 +620,11 @@ Otimizando a transição:
 - **Mochila limitada por binary splitting.** Quantidade c_i → itens de 1, 2, 4, …, resto: O(nW log c). Com Σ c_i·w_i ≤ S ainda dá √S pesos distintos e cada um pode ser dividido ao mesmo tempo.
 - **Mochila limitada com fila monótona.** Para cada resíduo r mod w_i, dp'[r + t·w] = max_{t−c ≤ s ≤ t} dp[r + s·w] + (t − s)·v: deque sobre dp[s] − s·v; O(nW) sem log.
 - **Mochila limitada só de viabilidade (subset sum com multiplicidade).** Para cada peso w com cnt c: dp'[x] = true se dp[x] ou dp'[x − w] com usos < c; guarde used[x] mínimo usado do peso atual. O(nW) simples sem deque.
-- **Subset sum com bitset.** dp |= dp << w; O(nW/64). Com Σ pesos ≤ S e pesos distintos ≤ √(2S): agrupe e use binary splitting + bitset (S√S log S/64).
+- **Subset sum com bitset.** dp |= dp << w; O(nW/64). Com Σ pesos ≤ S e pesos distintos ≤ √(2S): agrupe e use binary splitting + bitset (S√S/64).
 - **Subset sum com pesos pequenos e soma grande (Pisinger / balanced).** Soma de n itens com pesos ≤ C: existe solução com complexidade O(nC) independente de W (algoritmo de Pisinger: comece de uma solução gulosa e vá e volta no máximo ±C).
 - **Subset sum modular / pigeonhole.** n itens com n ≥ m: algum subconjunto soma 0 mod m (prefixos); existência garantida → o problema é construir, não decidir (Erdős–Ginzburg–Ziv: entre 2m − 1 inteiros existem m com soma ≡ 0 mod m).
 - **Mochila com valor pequeno e peso gigante.** dp[v] = menor peso para obter valor v; se Σ v ≤ 10⁵ roda em n·Σv mesmo com W = 10⁹. Já está na seção base, mas vale também para "contar # de itens" como valor.
-- **Mochila onde itens têm peso 1, 2, 3 só (ou poucos tipos).** Ordene cada tipo por valor decrescente, prefix sums por tipo, enumere quantidades de dois tipos e ache o terceiro por busca (função côncava em quantidade) → O(W² log W): enumerar dois tipos já é Θ(W²).
+- **Mochila onde itens têm peso 1, 2, 3 só (ou poucos tipos).** Ordene cada tipo por valor decrescente, prefix sums por tipo, enumere quantidades de dois tipos e ache o terceiro por busca (função côncava em quantidade) → O(W log) ou O(W).
 - **Valores côncavos por grupo → merge guloso.** Mochila onde cada grupo tem ganho marginal decrescente (função côncava de qtd) → heap/ordenar todos os incrementos marginais; custo unitário igual vira guloso.
 - **Mochila min-plus convexa.** Mesclar duas funções convexas (min-plus convolução) = mesclar suas diferenças ordenadas em O(n); arrays convexos em cada filho de árvore (ex.: knapsack com itens de custo crescente) somam por merge de listas de inclinações.
 - **Mochila de "mochila de √" (pesos distintos).** Σ pesos ≤ S → ≤ √(2S) pesos distintos; combinado com cnt_i·w_i ≤ S dá total O(S√S) em vez de nS. Também: itens com w ≤ √ resolvidos por DP e itens com w > √ são ≤ √ no total usados.
@@ -655,8 +642,8 @@ Otimizando a transição:
 - **DP em permutação circular.** Fixe o elemento 1 (ou o menor) numa posição para quebrar a simetria; contar n arranjos circulares = (n−1)! × linear; para DP circular sobre a escolha de itens (nenhum vizinho adjacente), rode duas vezes: primeiro e último excluídos de um deles.
 - **Escolher k itens sem dois adjacentes (círculo/linha).** dp[i][j][pegou i-1?] em O(nk); com n grande e k pequeno há também o guloso heap com lista ligada (escolha o melhor, substitua por vizinhos − atual) — o "arrependimento" certo para max soma sem adjacentes com k.
 - **Heap + lista ligada vs DP.** "Escolha k não-adjacentes" onde dp é côncava em k → o guloso com arrependimento dá a resposta exata para cada k; use também como alternativa ao Aliens.
-- **Aliens / WQS (lambda).** "Exatamente k" com f(k) convexa: busque λ tal que o ótimo da DP com penalidade λ por item use k itens; resposta = g(λ) − λ·k, com g(λ) = min_k [f(k) + λ·k]. Cuidado com empates: guarde o MENOR (ou maior) número de itens entre ótimos para a binária ser coerente; λ inteiro basta quando f é inteira.
-- **Aliens: como reconhecer convexidade.** Se existe fluxo de custo mínimo de fundo (k unidades de fluxo), ou matroide/guloso com arrependimento para custo mínimo (máximo em matroide é côncavo, não convexo), f é convexa; se k é "número de segmentos" com custo Monge, também. Sem prova, valide com brute force imprimindo f(k) para k pequeno e checando segundas diferenças.
+- **Aliens / WQS (lambda).** "Exatamente k" com f(k) convexa: busque λ tal que o ótimo da DP com penalidade λ por item use k itens; resposta = g(λ) + λ·k. Cuidado com empates: guarde o MENOR (ou maior) número de itens entre ótimos para a binária ser coerente; λ inteiro basta quando f é inteira.
+- **Aliens: como reconhecer convexidade.** Se existe fluxo de custo mínimo de fundo (k unidades de fluxo), ou matroide/guloso com arrependimento, f é convexa; se k é "número de segmentos" com custo Monge, também. Sem prova, valide com brute force imprimindo f(k) para k pequeno e checando segundas diferenças.
 - **Aliens aninhado (duas restrições k₁, k₂).** Dois λ em binária dupla, O(log² · DP); só funciona se f é convexa em ambos jointly (ex.: certos problemas de emparelhamento); desconfie e teste.
 - **Slope trick: reconhecer.** dp[i][x] = min_y dp[i−1][y] + |x − a_i| com restrição em y−x (monotonia, |x−y| ≤ d) e dp[0] convexa → dp[i] continua convexa linear por partes; guarde só os pontos de quebra e um valor mínimo.
 - **Slope trick com translação.** "Janela deslizante" desloca os heaps esquerdo e direito por offsets lazy diferentes (addL, addR); inserção de |x − a| move um ponto entre heaps. Custo total O(n log n).
@@ -668,7 +655,7 @@ Otimizando a transição:
 - **Meet in the middle em DP/knapsack.** n ≤ 40 com valores grandes: divida em metades, enumere 2^{n/2} somas, ordene e use two pointers; para "soma ≤ W maximizando valor" com valor também, mantenha pareto (valor crescente com peso crescente) e busque binário.
 - **Reduza o estado por monotonia ou dominância.** Se dp[i][j] é monótono em j (mais j nunca pior), guarde só a fronteira (j mínimo por valor / estados Pareto); a DP vira "lista de pares não dominados" e para de estourar.
 - **Troca de dimensão por valor da DP (generalizada).** Se n é pequeno mas as coordenadas enormes, ou se o valor da resposta é pequeno (≤ log ou ≤ √): indexe dp[resposta] = melhor parâmetro. Ex.: dp[k] = menor posição final com k escolhidos (LIS é isso).
-- **Resposta limitada por log ou √.** Se o valor ótimo é provadamente ≤ O(log n) ou ≤ O(√n) (ex.: ovos/andares — com 2 ovos é Θ(√n), não log, e com e ovos é Θ(n^{1/e}) — e menor número de operações de dobra), faça dp[j][ops] = alcance máximo com ops tentativas — troca estado e valor; ovos: f(t, e) = f(t−1, e−1) + f(t−1, e) + 1.
+- **Resposta limitada por log ou √.** Se o valor ótimo é provadamente ≤ O(log n) (ex.: ovos/andares, menor número de operações de dobra), faça dp[j][ops] = alcance máximo com ops tentativas — troca estado e valor; ovos: f(t, e) = f(t−1, e−1) + f(t−1, e) + 1.
 - **DP de pior caso (minimax) com resposta log.** "Mínimo de tentativas no pior caso" → inverta: quantos casos distinguíveis com t tentativas; O(t·k) em vez de O(n²k).
 - **Meio-DP: balanceie dimensões.** Se dp[i][j] tem n ≤ 10⁵ e k ≤ 20, a transição k·n·log pode entrar; se k ≤ ~√n e n grande, trocar quem vai no estado (segmentos × posição) por dp[k][i] ou o contrário muda log.
 - **DP sobre pequena dimensão: n·m ≤ 10⁶.** Itere pela menor dimensão no estado de máscara/profundidade e pela maior no laço; se m ≤ 20, máscara na menor; se ambos ≤ 10³, DP O(nm) rolando linha.
@@ -681,9 +668,9 @@ Otimizando a transição:
 - **Guloso vira DP: sinais.** (1) exchange argument falha em empate de custos, (2) o melhor local depende de escolhas futuras (mochila), (3) restrição de capacidade ou contagem exata, (4) pequenos casos mostram escolhas diferentes com mesma entrada local. Sinal forte: n ≤ 5000 ou "exatamente k".
 - **DP vira guloso/estrutura: sinais.** dp[i] = melhor sobre prefixo e a escolha ótima parece sempre "a mais recente barata" → pilha monotônica; dp côncava/convexa em k → heap de arrependimento ou Aliens; dp[i] = max_{j<i} f(j) + g(i) → prefixo.
 - **Inverta quem é o índice (dp sobre valores em vez de posições).** Se a_i ≤ 2·10⁵ e n grande, dp[v] = melhor sequência terminando no valor v (com BIT/segtree) evita estado de posição; "transição por divisores/múltiplos" → harmônico em v.
-- **DP com transição por divisores.** dp[x] = Σ_{d | x, d < x} dp[d] ou max sobre múltiplos: itere crivo em N log N; para subsequência com "cada elemento divide o seguinte" (maior cadeia de divisibilidade), use o crivo de múltiplos em O(V log V) (ou enumere divisores em O(n√V)).
-- **DP por intervalo de valores (compactada).** Coordenadas enormes mas poucos pontos relevantes: comprima para os pontos de quebra (os próprios a_i; se a restrição envolve distância d, ótimos podem ser a_i ± k·d, até O(n²) candidatos — use slope trick se necessário) e rode dp[i][j] só sobre eles.
-- **DP com restrição de distância em ordem (dist-k).** "Escolha subconjunto com índices a mais de k de distância" → dp[i] = max(dp[i−1], dp[i−k−1] + v_i) com prefix max, não precisa de estrutura.
+- **DP com transição por divisores.** dp[x] = Σ_{d | x, d < x} dp[d] ou max sobre múltiplos: itere crivo em N log N; para subsequência com "cada elemento divide o seguinte" (maior cadeia de divisibilidade) em n·log por valor.
+- **DP por intervalo de valores (compactada).** Coordenadas enormes mas poucos pontos relevantes: comprima a ≤ 2n candidatos (cada ótimo está num ponto de quebra: os próprios a_i, ou a_i ± d) e rode dp[i][j] só sobre eles.
+- **DP com restrição de distância em ordem (dist-k).** "Escolha subconjunto com índices a mais de k de distância" → dp[i] = max(dp[i−1], dp[i−k] + v_i) com prefix max, não precisa de estrutura.
 - **DP com troca de estado: dp[i] relativo a "melhor até aqui".** Guarde dp[i] = melhor terminando exatamente em i e g[i] = max_{j ≤ i} dp[j]; separar "terminando em i" de "acumulado" simplifica transições com janelas.
 - **DP em jogos.** Vitória/derrota: dp[estado] = existe movimento para estado perdedor; com pontuação: dp[l][r] = melhor diferença = max(a_l − dp[l+1][r], a_r − dp[l][r−1]); jogos que mudam quem joga → dp[estado][vez] explícito, ou negamax.
 - **Jogo com pilha de moedas / passar vez / limite de lances por turno.** dp[i][m] = melhor diferença com m = máximo que pode pegar agora (clássico "pegar até 2M pedras"); estado = (restante, limite).
@@ -691,7 +678,7 @@ Otimizando a transição:
 - **DP em ciclo / circular com custo de fechamento.** "Costurar" início e fim: fixe o valor/estado do primeiro elemento e rode a DP linear exigindo estado final compatível (|S| execuções, ou matriz de transição e traço: Σ diagonal de produto de matrizes).
 - **Traço de produto de matrizes para contagem circular.** Número de colorações de ciclo de n vértices com regra de vizinhança M (matriz k×k) = tr(M^n); para problemas "string cíclica sem padrão" calcule traço do autômato.
 - **DP com bitset (otimização).** dp[i] |= dp[j] para j ∈ janela: troque laços internos por operações de 64 bits; para alcançabilidade em DAG/transitivo (n ≤ 5·10⁴ em ~n·m/64) mantenha bitset de alcançáveis por vértice em ordem reversa topológica.
-- **Bitset em DP de caminhos em grade com "alcançável?"** b = reach[i−1] & livre[i]; repita b |= (b << 1) & livre[i] até estabilizar; reach[i] = b, cada passada em O(m/64); problemas de "existe caminho/escada" com m ≤ 10⁵.
+- **Bitset em DP de caminhos em grade com "alcançável?"** reach[i] = (reach[i−1] | (reach[i−1] << 1)...) & livre[i], linha inteira em O(m/64); problemas de "existe caminho/escada" com m ≤ 10⁵.
 - **Contagem de caminhos em grade com obstáculos (n pequeno, obstáculos poucos).** Ordene obstáculos e dp[k] = caminhos até k sem passar por outros = C(até k) − Σ dp[j]·C(j → k): O(K²) em vez de O(nm) quando grade enorme.
 - **Lagrange / interpolação em DP.** Se dp(n) é polinômio em n de grau d (ex.: soma de potências, contagem de caminhos com passos limitados, soma por camada de uma DP polinomial), calcule d+1 valores por brute force e interpole (Lagrange O(d) com fatoriais para pontos consecutivos).
 - **Detectar polinômio em n.** Diferenças finitas da sequência: se as diferenças de ordem d+1 zeram, é polinômio de grau d → Lagrange. Aparece em "número de formas de colorir/distribuir com k cores" (polinômio cromático) e somas Σ i^k.
@@ -705,8 +692,8 @@ Otimizando a transição:
 - **DP com somas de 1+…+k ≤ n (estado "último valor")** → dp[soma][último] com último ≤ √(2n); transição por prefix sum sobre último, O(n√n).
 - **Pareto / "listas não dominadas" para DP bicritério.** dp[v] = conjunto de pares (custo, tempo) não dominados; se o tamanho ficar ≤ ~√ ou log, é viável; caso contrário fixe um critério por binária (resposta) e DP no outro.
 - **Binária na resposta + DP monótona.** "Menor X tal que existe divisão em ≤ k partes com custo ≤ X" → checagem greedy O(n) ou DP em O(n log n); costuma ser mais rápida e simples que DP de camada k.
-- **Dividir em k segmentos minimizando o maior (ou soma).** Max: binária + guloso (exige a_i ≥ 0; com negativos use DP); soma de custos convexos: Aliens ou D&C; "partições de array em k blocos custo soma-quadrado" → CHT/D&C/Knuth conforme formato.
-- **DP com técnica "pular estados inúteis" (map/memo).** Se n é 10¹⁸ e a DP só visita O(log²) estados distintos (por divisões ⌊n/2⌋, ⌊n/3⌋), memoize em map: a recursão "min operações para reduzir n a 0 por /2, /3, −1" visita Θ(n) estados com a transição −1 literal; subtraia de uma vez até o múltiplo (n%2, n%3) para ficar O(log²).
+- **Dividir em k segmentos minimizando o maior (ou soma).** Max: binária + guloso; soma de custos convexos: Aliens ou D&C; "partições de array em k blocos custo soma-quadrado" → CHT/D&C/Knuth conforme formato.
+- **DP com técnica "pular estados inúteis" (map/memo).** Se n é 10¹⁸ e a DP só visita O(log²) estados distintos (por divisões ⌊n/2⌋, ⌊n/3⌋), memoize em map: a recursão "min operações para reduzir n a 0 por /2, /3, −1" visita poucos estados.
 - **Floor-DP: estados ⌊n/k⌋.** Somas multiplicativas (Dirichlet) dp[⌊n/k⌋] com 2√n estados (Min_25, Du Jiao): tabelas indexadas por valores de ⌊n/i⌋ em O(n^{3/4}) ou O(n^{2/3}). Problemas "soma de f sobre 1..n" com f multiplicativa e n até 10¹⁰–10¹².
 - **Crivo Dirichlet / DP sobre primos.** dp sobre primos em ordem (soma de f(p^k) com mínimo p do fator): Min_25 em duas fases; "contar números ≤ N cujo menor fator primo é ≥ p" é o estado S(n, j).
 - **DP sobre fatoração (números altamente compostos).** Número com ≤ 10^18 tem ≤ 15 primos distintos e expoentes decrescentes: DFS gerando "números altamente compostos" com expoentes não-crescentes é muito pequeno (~10⁵) e resolve "maior número de divisores ≤ N".
@@ -727,14 +714,14 @@ Otimizando a transição:
 - **Número de caminhos / maior caminho em DAG de intervalos (arestas para intervalo).** dp ordenada topológica com segtree/prefix sum sobre o intervalo de destinos; se destinos formam intervalo contíguo, dp[i] += prefix.
 - **DP em string com "transição por todos os palíndromos/períodos".** Menor partição em palíndromos: eertree com séries de links (diff, slink) mantém dp em O(n log n) (já citado em strings); partição em periódicos: usa Z/KMP por início.
 - **Soma sobre subsets com restrição de popcount ou peso (DP em bits).** dp[bit][carry] para somas de pares com xor/and/or: processe bit a bit com carry (0/1) e contagem; "pares (i, j) com a_i + b_j ≥ K" em bits do mais alto ao mais baixo.
-- **DP sobre bits com carry.** Contar (x, y) com x + y = z, x & y = 0, ou x ≤ A, y ≤ B: dp[bit][carry][borrowA][borrowB] do bit menos significativo (limites via borrow), ou dp[bit][tightA][tightB] do mais significativo (sem carry) — não misture carry (LSB) com tight (MSB); mais simples que fórmulas.
+- **DP sobre bits com carry.** Contar (x, y) com x + y = z, x & y = 0, ou x ≤ A, y ≤ B: dp[bit][carry][tightA][tightB] processa do bit menos significativo (carry) ou mais (tight); mais simples que fórmulas.
 - **Árvore de recursão de "estados equivalentes" (memo sobre estruturas).** Em jogos/contagem de configurações simétricas, normalize o estado (ordene multiconjunto, rotacione) antes de memoizar: reduz estados exponencialmente (partições, necklaces).
 - **Estado = multiconjunto ordenado (partições).** n ≤ 40–60 com configuração "pilhas de pedras" ou "grupos": estados são partições (≤ 10⁶ para n ~ 60); memo em map com vetor ordenado.
 - **DP "dos dois lados" (prefixo e sufixo) para escolher um ponto de corte.** Resposta = max sobre i de pre[i] + suf[i+1]; com 3 cortes, mantenha estado "quantos cortes já fiz" (0..3) numa única passada.
 - **Máquina de estados de poucas fases.** Problemas "no máximo k transações / 3 fases (subir-descer-subir)" → dp[i][fase] com fase ≤ k; compre-venda de ações com cooldown/taxa são autômatos pequenos, escreva o diagrama de estados antes de codar.
 - **Programação dinâmica sobre "tempo" quando custo é por tempo de espera.** Fila/escalonamento com custo Σ w_i·C_i: ordene por razão (exchange argument); se há prazos e lucros → dp[t] com mochila sobre tempo ou guloso com heap (job sequencing) — diferencie.
-- **Escalonamento com prazos e penalidade (1 || Σ w_j U_j).** Guloso com heap: ordene por prazo, insira, se estourou remova o de maior p_j — Moore–Hodgson só vale sem pesos (minimizar nº de atrasados); com pesos é NP-hard fraco e vira mochila (DP em tempo).
-- **Maximizar nº de intervalos disjuntos com pesos.** Ordene por fim; dp[i] = max(dp[i−1], w_i + dp[último j com fim ≤ início_i]) com binária; para k máquinas/intervalos sobrepostos até k → fluxo de custo mínimo (não é matroide).
+- **Escalonamento com prazos e penalidade (1 || Σ w_j U_j).** Guloso com heap: ordene por prazo, insira, se estourou remova o mais caro/longo (Moore–Hodgson para minimizar nº de atrasados); com pesos vira mochila (DP em tempo).
+- **Maximizar nº de intervalos disjuntos com pesos.** Ordene por fim; dp[i] = max(dp[i−1], w_i + dp[último j com fim ≤ início_i]) com binária; para k máquinas/intervalos sobrepostos até k → fluxo de custo mínimo (ou matroid).
 - **Cobertura por k máquinas (intervalo, "no máximo k simultâneos").** Fluxo de custo mínimo em linha do tempo com arestas de capacidade k e arestas de intervalo; é DP "não óbvia" que vira fluxo; guloso com heap vale se pesos iguais.
 - **Min-cost flow como DP.** Problemas de escolher conjuntos com restrição "no máximo k cobrindo cada ponto" ou "caminhos disjuntos em DAG com k": DP em n·k não funciona, mas fluxo de custo mínimo em DAG linear resolve; reconhecer: pesos de intervalos e restrição de cobertura.
 - **Estados "último que mudou" para custo de troca.** Custo de trocar de tipo (ex.: máquinas/cores) → dp[i][último] com último podendo ser comprimido: guarde só o melhor e o segundo melhor de cada grupo (top-2 em dp[i−1]) para transição O(1) por tipo.
@@ -742,19 +729,19 @@ Otimizando a transição:
 - **DP em "duas pessoas andando" (caminhos ida-e-volta).** Dois caminhantes simultâneos com passo t: dp[t][x1][x2] com y = t − x; 2n × n × n em vez de caminhos 4D. Cereja/ida e volta em grid; se se cruzam conta só uma vez.
 - **DP com dois ponteiros simultâneos em duas strings/arrays (intercalar).** Intercalação de duas sequências com restrição: dp[i][j] = pode formar o prefixo i+j da terceira com i da primeira e j da segunda; O(nm); troque por bitset se n,m ~ 10⁴.
 - **Contagem de caminhos Dyck com altura limitada** (parênteses balanceados com profundidade ≤ h) → dp[i][altura]; para n enorme use matriz h×h ou transfer; também fórmula por reflexão alternada (IE sobre reflexões múltiplas).
-- **Contar sequências que evitam padrão consecutivo por GF.** "Sem k iguais seguidos" para n até 10¹⁸ → recorrência linear de ordem k−1 (ou k·alfabeto) → Kitamasa/matriz.
+- **Contar sequências que evitam padrão consecutivo por GF.** "Sem k iguais seguidos" para n até 10¹⁸ → recorrência linear de ordem k (ou k·alfabeto) → Kitamasa/matriz.
 - **Contar árvores, florestas ou estruturas rotuladas por DP em tamanho.** dp[n] = Σ binomial·dp[i]·dp[n−1−i] (EGF); sequências rotuladas por tamanho do primeiro bloco: dp[n] = Σ C(n−1, k−1)·g[k]·dp[n−k] — a escolha do menor rótulo no primeiro bloco evita contar ordem duas vezes.
 - **Estruturas rotuladas: fixe o menor rótulo.** Para contar partições/componentes de conjunto, sempre inclua o elemento 1 no primeiro bloco (C(n−1, k−1)); é o segredo da recorrência de Bell, grafos conexos rotulados (conexos = total − não conexos fixando o componente do 1).
 - **Grafos conexos rotulados.** conn[n] = 2^{C(n,2)} − Σ_{k<n} C(n−1, k−1)·conn[k]·2^{C(n−k,2)}; mesmo molde (total − componente do vértice 1) para torneios fortemente conexos, DAGs rotulados (IE com sinais alternados sobre fontes).
 - **DAGs rotulados (contagem).** dag[n] = Σ_{k≥1} (−1)^{k+1} C(n, k)·2^{k(n−k)}·dag[n−k] (IE sobre o conjunto de fontes); n até 5000 com NTT online.
 - **DP de contagem de matrizes/tabelas 0/1 com somas de linha e coluna.** Ordene colunas por soma e processe linha a linha com estado = nº de colunas ainda precisando de 1,2,... (quando as somas ≤ 2): dp[i][c1][c2] com contagem por escolhas.
 - **Gale–Ryser / contagem por graus.** Existência de matriz 0/1 com somas dadas → conjugada majora (verificação O(n)); contagem exata é difícil, mas com somas ≤ 2 o DP em (c1, c2) funciona.
-- **Coloração de grafo / cobertura de conjuntos por DP em subconjuntos.** Número cromático: dp[S] = 1 + min sobre independentes I ⊆ S contendo menor bit; ou contagem de k-colorações por IE sobre arestas: Σ_{F⊆E} (−1)^{|F|} k^{c(F)} com c(F) = nº de componentes de (V, F), O(2^m); a soma Σ_{S} (−1)^{n−|S|} I(S)^k conta coberturas com sobreposição, não colorações.
+- **Coloração de grafo / cobertura de conjuntos por DP em subconjuntos.** Número cromático: dp[S] = 1 + min sobre independentes I ⊆ S contendo menor bit; ou contagem de k-colorações por IE: Σ_{S} (−1)^{n−|S|} I(S)^k com I(S) = nº de subconjuntos independentes de S, O(2^n n).
 - **Contagem de subconjuntos independentes por SOS.** I(S) = nº de independentes ⊆ S: calcule ind[S] e zeta; cobre problemas de "k-coloração", "cobertura por k conjuntos", "partição em k independentes".
 - **DP de "nº de cobertura por k conjuntos" via IE + SOS.** Cobrir U com k conjuntos de uma família F: Σ_{T ⊆ U} (−1)^{|U∖T|} (|{f ∈ F: f ⊆ T}|)^k; O(2^n n) após zeta de F. Dá cobertura exata contável e, com cuidado, existência (módulo primo grande).
 - **Steiner tree DP.** dp[mask][v] = menor árvore conectando terminais de mask com raiz v: merge dp[sub][v] + dp[mask∖sub][v] e relaxamento por Dijkstra em cada mask; O(3^k n + 2^k m log) com k ≤ 10 terminais.
 - **Caminho simples longo por DP sobre subconjuntos de vértices.** n ≤ 20 hamilton; com n maior e caminho curto (k ≤ 10): color coding + dp[mask][v] em 2^k·m·e^k.
-- **Cobertura/dominação em grade larga.** Dominating set / vertex cover / independent set em grafo de treewidth pequena: DP sobre decomposição em árvore (largura ≤ ~10–15) com estados 3^w para dominating set e 2^w para vertex cover/independent set; em grade n × m com n ≤ 12 vira broken profile.
+- **Cobertura/dominação em grade larga.** Dominating set / vertex cover / independent set em grafo de treewidth pequena: DP sobre decomposição em árvore (largura ≤ ~10–15) com estados 3^w; em grade n × m com n ≤ 12 vira broken profile.
 - **Grafo com treewidth/pathwidth pequena.** Se o enunciado diz "grafo de grade com 5 linhas", "série-paralelo", "cacto": cacto → DP em ciclos (ciclo como nó); série-paralelo → DP por redução (série/paralelo) com tabela por (estado das duas pontas).
 - **Cacto / grafo com ciclos que não compartilham aresta.** DP na árvore dfs: cada ciclo é tratado ao sair do vértice mais alto; estados (usado, não usado) por vértice do ciclo, depois mini-DP circular por ciclo (cut no ponto de articulação).
 - **DP sobre "decomposição em cadeias" (Dilworth + largura pequena).** Se a largura de um poset é pequena (k ≤ 10), DP com estado = antichain / frente de cadeias (índices por cadeia) tem O(n^k) estados; usa-se para "scheduling com precedência e poucas máquinas".
@@ -782,12 +769,12 @@ Os limites pequenos escondidos resolvem metade dos problemas: até 10⁹ há no 
 - **Quadrado perfeito / produto quadrado** → vetor de paridades dos expoentes, xor sobre GF(2) (base linear).
 - **Contar pares com gcd = g** → conte "múltiplos de d" e faça Möbius/inclusão-exclusão de cima para baixo.
 - **Σ ⌊n/i⌋** → só 2√n valores distintos (divisão em blocos).
-- **x mod y** com x/2 < y ≤ x é x − y; mod reduz x pelo menos à metade quando y ≤ x.
+- **x mod y** com y > x/2 é x − y; mod reduz x pelo menos à metade quando y ≤ x.
 - **a^b mod m** com b enorme → Euler: reduza o expoente mod φ(m) (cuidado com gcd ≠ 1).
 - **Equação linear ax + by = c** → Euclides estendido; sistema de congruências → CRT.
-- **Primos até 10⁷** → crivo linear guardando o menor fator primo.
+- **Primos até 10⁷** → crivo linear guardando o menor fator primo (fatoração em log).
 - **Paridade de números**, **resíduos mod 2, 3, 4** costumam bastar em construtivos.
-- **Fatorar até 10¹⁸** → Miller–Rabin + Pollard rho.
+- **Fatorar até 10¹⁸** → Miller–Rabin + Pollard rho; até 10¹² basta dividir pelos primos até 10⁶.
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
@@ -804,11 +791,11 @@ Os limites pequenos escondidos resolvem metade dos problemas: até 10⁹ há no 
 - **k-tuplas com gcd 1.** #{tuplas em [1, n]^k com gcd = 1} = Σ_d μ(d)⌊n/d⌋^k. Com gcd exatamente g: use n/g.
 - **Inversão de Möbius (as duas formas).** g(n) = Σ_{d|n} f(d) ⇔ f(n) = Σ_{d|n} μ(n/d)g(d); G(n) = Σ_{n|m} F(m) ⇔ F(n) = Σ_{n|m} μ(m/n)G(m). "Soma sobre múltiplos" é o caso que aparece em contagem de gcd.
 - **Convolução de Dirichlet: identidades úteis.** 1∗μ = ε, 1∗φ = id, μ∗id = φ, 1∗1 = τ, 1∗id = σ, id_k∗μ = J_k. Se f = g∗h e você sabe os prefixos de g e h, o prefixo de f sai por Σ_{d≤n} h(d)·G(⌊n/d⌋).
-- **Hipérbole de Dirichlet.** Σ_{ab≤n} F(a)G(b) em O(√n): Σ_{a≤A} f(a)G(n/a) + Σ_{b≤B} g(b)F(n/b) − F(A)G(B) com A·B ≤ n < (A+1)(B+1). Dá Σ τ(i) = 2Σ_{i≤√n}⌊n/i⌋ − ⌊√n⌋².
+- **Hipérbole de Dirichlet.** Σ_{ab≤n} F(a)G(b) em O(√n): Σ_{a≤A} f(a)G(n/a) + Σ_{b≤B} g(b)F(n/b) − F(A)G(B) com A·B ≈ n. Dá Σ τ(i) = 2Σ_{i≤√n}⌊n/i⌋ − ⌊√n⌋².
 - **Prefixo de φ ou μ até 10¹⁰–10¹¹ (sieve de Dirichlet).** M(n) = 1 − Σ_{d≥2} M(⌊n/d⌋) e Φ(n) = n(n+1)/2 − Σ_{d≥2} Φ(⌊n/d⌋); crive até n^{2/3} e memorize o resto por ⌊n/i⌋: O(n^{2/3}).
 - **Truque geral do prefixo.** Para f difícil, ache g com prefixo fácil e f∗g fácil: (id^k·φ)∗id^k = id^{k+1}; (id·μ)∗id = ε. Então S_f(n) = [S_{f∗g}(n) − Σ_{d≥2} g(d)S_f(⌊n/d⌋)]/g(1).
 - **Lucy_Hedgehog.** Contagem de primos ≤ n e Σp, Σp² em O(n^{3/4}) sobre os 2√n valores ⌊n/i⌋: S(v, p) = S(v, p−1) − f(p)[S(⌊v/p⌋, p−1) − S(p−1, p−1)] para v ≥ p²; f completamente multiplicativa (p^k).
-- **Min_25.** Fase 1 = Lucy, exige f(p) polinomial em p (soma de f sobre primos); fase 2 soma qualquer f multiplicativa com f(p^e) calculável, por DFS/DP sobre ⌊n/i⌋; n até 10¹⁰–10¹².
+- **Min_25.** Fase 1 = Lucy (soma de f sobre primos); fase 2 soma qualquer f multiplicativa com f(p^e) calculável, por DFS/DP sobre ⌊n/i⌋; n até 10¹⁰–10¹².
 - **Powerful numbers.** Se f multiplicativa e existe g multiplicativa com f(p) = g(p) e prefixo de g fácil, então f = g∗h com h só em números "powerful" (todo expoente ≥ 2, são O(√n)): Σf = Σ_{m powerful} h(m)·G(⌊n/m⌋).
 - **Floor sum (Euclid-like).** Σ_{i=0}^{n−1} ⌊(a·i + b)/m⌋ em O(log m); trocando papéis (a ≥ m → reduza; senão troque i e o valor). Variantes com Σ i·⌊·⌋ e Σ ⌊·⌋² também são recursivas.
 - **Onde floor sum aparece.** Pontos de rede sob uma reta; Σ (a·i + b) mod m = Σ(a·i + b) − m·floorsum; contar (x, y) com a·x + b·y ≤ n; mínimo de (a·i + b) mod m para i ≤ n (versão Euclid-like).
@@ -818,15 +805,15 @@ Os limites pequenos escondidos resolvem metade dos problemas: até 10⁹ há no 
 - **Garner.** Reconstrói um número grande (ou mod M qualquer) a partir de resíduos em módulos primos entre si por base mista, sem bigint: usado em NTT com 3 primos para resposta mod arbitrário.
 - **Euclides estendido: todas as soluções.** ax + by = c tem solução sse g | c; x = x₀ + k·b/g, y = y₀ − k·a/g. Contar soluções com x ∈ [x₁, x₂], y ∈ [y₁, y₂] = interseção de dois intervalos de k (cuidado com floor/ceil de negativos).
 - **Inverso em lote.** Produtos de prefixo, um único inverso do total, volta multiplicando: O(n + log). Para 1..n: inv[i] = −(p/i)·inv[p mod i]; para fatoriais: invfact[n] = fact[n]^{−1} e desce multiplicando por i.
-- **Ordem multiplicativa.** ord_n(a) só existe com gcd(a, n) = 1 (senão há pré-período); ord_n(a) | φ(n) (ou λ(n)); calcule começando em φ e, para cada primo q de φ, divida por q enquanto a^{x/q} ≡ 1. Com gcd(a, n) = 1, todo ciclo de a^k mod n tem período ord.
-- **Raiz primitiva.** Existe sse n = 1, 2, 4, p^k, 2p^k com p primo ímpar; g é raiz mod p sse g^{(p−1)/q} ≢ 1 para todo primo q | p−1; a menor costuma ser pequena (tente 2, 3, 5…); há φ(p−1) raízes.
-- **Logaritmo/índice via raiz primitiva.** Mult. mod p vira soma mod p−1: x^k ≡ a ⇔ k·ind(x) ≡ ind(a); para a ≢ 0, a é potência k-ésima sse a^{(p−1)/gcd(k, p−1)} ≡ 1, e então há gcd(k, p−1) raízes (a ≡ 0 tem só x ≡ 0).
-- **BSGS.** a^x ≡ b (mod m) em O(√m) com hash: x = i·s − j, s ≈ √m. Para gcd(a, m) ≠ 1 (exBSGS): enquanto g = gcd(a, m) > 1, se g ∤ b não há solução; faça b ← (b/g)·inv(a/g mod m/g) (mod m/g), m ← m/g e conte o expoente deslocado, até ficar coprimo.
-- **Raiz quadrada mod p.** Critério de Euler a^{(p−1)/2}; p ≡ 3 (mod 4) → a^{(p+1)/4}; geral → Tonelli–Shanks ou Cipolla. Mod p^k: Hensel; mod composto: CRT; com n ímpar, gcd(a, n) = 1 e a QR em cada p | n, 2^ω soluções (casos 2^k e p | a têm contagem especial).
-- **Legendre/Jacobi.** Para a ímpar, (a/p)(p/a) = (−1)^{(p−1)(a−1)/4}; (2/p) = (−1)^{(p²−1)/8}; Jacobi em O(log) estilo Euclides, sem fatorar. x² ≡ −1 (mod p) tem solução sse p = 2 ou p ≡ 1 (mod 4).
+- **Ordem multiplicativa.** ord_n(a) | φ(n) (ou λ(n)); calcule começando em φ e, para cada primo q de φ, divida por q enquanto a^{x/q} ≡ 1. Todo ciclo de a^k mod n tem período ord.
+- **Raiz primitiva.** Existe sse n = 1, 2, 4, p^k, 2p^k; g é raiz mod p sse g^{(p−1)/q} ≢ 1 para todo primo q | p−1; a menor costuma ser pequena (tente 2, 3, 5…); há φ(p−1) raízes.
+- **Logaritmo/índice via raiz primitiva.** Mult. mod p vira soma mod p−1: x^k ≡ a ⇔ k·ind(x) ≡ ind(a); a é potência k-ésima sse a^{(p−1)/gcd(k, p−1)} ≡ 1, e então há gcd(k, p−1) raízes.
+- **BSGS.** a^x ≡ b (mod m) em O(√m) com hash: x = i·s − j, s ≈ √m. Para gcd(a, m) ≠ 1: divida g = gcd(a, m) de ambos os lados repetidamente (contando o expoente deslocado) até ficar coprimo.
+- **Raiz quadrada mod p.** Critério de Euler a^{(p−1)/2}; p ≡ 3 (mod 4) → a^{(p+1)/4}; geral → Tonelli–Shanks ou Cipolla. Mod p^k: Hensel; mod composto: CRT, 2^ω soluções.
+- **Legendre/Jacobi.** (a/p)(p/a) = (−1)^{(p−1)(a−1)/4}; (2/p) = (−1)^{(p²−1)/8}; Jacobi em O(log) estilo Euclides, sem fatorar. x² ≡ −1 (mod p) tem solução sse p = 2 ou p ≡ 1 (mod 4).
 - **Soma de dois/três/quatro quadrados.** n é soma de 2 quadrados sse todo primo ≡ 3 (mod 4) tem expoente par (r₂(n) = 4(d₁ − d₃)); soma de 3 quadrados sse n ≠ 4^a(8b+7); 4 quadrados sempre (Lagrange).
 - **Resíduos que provam impossibilidade.** Quadrados mod 8 ∈ {0, 1, 4}; mod 3 ∈ {0, 1}; cubos mod 9 ∈ {0, 1, 8}; quartas potências mod 16 ∈ {0, 1}. Também: x² ≡ 1 (mod n) tem 2^ω soluções para n ímpar e 4 para 2^k, k ≥ 3.
-- **LTE (Lifting the Exponent).** p ímpar, p | x−y, p ∤ xy: v_p(xⁿ − yⁿ) = v_p(x−y) + v_p(n); n ímpar, p | x+y, p ∤ xy: v_p(xⁿ + yⁿ) = v_p(x+y) + v_p(n); p = 2, n par, x, y ímpares: v₂(xⁿ − yⁿ) = v₂(x−y) + v₂(x+y) + v₂(n) − 1.
+- **LTE (Lifting the Exponent).** p ímpar, p | x−y, p ∤ xy: v_p(xⁿ − yⁿ) = v_p(x−y) + v_p(n); n ímpar e p | x+y: v_p(xⁿ + yⁿ) = v_p(x+y) + v_p(n); p = 2, n par, x, y ímpares: v₂(xⁿ − yⁿ) = v₂(x−y) + v₂(x+y) + v₂(n) − 1.
 - **Legendre/Kummer em p-ádico.** v_p(n!) = Σ⌊n/p^i⌋ = (n − s_p(n))/(p−1); v_p(C(n, k)) = (s_p(k) + s_p(n−k) − s_p(n))/(p−1) = número de vai-uns de k + (n−k) na base p. Zeros finais de n! na base b = min_p ⌊v_p(n!)/e_p(b)⌋.
 - **Wilson e consequências.** (p−1)! ≡ −1; (n−1)! ≡ 0 (mod n) para composto n > 4; (p−1−k)!·k! ≡ (−1)^{k+1} (mod p), útil para n! mod p com n perto de p.
 - **n! mod p com parte livre de p.** n! = p^{⌊n/p⌋}·⌊n/p⌋!·∏_{p∤i≤n} i, e o último produto ≡ (−1)^{⌊n/p⌋}(n mod p)! (mod p): recursão em log_p n com tabela de fatoriais até p. Base de Lucas generalizado e de C(n, k) mod p^e.
@@ -858,16 +845,9 @@ Os limites pequenos escondidos resolvem metade dos problemas: até 10⁹ há no 
 - **Inversa de φ.** φ(n) = k: enumere divisores d de k com d+1 primo e faça DFS multiplicando; φ(n) = k tem poucas soluções e n ≤ k·∏ p/(p−1).
 - **Dízima e expansões.** Período de 1/n = ord_{n'}(10) com n' = n sem fatores 2 e 5; pré-período = max(v₂, v₅); primeiros dígitos de a^b: frac(b·log₁₀ a); últimos k dígitos: mod 10^k.
 - **Convolução de gcd/lcm.** h[g] = Σ_{gcd(i, j) = g} f[i]·f'[j]: zeta sobre múltiplos F[d] = Σ_{d|i} f[i], multiplique ponto a ponto, Möbius de volta, tudo em O(N log log N). lcm: zeta sobre divisores.
-- **Sequências que recorrem mod m.** x_{n+1} = F(x_n) mod m tem período ≤ m (Floyd/Brent acham ciclo); recorrências lineares de ordem k mod m têm período ≤ m^k (m² é o caso k = 2).
+- **Sequências que recorrem mod m.** x_{n+1} = F(x_n) mod m tem período ≤ m (Floyd/Brent acham ciclo); recorrências lineares mod m repetem em ≤ m² termos.
 - **Reduza expoentes por p-ádico.** Para "n mod p^k" de produtos, separe a parte p^v e a unidade; para x^n com n gigante e gcd ≠ 1 trate v_p(x)·n separado do resto coprimo.
 - **mulmod 64 bits.** __int128, ou mod 2⁶¹−1 com shifts, ou Montgomery; long double só com cuidado. Para módulo fixo primo ~10⁹ evite % em laço quente (Barrett).
-
-*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
-
-- **Precisa de um primo novo → Bertrand.** Para n ≥ 1 existe primo em (n, 2n]: um primo maior que todos os valores é coprimo com todos e cabe em 2·máx. Ex.: CF 2284C1.
-- **x·(10^d + 1) = x concatenado com x** (d = nº de dígitos de x; ex.: 123·1001 = 123123). Gatilho: construir múltiplo com poucos dígitos distintos ou com padrão repetido. Ex.: CF 2241B.
-- **Trocas a distância a ou b.** Se n ≥ a + b − gcd(a, b), as componentes das posições 0..n−1 são exatamente as classes mod gcd(a, b) (mesmo argumento de Fine–Wilf); para n menor, faça DSU. Ex.: CF 2244C.
-- **Inteiro mais próximo usando só dígitos permitidos.** Mantenha um prefixo comum com o alvo, desvie no primeiro dígito para o permitido logo acima (resto com o menor dígito permitido) ou logo abaixo (resto com o maior); teste também comprimentos ±1. São O(len) candidatos. Ex.: CF 2228C1.
 
 Repetidas de outras seções:
 
@@ -901,7 +881,7 @@ Antes de qualquer fórmula: conte à mão n = 1..6 e jogue a sequência na OEIS.
 - **IE de surjeções.** #sobrejeções [n] → [k] = Σ_j (−1)^j C(k, j)(k−j)ⁿ = k!·S(n, k); desarranjos = Σ (−1)^j n!/j!.
 - **IE com defeitos estruturados.** Se N(S) só depende da estrutura (blocos, intervalos), faça DP que soma sinais ao decidir se cada defeito entra; vira O(n²) em vez de 2ⁿ. n ≤ 20 → máscara.
 - **Min–max (IE de máximos).** max(S) = Σ_{∅≠T⊆S} (−1)^{|T|+1} min(T); vale para esperança também: E[max] = Σ (−1)^{|T|+1}E[min T]. Útil quando min é fácil (mínimo de exponenciais/prob. por estado é soma).
-- **Reflexão e ballot.** Caminhos de (0,0) a (n, m) tocando y = x + c (c > 0) = C(n+m, n+c) (reflita o destino), válida para m ≤ n+c; se m > n+c todos os caminhos tocam a reta (total C(n+m, n)) e a fórmula superconta. Ballot: A sempre estritamente à frente com a > b votos = (a−b)/(a+b)·C(a+b, a); permitindo empate (exige a ≥ b) = (a−b+1)/(a+1)·C(a+b, b).
+- **Reflexão e ballot.** Caminhos de (0,0) a (n, m) tocando y = x + c (c > 0) = C(n+m, n+c) (reflita o destino). Ballot: A sempre estritamente à frente com a > b votos = (a−b)/(a+b)·C(a+b, a); permitindo empate = (a−b+1)/(a+1)·C(a+b, b).
 - **Faixa 0 ≤ y ≤ h.** Número de caminhos que não saem da faixa = soma alternada de reflexões Σ_k [C(n, ·) − C(n, ·)] com O(n/h) termos; para h pequeno use DP O(n·h).
 - **Cycle lemma (Raney).** Entre as n rotações de uma sequência de passos com soma +1, exatamente uma tem todos os prefixos positivos. Dá Catalan, ballot e árvores k-árias: 1/((m−1)n+1)·C(mn, n) (Fuss–Catalan).
 - **Catalan: outros disfarces.** Triangulações de (n+2)-gono, árvores binárias de n nós, partições não-cruzadas, emparelhamentos sem cruzar de 2n pontos, permutações que evitam 231 (ou qualquer padrão de tamanho 3), SYT 2×n. Narayana N(n, k) = (1/n)C(n, k)C(n, k−1) conta Dyck com k picos.
@@ -911,9 +891,9 @@ Antes de qualquer fórmula: conte à mão n = 1..6 e jogue a sequência na OEIS.
 - **Somas parciais de binomiais em O(1) por passo.** S(n, m) = Σ_{i≤m} C(n, i) satisfaz S(n+1, m) = 2S(n, m) − C(n, m): ao deslizar (n, m) numa escada mantenha S sem recomputar.
 - **Caminhos em grid com obstáculos.** Ordene os k pontos proibidos; f(i) = caminhos(start, i) − Σ_{j antes de i} f(j)·caminhos(j, i): O(k²) com fatoriais; boundary em escada → Σ de C(x+y, x) por hockey stick.
 - **Estrelas e barras com limites.** x_i ≤ u: IE Σ_j (−1)^j C(k, j)·C(n − j(u+1) + k − 1, k − 1); x_i ≥ l_i: desloque; x₁ < x₂ < … < x_k: subtraia i de x_i; multiconjuntos de tamanho k de n tipos = C(n+k−1, k).
-- **Escolher sem vizinhos.** k posições de n em linha sem duas adjacentes = C(n−k+1, k); em círculo = n/(n−k)·C(n−k, k); com distância ≥ d entre escolhidos: C(n − (k−1)(d−1), k).
+- **Escolher sem vizinhos.** k posições de n em linha sem duas adjacentes = C(n−k+1, k); em círculo = n/(n−k)·C(n−k, k); com folga ≥ d: C(n − (k−1)(d−1), k).
 - **Composições e partições.** Composições de n = 2^{n−1}; com partes em S → GF 1/(1 − Σ_{s∈S} x^s) (recorrência linear). Partições p(n) por pentágonos de Euler: p(n) = Σ_{k≥1} (−1)^{k+1}[p(n − k(3k−1)/2) + p(n − k(3k+1)/2)], O(n√n).
-- **Partições: dualidades e DP √.** Conjugação: partições com maior parte k ↔ exatamente k partes; distintas = ímpares (Euler). Partições de n em k partes distintas: q(n, k) = q(n−k, k) + q(n−k, k−1), só k ≤ √(2n) → O(n√n). Partes ≤ √n por DP, as partes > √n são em número < √n e se contam por conjugação.
+- **Partições: dualidades e DP √.** Conjugação: partições com maior parte k ↔ exatamente k partes; distintas = ímpares (Euler). Partições de n em k partes distintas: q(n, k) = q(n−k, k) + q(n−k, k−1), só k ≤ √(2n) → O(n√n). Partes ≤ √n por DP, partes > √n são < √n e se contam por conjugação.
 - **Stirling 2ª espécie.** S(n, k) = (1/k!)·Σ_j (−1)^{k−j}C(k, j)jⁿ (um valor em O(k log n)); linha inteira por NTT; xⁿ = Σ_k S(n, k)·x^{\underline{k}}; Σ_i C(m, i)iⁿ = Σ_k S(n, k)m^{\underline{k}}2^{m−k}.
 - **Momentos via Stirling.** Xⁿ = Σ_k S(n, k)X^{\underline{k}}, e E[X^{\underline{k}}] = E[# k-tuplas ordenadas de indicadores]: calcula E[Xⁿ] (n pequeno) contando k-tuplas.
 - **Bell.** B_{n+1} = Σ_k C(n, k)B_k; B_n = Σ_k S(n, k); triângulo de Bell em O(n²); Dobinski B_n = (1/e)Σ k^n/k!. Partições de conjunto com restrição de blocos → EGF exp(Σ x^s/s!).
@@ -929,12 +909,12 @@ Antes de qualquer fórmula: conte à mão n = 1..6 e jogue a sequência na OEIS.
 - **Intercalações.** Mesclar sequências preservando ordem interna: multinomial n!/∏ n_i!; k-ésima string lexicográfica com multiconjunto: conte completamentos por multinomial a cada escolha.
 - **Hook length e RSK.** # SYT de forma λ = n!/∏ hooks; RSK dá perm ↔ (P, Q) mesma forma, então n! = Σ f_λ²; LIS = λ₁, LDS = # linhas; # involuções = Σ f_λ. Perms com LIS ≤ 2 = Catalan.
 - **Burnside em grid.** Rotações 90°/180° de n×n: ciclos = n²/4 (ou (n²−1)/4 + 1) e n²/2 (ou (n²+1)/2); Fix = k^{#ciclos}. Para cores com contagem fixa use índice de ciclos (Pólya) com GF.
-- **Contagem por simetria/estabilizador.** #classes de estruturas rotuladas = #rotuladas·ā/n!, com ā = média de |Aut| sobre as estruturas rotuladas (Burnside: (1/n!)Σ_π |Fix(π)|); orbit–stabilizer: |órbita| = |G|/|Stab|. Isomorfismo de árvores com raiz: AHU (hash do multiconjunto ordenado dos filhos); sem raiz: centroides.
+- **Contagem por simetria/estabilizador.** #classes de estruturas rotuladas = #rotuladas/|Aut| em média; orbit–stabilizer: |órbita| = |G|/|Stab|. Isomorfismo de árvores com raiz: AHU (hash do multiconjunto ordenado dos filhos); sem raiz: centroides.
 - **Strings primitivas e Lyndon.** #strings de comprimento n sem período próprio = Σ_{d|n} μ(n/d)k^d; #colares primitivos (Lyndon) = (1/n)·esse valor; mínimo período exato d: Möbius sobre divisores.
 - **Prüfer.** Sequência de n−2 ↔ árvore rotulada; vértice v aparece deg(v)−1 vezes. # árvores com graus d_i = (n−2)!/∏(d_i−1)!; com vértice v de grau d: C(n−2, d−1)(n−1)^{n−d−1}; Cayley nⁿ⁻².
 - **Contar árvores que conectam componentes.** Com k componentes de tamanhos s_i, o # de formas de ligá-las em árvore é n^{k−2}∏ s_i; florestas com k raízes especificadas: k·n^{n−k−1}; K_{a,b} tem a^{b−1}b^{a−1} geradoras.
 - **Matrix-Tree.** # árvores geradoras = qualquer cofator de L = D − A (multigrafo ok); com pesos multiplicativos some pesos; dirigido: Laplaciano de grau de entrada → arborescências com raiz escolhida. det mod p em O(n³), n ≤ ~400; módulo composto: eliminação tipo Euclides.
-- **BEST theorem.** Em grafo dirigido euleriano (conexo nos vértices de grau > 0), # circuitos eulerianos = t_w(G)·∏_{v: deg(v)>0} (deg(v) − 1)! (t_w = # arborescências com raiz w, qualquer w), contando circuitos como ciclos sem ponto inicial; fixando a aresta inicial o valor é o mesmo.
+- **BEST theorem.** # circuitos eulerianos de um grafo dirigido = t_w(G)·∏_v (deg(v) − 1)! (t_w = # arborescências com raiz w, qualquer w), contando circuitos como ciclos sem ponto inicial; fixando a aresta inicial o valor é o mesmo.
 - **Grafos conexos e DAGs rotulados.** Conexos: c(n) = 2^{C(n,2)} − Σ_{k<n} C(n−1, k−1)c(k)2^{C(n−k,2)} (fixe o vértice 1); DAGs: a(n) = Σ_{k≥1} (−1)^{k+1}C(n, k)2^{k(n−k)}a(n−k) (IE sobre fontes). Em geral: exp/log de EGF.
 - **Contagens clássicas rotuladas.** Árvores com raiz nⁿ⁻¹; florestas com raiz (n+1)ⁿ⁻¹; funções n→n com ciclos = nⁿ; emparelhamentos perfeitos (2n−1)!!; grafos 2^{C(n,2)}; injeções n^{\underline{k}}.
 - **Funções geradoras: dicionário.** OGF: produto = escolhas independentes; EGF: produto = convolução binomial (rotulado); 1/(1−f) = sequências, exp(f) = conjuntos de componentes, ln(1/(1−x)) = ciclos; árvores com raiz T = x·e^T → [xⁿ]T = nⁿ⁻¹/n!.
@@ -943,7 +923,7 @@ Antes de qualquer fórmula: conte à mão n = 1..6 e jogue a sequência na OEIS.
 - **Tempo esperado até um padrão.** Moedas justas: E = Σ_{k: prefixo k = sufixo k} 2^k (HH: 6, HT: 4); alfabeto q: Σ q^k sobre as bordas (incluindo a string toda).
 - **Recorrência linear gigante.** Sequência de ordem d: Kitamasa/Bostan–Mori O(d log d log n); não conhece a recorrência → Berlekamp–Massey com 2d termos (DP com matriz de transição ≤ 50 estados).
 - **Sequências P-recursivas.** Catalan, Motzkin, Delannoy satisfazem recorrências com coeficientes polinomiais: ache por ajuste, calcule n até 10⁷ em O(n) com inversos pré-calculados.
-- **Polinômio em n.** Se f(n) é polinômio de grau d (confira diferenças finitas), f(N) para N gigante = Lagrange com d+1 pontos em O(d); Σ_{i<n} i^k é grau k+1; Σ_{i<n} i^k r^i = rⁿP(n) − P(0), grau P = k, para r ≠ 1 (em r = 1, Faulhaber de grau k+1).
+- **Polinômio em n.** Se f(n) é polinômio de grau d (confira diferenças finitas), f(N) para N gigante = Lagrange com d+1 pontos em O(d); Σ_{i<n} i^k é grau k+1; Σ_{i<n} i^k r^i = rⁿP(n) − P(0), grau P = k.
 - **Filtro de raízes da unidade.** Σ_{k ≡ r (m)} C(n, k) = (1/m)Σ_j ω^{−jr}(1+ω^j)ⁿ; versão discreta: (1+x)ⁿ mod (xᵐ − 1) por exponenciação rápida de polinômio cíclico (subconjuntos com soma ≡ r mod m).
 - **Strings com contagem par de cada letra.** Alfabeto k, comprimento n: 2^{−k}Σ_j C(k, j)(k − 2j)ⁿ (EGF cosh^k).
 - **Possibilidade de grau.** Sequência é graphical (Erdős–Gallai): soma par e Σ_{i≤k} d_i ≤ k(k−1) + Σ_{i>k} min(d_i, k) para cada k (ordenada decrescente); constrói por Havel–Hakimi. Bipartido: Gale–Ryser. Torneio: Landau.
@@ -951,19 +931,19 @@ Antes de qualquer fórmula: conte à mão n = 1..6 e jogue a sequência na OEIS.
 - **Torres e posições proibidas.** Permutações evitando posições proibidas = Σ_k (−1)^k r_k (n−k)! (r_k = # modos de k torres não atacantes nas proibidas); em tabuleiro de Young com colunas ordenadas crescente: dp[i][j] = dp[i−1][j] + dp[i−1][j−1]·(h_i − (j−1)).
 - **Permanente e determinante.** Permanente 0/1 (= # emparelhamentos perfeitos bipartidos) por Ryser O(2ⁿ·n) com Gray code, n ≤ 25; permanente mod 2 = det mod 2; planar → Kasteleyn (Pfaffian/det). Rank da matriz de Tutte com valores aleatórios = 2·(emparelhamento máximo) em grafo geral.
 - **Determinantes úteis.** Lema do determinante de matriz: det(A + uvᵀ) = det(A)(1 + vᵀA⁻¹u); Vandermonde ∏(x_j − x_i); polinômio característico por Hessenberg O(n³); tridiagonal → recorrência de 3 termos.
-- **LGV.** Famílias de caminhos disjuntos em DAG (planaridade não é necessária) com fontes/destinos compatíveis = det[e(a_i, b_j)]; com e = C(·) em grid; permutações não-identidade entram com sinal, então precisa garantir que só a identidade é possível sem interseção. Aplica a ladrilhos de losangos e partições planas.
+- **LGV.** Famílias de caminhos disjuntos em DAG planar com fontes/destinos compatíveis = det[e(a_i, b_j)]; com e = C(·) em grid; permutações não-identidade entram com sinal, então precisa garantir que só a identidade é possível sem interseção. Aplica a ladrilhos de losangos e partições planas.
 - **Ladrilhos de dominó.** Largura pequena → DP de perfil (broken profile) ou matriz de transição + exponenciação; planar grande → Kasteleyn.
 - **Zeta/Möbius em subconjuntos.** f̂(S) = Σ_{T⊆S} f(T) em O(2ⁿ·n), inversa por subtração; convolução de subconjuntos O(2ⁿ n²) com posto (popcount); OR/AND por zeta; XOR por FWHT. Posets gerais: μ de cadeia = diferença, de divisores = μ(n/d), de partições = (−1)^{n−1}(n−1)!.
-- **Contagem dupla clássica.** Σ_v deg(v) = 2m; Σ_{S⊆[n]} |S| = n·2^{n−1}; Σ de max (ou min) sobre subconjuntos: ordene crescente; max usa a_{(i)}·2^{i−1}, min usa a_{(i)}·2^{n−i}; "contar pares (elemento, conjunto)" pelos dois lados.
+- **Contagem dupla clássica.** Σ_v deg(v) = 2m; Σ_{S⊆[n]} |S| = n·2^{n−1}; Σ de max (ou min) sobre subconjuntos: ordene e a_{(i)}·2^{i−1}; "contar pares (elemento, conjunto)" pelos dois lados.
 - **Somatórios: Abel e inversão de ordem.** Σ a_i b_i = A_n b_n − Σ A_i(b_{i+1} − b_i); Σ_{i≤n}Σ_{j≤i} = Σ_{j≤n}Σ_{i=j}^n; condição i·j ≤ n troca para somar sobre ⌊n/i⌋ valores.
 - **Completar o quadrado em somas.** Σ_{i<j}(a_i − a_j)² = nΣa² − (Σa)²; Σ_{i<j} a_i a_j = ((Σa)² − Σa²)/2; Σ_{i<j}|a_i − a_j| = Σ a_{(i)}(2i − n − 1) com a ordenado. Soma sobre pares vira O(n) com prefixos.
 - **Telescópica.** 1/(i(i+1)) = 1/i − 1/(i+1); 1/(i(i+k)) = (1/k)(1/i − 1/(i+k)); Σ i·i! = (n+1)! − 1; Σ C(i, k) = hockey; produtos ∏(1 + 1/i) = n+1. Se uma soma tem termo "f(i+1) − f(i)", ache f.
-- **Pombos.** Prefixos mod n: qualquer n inteiros têm bloco consecutivo com soma múltipla de n; Erdős–Ginzburg–Ziv: 2n−1 inteiros têm n com soma ≡ 0 (mod n); Erdős–Szekeres: n²+1 distintos têm monótona de tamanho n+1 (LIS·LDS ≥ n²+1); Dirichlet |α − p/q| < 1/(qN).
+- **Pombos.** Prefixos mod n: qualquer n inteiros têm bloco consecutivo com soma múltipla de n; Erdős–Ginzburg–Ziv: 2n−1 inteiros têm n com soma ≡ 0 (mod n); Erdős–Szekeres: n²+1 distintos têm monótona de tamanho n+1 (LIS·LDS ≥ n); Dirichlet |α − p/q| < 1/(qN).
 - **Dilworth e Mirsky.** Menor cobertura por cadeias = maior antichain (via matching bipartido); menor cobertura por antichains = maior cadeia; Greene–Kleitman para uniões de k cadeias.
 - **Linearidade: truques de indicadores.** E[# valores distintos em n sorteios de N] = N(1 − (1 − 1/N)ⁿ); E[comparações do quicksort] = Σ_{i<j} 2/(j−i+1); E[# operações em "remova subárvore de vértice aleatório"] = Σ_v 1/depth(v) (v é escolhido antes dos ancestrais com prob. 1/depth).
 - **Troca de ordem/tail sum.** E[X] = Σ_{k≥1} P(X ≥ k); E[X²] = Σ_{i,j}E[I_i I_j]; E[máx de k dados de m faces] = Σ_{j=1}^{m} (1 − ((j−1)/m)^k); máx de n uniformes em [0, 1] tem média n/(n+1) e o j-ésimo menor j/(n+1).
 - **Exchangeabilidade.** Sem reposição, P(k-ésima retirada ser vermelha) = r/N independente de k; recordes em permutação aleatória: P(i é recorde) = 1/i, independentes; gaps de n pontos em [0, 1] são intercambiáveis (cada um E = 1/(n+1)).
-- **Coupon collector.** E = n·H_n; para colecionar k de n: Σ_{i<k} n/(n−i); probabilidades desiguais p_i: Σ_{∅≠S}(−1)^{|S|+1}/p(S) (min–max); variância = E[T²] − E[T]² com E[T²] = Σ_{∅≠S}(−1)^{|S|+1}(2−p(S))/p(S)².
+- **Coupon collector.** E = n·H_n; para colecionar k de n: Σ_{i<k} n/(n−i); probabilidades desiguais p_i: Σ_{∅≠S}(−1)^{|S|+1}/p(S) (min–max); variância Σ (1−p_i)/p_i².
 - **Geométrica.** E[tempo até k sucessos] = k/p; P(primeiro sucesso em passo par) = (1−p)/(2−p); E[min de exponenciais] = 1/Σλ_i e quem vence é i com prob. λ_i/Σλ.
 - **Cadeia de Markov absorvente.** E[tempos] = (I − Q)⁻¹·1 (Gauss, n ≤ ~500, em mod p com inversos). Estrutura linear/árvore: escreva E_v = α_v·E_{pai} + β_v e resolva sem Gauss; ciclo: duas incógnitas.
 - **Ruína do jogador e martingais.** Passeio justo ±1 de i até {0, N}: P(chegar a N) = i/N, E[T] = i(N−i); com p ≠ q: ((q/p)^i − 1)/((q/p)^N − 1). Optional stopping: ache Φ com E[Φ_{t+1} | Φ_t] = Φ_t (ex. S_t² − t) ou E[ΔΦ] = −1 (então E[T] = Φ₀ − Φ_fim).
@@ -1004,7 +984,7 @@ Quase sempre: trate cada bit separadamente, do mais significativo para o menos.
 - **Trie xor persistente / diferença de versões.** Max x⊕a_i com i ∈ [l, r]: guarde cnt por nó em root[i]; só entram ramos com cnt[root[r]] − cnt[root[l−1]] > 0.
 - **Max xor de caminho / de subarray** = max de pref[i]⊕pref[j]; insira os prefixos na trie conforme varre (subarray) ou todos os px[v] da raiz (caminho; o LCA se cancela).
 - **k-ésimo menor a_i⊕x** → desça na trie com cnt (se o ramo "xor 0" tem cnt ≥ k vá nele, senão subtraia). Mesma ideia dá o rank de um valor.
-- **Mex de {a_i⊕x}** → trie sobre os distintos; um ramo "cheio" tem exatamente 2^b folhas; desça pelo ramo cujo xor é 0 se ele NÃO estiver cheio; se estiver cheio, o bit do mex é 1 e siga pelo outro ramo.
+- **Mex de {a_i⊕x}** → trie sobre os distintos; um ramo "cheio" tem exatamente 2^b folhas; desça preferindo o ramo cujo xor é 0 enquanto estiver cheio.
 - **Ordem sob xor.** Comparar a⊕x com b⊕y é decidido pelo bit mais alto onde (a⊕x) e (b⊕y) diferem; para x fixo, o bit mais alto onde a e b diferem decide, e x só inverte a ordem se tiver 1 ali.
 - **Min xor entre dois elementos** → o par ótimo é adjacente no array ordenado. Max xor global → trie.
 - **Min do max a_i⊕x sobre x** → f(nó, b): se só um filho, f(filho); se dois, 2^b + min(f(esq), f(dir)). Recursão pela trie, O(n·bits).
@@ -1016,12 +996,12 @@ Quase sempre: trate cada bit separadamente, do mais significativo para o menos.
 - **Base com prefixo (queries [l, r] de max xor de subconjunto)** → mantenha, ao varrer r, a base com o índice mais recente em cada pivô (troca ao inserir se o novo é mais recente); query usa só vetores com índice ≥ l.
 - **Base com remoções** → segtree no tempo (cada vetor vive num intervalo) + cópia da base (≤ 30 inteiros) a cada nível da recursão, em vez de rollback.
 - **n > nº de bits (ou n > 2^k com valores < 2^k)** → pigeonhole: existe subconjunto/subarray de xor 0 (n+1 prefixos em 2^k valores têm repetição). Use para provar que a resposta existe ou limitar o brute force.
-- **Operação "a_i ← a_i⊕a_j"** → o span (espaço gerado) é invariante; classes de equivalência = mesmo span; o mínimo de passos para a forma canônica NÃO depende só de n − rank: depende de quais vetores são redundantes e de suas posições.
+- **Operação "a_i ← a_i⊕a_j"** → o span (espaço gerado) é invariante; classes de equivalência = mesmo span; o mínimo de passos para a forma canônica depende só de n − rank.
 - **Soma de xor de todos os subconjuntos** = (OR de todos) · 2^(n−1) (cada bit presente em algum elemento aparece em metade dos subconjuntos).
 - **Xor de todos os subarrays** → a_i (0-indexado) está em (i+1)(n−i) subarrays e entra se esse número é ímpar, ou seja, i par e n ímpar; se n é par, o resultado é 0.
 - **Soma de a_i⊕a_j, a_i&a_j, a_i|a_j sobre pares** → por bit: c₁·c₀, C(c₁,2), C(n,2) − C(c₀,2), vezes 2^b.
 - **Max AND de um par** → guloso do bit alto: teste cand | 2^b e conte elementos que contêm cand; se ≥ 2, fixe o bit.
-- **Pares com a_i + a_j em que o bit k é 1 (ou xor das somas)** → reduza cada valor mod 2^(k+1), ordene e conte somas ∈ [2^k, 2^(k+1)) ∪ [2^(k+1)+2^k, 2^(k+2)) com two pointers. Xor de todas as somas = xor dos bits obtidos (CF 1322B).
+- **Pares com a_i + a_j em que o bit k é 1 (ou xor das somas)** → reduza cada valor mod 2^(k+1), ordene e conte somas ∈ [2^k, 2^(k+1)) ∪ [2^(k+1)+2^k, ∞) com two pointers. Xor de todas as somas = xor dos bits obtidos (CF 1322B).
 - **a + b = (a⊕b) + 2(a&b) invertido.** Dados s = a+b e x = a⊕b: precisa s ≥ x, s − x par, e (s−x)/2 & x = 0; então o nº de pares (a, b) ordenados é 2^popcount(x). Também a+b = a⊕b ⇔ a&b = 0, e n+x = n⊕x ⇔ x ⊆ ~n.
 - **Identidades úteis:** a+b = (a|b) + (a&b); a⊕b = (a|b) − (a&b); a|b ≥ max(a, b); a&b ≤ min(a, b).
 - **AND é não-crescente, OR não-decrescente ao estender.** Contar subarrays com AND/OR ≥ k, = k → para cada fim, ≤ 30 pares (valor, menor início); ou two pointers com contador cnt[b] por bit (janela com OR: bit ligado ⇔ cnt[b] > 0).
@@ -1029,7 +1009,7 @@ Quase sempre: trate cada bit separadamente, do mais significativo para o menos.
 - **Simulação de soma/carry.** "Quantos pares (a, b) ≤ A, B com a+b = ... / a&b = 0 / a⊕b ≤ K": digit DP bit a bit, estado [bit][tightA][tightB][carry].
 - **Intervalo [0, A) = ≤ log A blocos alinhados** (prefixo fixo + sufixo livre). Contar x ≤ A com propriedade bit a bit, ou xor de dois intervalos, vira combinação de blocos.
 - **Soma dos popcounts de 0..n** → por bit b: ⌊(n+1)/2^(b+1)⌋·2^b + max(0, (n+1) mod 2^(b+1) − 2^b).
-- **Contar x ≤ n com popcount = k** → percorra os bits 1 de n: ao passar por um 1 na posição b, some C(b, k − usados); ao final, some 1 se popcount(n) = k (o próprio n).
+- **Contar x ≤ n com popcount = k** → percorra os bits 1 de n: ao passar por um 1 na posição b, some C(b, k − usados).
 - **n como soma de exatamente k potências de 2** ⇔ popcount(n) ≤ k ≤ n (quebre uma potência 2^b em duas 2^(b−1) para aumentar). Mínimo de termos com ±2^i = peso da NAF (forma não adjacente).
 - **Gosper's hack.** Próxima máscara com o mesmo popcount: c = x&−x; r = x+c; nxt = (((r⊕x)>>2)/c)|r. Enumera C(n, k) máscaras em ordem crescente.
 - **Contador binário** → custo amortizado O(1) por incremento (potencial = nº de 1s); vale só para incrementos puros, não para mistura ±1.
@@ -1037,7 +1017,7 @@ Quase sempre: trate cada bit separadamente, do mais significativo para o menos.
 - **Paridade de C(n, k)** → ímpar ⇔ k & (n−k) = 0 ⇔ k ⊆ n (Lucas mod 2). Nº de ímpares na linha n = 2^popcount(n).
 - **Nim com limite / generalizações.** Tirar até k de uma pilha: Grundy = a mod (k+1). Moore's Nim_k (tirar de até k pilhas): escreva em binário e some cada bit mod (k+1); perde quem tem tudo 0.
 - **Ordem de Gray.** g(i) = i⊕(i>>1); de i−1 para i muda o bit ctz(i). Percorre os 2^n subconjuntos alterando 1 elemento por passo → soma/xor/estado atualizado em O(1) por subconjunto (enumeração de subset sums sem recomputar).
-- **Lowbit.** x & −x isola o menor bit; x & (x−1) remove-o; itere os bits ligados em O(popcount). Fenwick: na atualização, o pai de i é i + lowbit(i); na consulta de prefixo, o próximo bloco é i − lowbit(i).
+- **Lowbit.** x & −x isola o menor bit; x & (x−1) remove-o; itere os bits ligados em O(popcount). Fenwick: pai de i é i − lowbit(i), próximo é i + lowbit(i).
 - **Troca de dois bits** i, j: x ⊕= (((x>>i) ⊕ (x>>j)) & 1) · ((1<<i) | (1<<j)).
 - **Zeta/Möbius sobre subconjuntos (SOS) como ferramenta de contagem.** Pares com a_i & a_j = 0 → para cada a_i, quantos b ⊆ ~a_i (soma sobre submáscaras do cnt). Möbius (inversa) recupera "exatamente" a partir de "⊆".
 - **SOS guardando top-2.** "Max/min de a_j sobre j com a_j ⊇ máscara (ou ⊆)" e "dois melhores índices distintos" → SOS com 2 melhores por máscara (ex.: max a_i | (a_j & a_k) com i < j < k, CF 1208F).
@@ -1106,7 +1086,7 @@ Transformações:
 - **Parênteses** → prefixo ≥ 0 e total 0; mínimo de prefixo diz quantos consertar; Catalan para contar.
 - **Operação "apague dois iguais adjacentes"** → pilha; resultado é canônico (invariante).
 - **Reverter, ler de trás pra frente** → strings invertidas, palíndromo = s igual ao reverso (hash nos dois sentidos).
-- **s se repete k vezes / s infinita** → não basta 2 ou 3 cópias em geral; para matching de um padrão p use ⌈|p|/|s|⌉+1 cópias e extrapole.
+- **s se repete k vezes / s infinita** → resposta estabiliza depois de 2 ou 3 cópias; teste e extrapole.
 - **Jogo com strings** → ver Teoria dos jogos (quem escolhe a primeira letra geralmente decide).
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
@@ -1121,14 +1101,14 @@ Transformações:
 - **Hash de multiconjunto de letras** (anagrama) = Σ rand[c]; janela deslizante de tamanho |p| em O(1) por passo. Alternativa: manter cnt e um contador de letras "erradas".
 - **Z-function para contar prefixos.** Ocorrências de s[0..L) em s = #{i : z[i] ≥ L} + 1; com array de diferenças, conta para todos os L em O(n). Soma de z = Σ LCP(s, sufixo).
 - **Prefix function: contar ocorrências de cada prefixo.** cnt[π[i]]++ para todo i, depois propague de trás pra frente cnt[π[i−1]] += cnt[i]; cnt[k]+1 = nº de ocorrências do prefixo de tamanho k.
-- **Autômato KMP.** aut[0][c] = (p[0] == c ? 1 : 0); para i > 0, aut[i][c] = i+1 se p[i] = c, senão aut[π[i−1]][c]; O(n·Σ). Serve para DP "string de tamanho L contendo/evitando p" e (com matriz) para L enorme.
+- **Autômato KMP.** aut[i][c] = i+1 se p[i] = c, senão aut[π[i−1]][c]; O(n·Σ). Serve para DP "string de tamanho L contendo/evitando p" e (com matriz) para L enorme.
 - **KMP e rollback.** A amortização de π quebra se você desfaz caracteres; use o autômato completo, ou guarde a pilha de estados, ou faça DFS numa trie de strings com π por nó.
 - **Todas as bordas** = cadeia π[n−1], π[π[n−1]−1], …; todos os períodos = n − borda. Existe borda de tamanho b ⇔ período n − b; s é potência ⇔ p = n − π[n−1] divide n e p < n.
 - **Lema de periodicidade (Fine–Wilf).** Se p e q são períodos e p + q − gcd(p, q) ≤ n, então gcd(p, q) é período. Consequência: as bordas de tamanho ≥ n/2 formam uma PA; todas as bordas se agrupam em O(log n) PAs.
 - **Ocorrências de p em janela de tamanho ≤ 2|p|** formam uma PA (ou são ≤ 2): guarde (início, razão, quantidade) em O(1). Duas ocorrências a distância d < |p| fazem de d um período de p.
 - **Runs theorem.** O nº de runs (repetições maximais com expoente ≥ 2) é < n; a soma dos expoentes é ≤ 3n; calcule todas via fatores de Lyndon + LCP/LCE em O(n log n). Número de quadrados distintos numa string é < 2n.
 - **Quadrados (xx) / tandem repeats** → Main–Lorentz O(n log n) por D&C, ou via runs; "existe substring xx" em O(n).
-- **Comutação.** xy = yx ⇔ x e y são potências da mesma palavra (Lyndon–Schützenberger); s^a = t^b ⇔ s·t = t·s. Para a raiz primitiva de s: p0 = n − π[n−1]; se p0 | n, a raiz é s[0..p0); senão a raiz é a própria s (s é primitiva).
+- **Comutação.** xy = yx ⇔ x e y são potências da mesma palavra (Lyndon–Schützenberger); s^a = t^b ⇔ s·t = t·s. Para a raiz primitiva de s: menor p dividindo n com p = n − π[n−1].
 - **Rotações e potências por s+s.** t é rotação de s ⇔ t ocorre em s+s (|t| = |s|). Menor período cíclico (raiz primitiva) = primeira posição i > 0 onde s ocorre em s+s.
 - **Aho-Corasick: link tree.** Contar quantas vezes cada padrão ocorre no texto: marque cnt[nó] nos nós visitados e some a subárvore na árvore de links (processe em ordem inversa de BFS). O(|T| + Σ|p|).
 - **AC em DP.** Marque nó como ruim se ele ou algum ancestral de link é terminal (propague na BFS). dp[i][nó] conta strings de tamanho i sem padrão; para i enorme → matriz (nós × nós) e exponenciação, O(S³ log L).
@@ -1148,15 +1128,15 @@ Transformações:
 - **BWT.** BWT[i] = s[sa[i]−1] (com $); invertível por LF-mapping; agrupa letras iguais (compressão, run-length). FM-index: busca de padrão em O(|p|) por backward search com C[] e rank.
 - **SAM: contagem de ocorrências.** cnt = 1 nos estados não-clone (prefixos), 0 nos clones; soma na subárvore da link tree. Substrings distintas = Σ (len[v] − len[link[v]]); online: ao adicionar um caractere, ans += len[last] − len[link[last]].
 - **SAM: maximizar |t|·ocorrências(t)** → max sobre estados de cnt[v]·len[v]. Maior substring com ≥ k ocorrências: max len[v] com cnt[v] ≥ k.
-- **SAM: substring comum de duas strings (ou k).** SAM de A; percorra B mantendo (estado, comprimento) com saltos de link ao falhar; para k strings, para cada string calcule best[v] = maior match no estado e propague para o link com best[link[v]] = max(best[link[v]], min(best[v], len[link[v]])) em ordem decrescente de len; após propagar cada string, atualize o mínimo global por estado (o menor best entre as strings).
+- **SAM: substring comum de duas strings (ou k).** SAM de A; percorra B mantendo (estado, comprimento) com saltos de link ao falhar; para k strings, para cada estado guarde o mínimo entre as strings do maior match e propague pro link (min com len do filho).
 - **SAM: link tree de s = suffix tree de reverse(s).** Logo, suffix tree de s = SAM de rev(s). Tamanho ≤ 2n−1 estados, ≤ 3n−4 transições.
 - **SAM: substring t[l..r] → estado.** Pegue o estado do prefixo t[1..r] e suba pela link tree (binary lifting) até o ancestral de menor profundidade com len ≥ r−l+1; ali estão cnt e endpos.
 - **SAM: k-ésima substring lexicográfica** → dp[v] = nº de caminhos a partir de v (distintas) ou Σ cnt (com multiplicidade); desça pelas transições em ordem de letra.
 - **SAM generalizado (várias strings / trie).** Reinicie last = root a cada string e trate o caso em que a transição já existe (evite clone duplicado); ou construa por BFS na trie. Substrings distintas do conjunto = Σ (len − len[link]).
 - **Menor string que NÃO é substring** (alfabeto k): no SAM dp[v] = 1 + min_c dp[go[v][c]] com dp = 0 se go não existe (o menor é 1 se falta uma letra). A lexicográfica mínima segue do dp.
-- **Menor string que não é subsequência.** dp[i] = 1 + min_c dp[next[i][c]+1] (next = n se não existe, dp[n+1] = 0); reconstrua pegando a letra de menor dp (menor lexicográfica entre as de mesmo valor).
+- **Menor string que não é subsequência.** dp[i] = 1 + min_c dp[next[i][c]] (next = n+1 se não existe, dp[n+1] = 0); reconstrua pegando a letra de menor dp (menor lexicográfica entre as de mesmo valor).
 - **Suffix tree.** LCA das folhas = LCP; substring de tamanho ≥ L mais frequente, "ocorrências por nó" por small-to-large ou Euler tour; é a estrutura certa quando o problema fala de "árvore de sufixos" ou mistura strings com DP em árvore.
-- **Manacher + diferenças.** Cada centro com raio r contribui, para o nº de palíndromos que cobrem cada posição, com uma função triangular; some tudo com array de segunda diferença e integre duas vezes. Para palíndromos que terminam/começam em cada índice, use range add (1ª diferença): cada centro soma +1 no intervalo correspondente. Dá "nº de palíndromos que cobrem" (2ª diferença) ou "que terminam/começam" (1ª diferença) em O(n).
+- **Manacher + diferenças de 2ª ordem.** Cada centro com raio r contribui uma PA nas posições (palíndromos que terminam/começam em cada índice); some tudo com array de segunda diferença e integre duas vezes. Dá "nº de palíndromos que cobrem/terminam em cada posição" em O(n).
 - **Pares de palíndromos adjacentes / s = P₁P₂…** → conte palíndromos que terminam em i (L[i]) e começam em i+1 (R[i+1]) e some L·R; fatoração em k palíndromos com k ≤ 3 tem caracterização direta.
 - **Eertree: ocorrências.** cnt[v] += cnt[filho em link] em ordem de criação invertida dá nº de ocorrências de cada palíndromo distinto; ≤ n palíndromos distintos. Rollback do último caractere por pilha de `last`.
 - **Fatoração em palíndromos (série link).** diff[v] = len[v] − len[link[v]]; palíndromos-sufixos com mesmo diff formam PA, só O(log n) por posição → dp de partição mínima/contagem em O(n log n). Partição em palíndromos de tamanho par: intercale s₁ sₙ s₂ sₙ₋₁… e conte partições em palíndromos de tamanho par da nova string (CF 932G).
@@ -1173,11 +1153,11 @@ Transformações:
 - **Ordenar strings por trie** em O(Σ|s|) (DFS em ordem de letra); LCP de duas strings ordenadas = min dos LCP adjacentes (RMQ).
 - **Edit distance com limite k.** Banda |i − j| ≤ k → O(nk); Landau–Vishkin com LCE em O(1) → O(n + k²) para distância ≤ k.
 - **Kangaroo jumps.** Posições onde p casa em t com ≤ k erros → em cada deslocamento, k+1 saltos de LCE (hash+binária ou SA+RMQ): O(n·k) total.
-- **Matching de Hamming por FFT.** Nº de coincidências por deslocamento = Σ_c conv(1[t=c], 1[p reverso = c]) (σ convoluções para alfabeto de tamanho σ); uma única convolução complexa com raízes de unidade ω^c não recupera a contagem para alfabeto > 2. Com '?' use Σ (a−b)²·a·b e valores aleatórios mod p para evitar falso zero.
+- **Matching de Hamming por FFT.** Nº de coincidências por deslocamento = Σ_c conv(1[t=c], 1[p reverso = c]); para alfabeto grande use raízes de unidade ω^c (uma convolução complexa). Com '?' use Σ (a−b)²·a·b e valores aleatórios mod p para evitar falso zero.
 - **LCS com bitset** em O(nm/w): V = tudo 1; para cada caractere c de t, M = máscara de ocorrências de c em s, V = (V + (V & M)) | (V & ~M); LCS = nº de zeros em V (nos primeiros |s| bits).
 - **LCS ↔ LIS.** Para permutações (ou strings com poucas ocorrências por letra), LCS = LIS em O(n log n) (Hunt–Szymanski, O(r log n)); LPS (subsequência palindrômica) = LCS(s, rev s); inserções mínimas p/ palíndromo = n − LPS.
 - **Subsequência como gatilho.** "t é subsequência de s?" com muitas queries → next[i][c] ou listas de ocorrências + binária; contar quantas de várias strings t são subsequências de s → listas de espera por próxima letra, O(|s| + Σ|t|).
-- **k-ésima subsequência distinta lexicográfica** → cnt[i] = 1 + Σ_c cnt[next[i][c]+1] (next = n se não existe; cnt[n] = 1, cnt[n+1] = 0) e desça escolhendo letras em ordem.
+- **k-ésima subsequência distinta lexicográfica** → cnt[i] = 1 + Σ_c cnt[next[i][c]] e desça escolhendo letras em ordem.
 - **Maior borda que também aparece no meio** (prefix = sufixo = substring interior) → entre as bordas de π, a maior com ocorrência interna (use max de z/π no meio) (CF 126B).
 - **Strings k-periódicas / período d.** s tem período d ⇔ s[i] = s[i+d]; classes i mod d via DSU. Menor nº de mudanças para período d = n − Σ_classes(max freq). Com palíndromo + período, DSU em i ~ n−1−i e i ~ i+d.
 - **Anagramas e multiconjuntos.** Nº de permutações distintas = n!/Π c_i!; ranking lexicográfico de permutação de multiconjunto → soma sobre letras menores com BIT de contagens; "próxima permutação" em O(n).
@@ -1194,11 +1174,6 @@ Transformações:
 - **Construção lexicográfica mínima.** Escolha letra a letra e teste viabilidade com um dp pronto (SAM/AC/next[i][c]); o desempate é local, o teste é global.
 - **Strings com operações e rollback** → pilha de estados (hash, nó do AC, nó da trie) em vez de recomputar; versionamento por árvore de prefixos.
 - **Palíndromo em substring com updates** → segtree com (hash direto, hash do reverso); para contagem de palíndromos/qualquer centro, Manacher não serve com updates: use hash + binária no raio.
-
-*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
-
-- **Operação troca todas as ocorrências de um símbolo.** Dá para chegar ao alvo sse o mapeamento s\_i → t\_i é função (mesmo símbolo sempre vai no mesmo alvo). Ex.: CF 1807C.
-- **Palíndromo com mudanças pontuais.** Cada par (i, n − 1 − i) é independente: custo total = Σ custo mínimo de igualar o par; o centro (n ímpar) é livre. Ex.: CF 2227D.
 
 Repetidas de outras seções:
 
@@ -1244,7 +1219,7 @@ Pergunte: quais são os vértices de verdade? Muitas vezes o grafo útil é de e
 - **BFS multi-fonte em grid com "tempo de propagação".** Fogo que se espalha + pessoa que foge: BFS do fogo dá t_fogo[v]; pessoa só pode entrar em v se chega estritamente antes. Para o último vértice, relaxe a condição (≤).
 - **Bellman-Ford em n passos detecta ciclo negativo.** Se a n-ésima iteração ainda relaxa, há ciclo negativo alcançável; para saber quais vértices têm dist = −∞, propague dos relaxados na última rodada.
 - **Ciclo negativo explícito.** Guarde pai ao relaxar; vértice relaxado na rodada n → ande n passos pelos pais para garantir cair dentro do ciclo, depois volte até repetir.
-- **SPFA** é só heurística (pior caso Θ(nm)); em problemas com anti-SPFA use Dijkstra com potenciais ou Bellman-Ford camadas.
+- **SPFA** é só heurística (pior caso exponencial/O(nm)); em problemas com anti-SPFA use Dijkstra com potenciais ou Bellman-Ford camadas.
 - **Floyd-Warshall como "fecho" de qualquer semianel.** min-plus (menor caminho), or-and (fecho transitivo), max-min (gargalo), max-× (confiabilidade); a ordem dos laços k externo é essencial.
 - **Floyd com adição incremental de vértices.** Adicionar vértice k e atualizar todas as distâncias em O(n²); "remova vértices numa ordem, soma das distâncias" → inverta e adicione (O(n³) total).
 - **Floyd com ciclo mínimo.** Ao processar k, antes de relaxar pares via k, o menor ciclo cujo maior índice é k é min(d[i][j] + w(j,k) + w(k,i)); gira ciclo mínimo (peso) em O(n³).
@@ -1253,17 +1228,17 @@ Pergunte: quais são os vértices de verdade? Muitas vezes o grafo útil é de e
 - **Ciclo de comprimento ímpar** existe ⇔ não bipartido; ache por BFS: aresta entre dois vértices de mesma paridade de nível fecha ciclo ímpar via LCA na árvore BFS.
 - **Ciclo par em grafo com min grau ≥ 3** sempre existe; todo grafo com grau mínimo ≥ k tem caminho de comprimento ≥ k e ciclo de comprimento ≥ k + 1 (DFS: último vértice da trilha maximal tem todos vizinhos na trilha).
 - **Base de ciclos (espaço de ciclos GF(2)).** Dimensão m − n + c; cada aresta fora da árvore geradora dá um ciclo fundamental; "xor máximo de ciclo/caminho" → base linear dos xors dos ciclos fundamentais + xor na árvore.
-- **Xor mínimo/máximo de passeio s→t em grafo qualquer** = xor da árvore s→t xor algum elemento do span dos ciclos fundamentais.
+- **Xor mínimo/máximo de caminho s→t em grafo qualquer** = xor da árvore s→t xor algum elemento do span dos ciclos fundamentais.
 - **Quantas arestas remover para virar árvore/floresta** = m − n + c; arestas que fecham ciclo no Kruskal são as redundantes.
 - **Ciclo único (m = n numa componente)** → pseudofloresta: ache o ciclo com DSU ou removendo folhas por grau; árvores penduradas viram DP.
 - **Remover folhas iterativamente (peeling por grau 1)** → acha o ciclo único, o centro da árvore e vértices que não participam de ciclos; com grau ≤ k, k-core.
-- **k-core / degenerescência.** Remova repetidamente o vértice de menor grau (fila de buckets, O(m)); a ordem dá orientação onde cada vértice tem ≤ d arestas de saída (d = degenerescência ≤ √(2m)); contagem de triângulos/cliques de tamanho fixo em O(m·d) (contar todas as cliques é #P-difícil).
+- **k-core / degenerescência.** Remova repetidamente o vértice de menor grau (fila de buckets, O(m)); a ordem dá orientação onde cada vértice tem ≤ d arestas de saída (d = degenerescência ≤ √(2m)); contagem de triângulos/cliques em O(m·d).
 - **Arboricidade ≤ √(2m)** e m ≤ a·(n − 1): orientar arestas do menor para o maior grau limita grau de saída a √(2m) → triângulos, C4 em O(m√m).
 - **Contar triângulos** → oriente cada aresta do menor (grau, id) para o maior; para cada u marque saídas e percorra saídas das saídas: O(m√m); com bitset, O(n³/64) ou O(n·m/64).
 - **Contar ciclos de comprimento 4** → para cada u, para cada v alcançável em 2 passos com ordem (grau, id) maior que u, some C(cnt[v], 2); O(m√m).
 - **Contar caminhos de comprimento 2 e ciclos pelo traço** → tr(A³)/6 = triângulos; tr(A⁴) contém C4 mais termos de grau; matriz de adjacência elevada a k conta walks de comprimento k.
 - **Subgrafo induzido / conjunto independente máximo em grafo pequeno (n ≤ 40)** → meet in the middle ou Bron–Kerbosch com pivô (≈ 3^{n/3}); n ≤ 50 clique máxima → branch and bound com bitset.
-- **Coloração de grafos: grau máximo Δ ⇒ guloso usa ≤ Δ + 1 cores; Brooks: Δ cores se é conexo, Δ ≥ 3, e não é clique nem ciclo ímpar; Vizing: arestas em Δ ou Δ + 1; bipartido: arestas em exatamente Δ cores (König).**
+- **Coloração de grafos: grau máximo Δ ⇒ guloso usa ≤ Δ + 1 cores; Brooks: Δ cores se não é clique nem ciclo ímpar; Vizing: arestas em Δ ou Δ + 1; bipartido: arestas em exatamente Δ cores (König).**
 - **Coloração de arestas de bipartido em Δ cores** → construtivo: para cada aresta (u,v) escolha cor livre a em u e b em v e troque ao longo do caminho alternado a/b (O(nm)); também por decomposição euleriana em potências de 2.
 - **Grafo de intervalos** (vértice = intervalo, aresta = interseção): é cordal e perfeito; cor mínima = clique máxima = máximo de sobreposição (sweep); MIS = guloso por menor fim; cobertura de cliques = guloso.
 - **Grafo cordal** (sem ciclo induzido ≥ 4) → ordem de eliminação perfeita por MCS/LexBFS; coloração gulosa na ordem reversa é ótima; clique máxima = max(|vizinhos posteriores| + 1).
@@ -1284,35 +1259,35 @@ Pergunte: quais são os vértices de verdade? Muitas vezes o grafo útil é de e
 - **Orientação de arestas com grau de saída/entrada limitado** → fluxo (aresta → vértice com capacidade) ou Hall; "orientar para que todo grau de saída seja par/dado" → Euler após adicionar vértice auxiliar.
 - **Orientar grafo 2-aresta-conexo para ficar fortemente conexo** (Robbins): orientação da DFS (árvore para baixo, retorno para cima); ponte ⇒ impossível.
 - **Circulação com demandas** → fonte S → v com cap d_v para excedentes, v → T para déficits; viável ⇔ fluxo máximo satura tudo. Limite inferior l na aresta: demanda l, capacidade c − l.
-- **Fluxo com limites inferiores, fluxo máximo s→t:** adicione aresta t→s de capacidade ∞, teste viabilidade, depois rode maxflow s→t no resíduo (sem a aresta t→s) e some o fluxo inicial (valor em t→s).
-- **Menger.** Máximo de caminhos disjuntos em arestas (vértices) = corte mínimo de arestas (vértices); disjuntos em vértices → divida v em v_in → v_out de capacidade 1 para v ∉ {s, t} (s e t com capacidade ∞).
+- **Fluxo com limites inferiores, fluxo máximo s→t:** adicione aresta t→s de capacidade ∞, teste viabilidade, depois rode maxflow s→t no resíduo (sem a aresta t→s).
+- **Menger.** Máximo de caminhos disjuntos em arestas (vértices) = corte mínimo de arestas (vértices); disjuntos em vértices → divida v em v_in → v_out de capacidade 1.
 - **k caminhos disjuntos de custo mínimo** → mincost flow com k unidades (capacidade 1); "ir e voltar" visitando cada ponto uma vez = 2 caminhos disjuntos.
 - **Corte mínimo em grid** (pintar célula preto/branco com custo de vizinhos diferentes, pixels, segmentação) → cada célula é vértice, penalidade de vizinhança como arestas bidirecionais; células fixas ligadas a S/T.
 - **Seleção com custo de par "se escolher a e b juntos"** (projetos, lucro − custo) → closure: lucro positivo de S, custo para T, dependência com ∞; resposta = soma lucros − corte mínimo.
 - **Seleção com bônus de pares (x_i, x_j diferentes custa c)** → corte mínimo onde variável é 0/1 = lado de S/T; custos tipo c(x_i ≠ x_j) são submodulares e se resolvem; c(x_i = x_j) em geral não (a menos que bipartido: inverta um lado).
-- **Atribuição com custo submodular em 3+ variáveis** → ainda dá corte mínimo se a função for submodular e grafo-representável (decomponível em termos; ex.: "ao menos um"); grafo com vértice auxiliar para cada termo.
+- **Atribuição com custo submodular em 3+ variáveis** → ainda dá corte mínimo se a função for submodular e decomponível (ex.: "ao menos um"); grafo com vértice auxiliar para cada termo.
 - **Máximo closure / densidade máxima (Goldberg).** Subgrafo de densidade máxima m_S/|S| → binária em g + corte mínimo (m_S − g|S| ≥ 0); arestas viram vértices ou nó por vértice.
 - **Fluxo máximo em unidade (capacidades 1)** → Dinic é O(min(V^{2/3}, E^{1/2})·E); em bipartido com capacidade 1 é O(E√V) (igual a Hopcroft–Karp).
 - **Escolha em dois lados com capacidades (ex.: n alunos, m clubes, cada um ≤ k)** → S → alunos (1) → clubes (cap) → T; restrições de "no máximo/ao menos" por grupo dão camadas extras de vértices.
 - **Min-cost flow com capacidades pequenas e custo ≥ 0** → SPFA/Dijkstra com potenciais; com fluxo F pequeno, F augmentações; custos negativos sem ciclo negativo: Bellman-Ford inicial.
 - **Mincost flow com custo convexo por aresta** → divida a aresta em k cópias de capacidade 1 com custos crescentes (ou cap/custo por segmento linear).
 - **Dualidade fluxo/corte para "mínimo de remoção".** Remover o menor número de vértices/arestas para desconectar s de t = corte mínimo; com pesos nos vértices, divida v em in/out.
-- **2-SAT: contagem.** SCC dá uma atribuição; "quantas variáveis forçadas" = x forçado a falso se x → ¬x, a verdadeiro se ¬x → x (ambos ⇒ insatisfatível); "menor lexicográfica" = tente x=0 e propague (O(n·m) ou com SCC tricks); "contar soluções" é #P em geral (só vale para casos especiais).
+- **2-SAT: contagem.** SCC dá uma atribuição; "quantas variáveis forçadas" = x forçado se x → ¬x; "menor lexicográfica" = tente x=0 e propague (O(n·m) ou com SCC tricks); "contar soluções" é #P em geral (só vale para casos especiais).
 - **2-SAT com cardinalidade "no máximo uma de k"** → prefix variables: p_i = x_1 ∨ … ∨ x_i, cláusulas x_i → p_i, p_i → p_{i+1}, p_{i} → ¬x_{i+1}, usando O(k) cláusulas em vez de O(k²).
 - **2-SAT com escolha de 2 opções por item** (pintar/escolher uma de duas posições/horários) e conflitos entre pares → vértice por opção; conflito (a,b) vira a → ¬b e b → ¬a.
-- **2-SAT online/binária**: "maior t tal que as primeiras t restrições são satisfatíveis" (ou o menor t insatisfatível) → binária em t ou adicionar incremental com verificação.
+- **2-SAT online/binária**: "menor t tal que as primeiras t restrições são satisfatíveis" → binária em t ou adicionar incremental com verificação.
 - **SCC: ordem topológica de Tarjan** devolve componentes em ordem topológica reversa; condensação com fontes/sumidouros: mínimo de arestas para tornar fortemente conexo = max(#fontes, #sumidouros) (se há > 1 componente).
 - **Alcançabilidade em DAG com n ≈ 5·10⁴ e bitset** → fecho transitivo em O(n·m/64) ou, com queries, bitsets em blocos de 64 fontes por vez para caber na memória.
 - **Contar pares (u, v) alcançáveis em DAG grande** → estimativa probabilística (min de hashes aleatórios por vértice, k rodadas) ou bitset por blocos; exato é difícil.
 - **Dominator tree** (Lengauer–Tarjan / Cooper–Harvey): v é dominado por d se todo caminho s→v passa por d; em DAG, idom(v) = LCA dos predecessores na própria árvore, construindo em ordem topológica.
 - **Condensação de componentes por pontes.** Contraia 2-aresta-conexas → árvore; "mínimo de arestas para tornar 2-aresta-conexo" = ⌈folhas/2⌉ (árvore de pontes com ≥ 2 vértices).
 - **Block-cut tree.** BCCs são vértices-bloco ligados aos cortes que pertencem a eles; caminho entre u e v passa por articulações da árvore; "u e v separados se remover w" = w é vértice de corte no caminho do block-cut tree.
-- **Contar pares desconectados ao remover vértice v** → tamanhos das componentes pendentes na DFS (low[child] ≥ tin[v]) e o resto n − 1 − Σ; pares desconectados = C(n−1, 2) − Σ C(sz_i, 2).
+- **Contar pares desconectados ao remover vértice v** → tamanhos das componentes pendentes na DFS (low[child] ≥ tin[v]) e o resto n − Σ.
 - **Articulação ≠ ponte para multiarestas.** Em ponte com arestas paralelas, compare por id da aresta, não por vértice pai; ao testar articulação, a raiz é articulação só se tiver ≥ 2 filhos na DFS.
 - **Pontes dinâmicas (só adições de arestas)** → mantenha a árvore de 2-aresta-conexas com DSU: nova aresta (u,v) contrai o caminho da árvore; amortizado O(n α) + travessia.
 - **Euler em não direcionado:** todos graus pares (circuito) ou exatamente 2 ímpares (trilha, comece num); grafo (ignorando isolados) conexo. Para completar com o mínimo de arestas, pareie os ímpares (menor emparelhamento: Chinese postman, via Floyd + emparelhamento perfeito mínimo em ≤ 20 ímpares com bitmask).
 - **Euler em direcionado:** in = out em todo vértice (circuito); trilha com um vértice out − in = 1 (início) e um in − out = 1 (fim); conectividade fraca basta quando os graus fecham.
-- **Sequência de de Bruijn** B(k, n) = circuito euleriano no grafo de vértices k^{n−1}; é cíclica de comprimento k^n; a string linear que contém todas as strings de comprimento n tem k^n + n − 1 caracteres; "senha" → de Bruijn.
+- **Sequência de de Bruijn** B(k, n) = circuito euleriano no grafo de vértices k^{n−1}; "string mínima que contém todas as strings de comprimento n" ou "senha" → de Bruijn.
 - **Cobertura de arestas por mínimo de trilhas** = max(1, #vértices de grau ímpar / 2) por componente conexa com arestas; "desenhar sem levantar a caneta" = isto.
 - **Decomposição de grafo em caminhos de comprimento par/ímpar** → Euler após adicionar vértice auxiliar ligado aos de grau ímpar, depois remova-o para cortar o circuito em trilhas.
 - **Hamilton em n ≤ 20** → dp[mask][v] em O(2^n·n²) com bitmask; para contar ciclos hamiltonianos fixe o vértice 0; para n ≤ 25–30 e grafo esparso, meet in the middle.
@@ -1324,14 +1299,14 @@ Pergunte: quais são os vértices de verdade? Muitas vezes o grafo útil é de e
 - **Grafos funcionais com pesos** → soma de k passos por binary lifting guardando soma; "primeira repetição / pré-período" = distância até o ciclo + posição.
 - **Grafo bipartido por DSU com paridade** → relação "x e y diferentes/iguais" mantida com paridade ao pai; conflito = ciclo ímpar; serve para "adicionar arestas online e dizer se ainda é bipartido".
 - **Bipartido completo vs. complemento:** se o complemento é bipartido (ou tem poucas arestas), BFS com conjunto de não visitados; componentes do complemento com m' arestas ausentes em O(n + m').
-- **Complemento: clique/independente.** Conjunto independente máximo no complemento = clique; em grafo com m pequeno, o complemento é denso, ordem de grau e Turán dizem que existe clique ou independente grande (Ramsey: n ≥ C(2k, k) garante clique ou independente de tamanho k).
+- **Complemento: clique/independente.** Conjunto independente máximo no complemento = clique; em grafo com m pequeno, o complemento é denso, ordem de grau e Turán dizem que existe clique ou independente grande (Ramsey: n ≥ 2^{k/2}).
 - **Fecho transitivo/BFS com bitset.** "Alcançável em ≤ 2 passos": BFS onde o próximo frontier = OR das linhas dos vértices da fronteira e conjunto de não visitados mascara; O(n²/64) por camada total.
 - **Contar componentes conexas após remover cada aresta/vértice (offline)** → segtree no tempo + DSU rollback (já conhecido); se só queries do tipo "subgrafo induzido por [l, r]" use DSU com ordenação por r e pesos de aresta como tempo de vida (MST por tempo).
 - **Subgrafo induzido por índices [l, r] com queries de componentes** → árvore geradora de máxima "l" para cada r (LCT) ou Mo com DSU rollback (Mo com rollback: ordena por bloco de l, r crescente).
 - **MST como "caminho minimax".** Menor valor M tal que u e v se conectam usando arestas ≤ M = maior aresta no caminho da MST; árvore de reconstrução de Kruskal (Kruskal reconstruction tree): cada junção cria nó com peso da aresta, então minimax(u,v) = peso do LCA e "componentes alcançáveis com peso ≤ x" = subárvore.
 - **Kruskal reconstruction tree + k-ésimo.** Em queries "k-ésimo maior vértice alcançável de v usando arestas ≤ x", suba ao ancestral mais alto com peso ≤ x (binary lifting) e consulte a k-ésima folha da subárvore pelo Euler tour (persistente/wavelet).
-- **Segundo MST** → para cada aresta fora da MST, troque pela maior aresta do caminho na MST (max por binary lifting); o menor aumento dá o 2º melhor. "MST sem uma aresta" é outra query: se a aresta está na MST, use a aresta de reposição que cruza o corte; se não está, a MST não muda.
-- **MST com aresta forçada/proibida** → forçada: se e ∉ T, custo MST + w(e) − max do caminho (se e ∈ T, o custo não muda); ela pertence a alguma MST ⇔ w(e) = max do caminho na MST; a todas ⇔ é ponte no subgrafo das arestas com peso ≤ w(e).
+- **Segundo MST** → para cada aresta fora da MST, troque pela maior aresta do caminho na MST (max por binary lifting); o menor aumento dá o 2º melhor, e "MST sem uma aresta" idem.
+- **MST com aresta forçada/proibida** → forçada: custo MST + w(e) − max do caminho; ela pertence a alguma MST ⇔ w(e) = max do caminho (≤); a todas ⇔ w < min dos ciclos (ponte no grafo de arestas com peso ≤).
 - **Aresta está em alguma/toda MST** → agrupe arestas por peso; para cada grupo, com os componentes do DSU antes do grupo, a aresta é "em toda MST" se é ponte no multigrafo reduzido e "em alguma" se une componentes distintos.
 - **MST único?** Sim ⇔ nenhuma aresta fora da árvore tem peso = maior do caminho. Contar MSTs → matrix-tree por classe de peso (determinante) em cada grupo de peso igual.
 - **Matrix-tree (Kirchhoff).** Número de árvores geradoras = det de qualquer cofator da Laplaciana; com pesos, soma dos produtos; arestas "exatamente k" → polinômio em x; Cayley: n^{n−2}.
@@ -1359,10 +1334,6 @@ Pergunte: quais são os vértices de verdade? Muitas vezes o grafo útil é de e
 - **Grafo de duas camadas (ônibus/linhas)** → vértices de linha e de parada, entrada com custo de embarque, saída custo 0; reduz arestas de O(L²) a O(L).
 - **Teorema de Ore/Dirac para Hamilton** → grau mínimo ≥ n/2 garante ciclo hamiltoniano; construtivos com "grafo denso" costumam ter isto: a construção é por inserção de vértices e rotação de caminho (Pósa).
 
-*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
-
-- **Reconstruir o grafo a partir da alcançabilidade.** Aresta direta u → v sse u alcança v e não existe w intermediário (redução transitiva, O(n³/64) com bitset). Numa árvore enraizada, o pai de v é, entre os que alcançam v, o de menor conjunto alcançável. Ex.: CF 2208D1.
-
 Repetidas de outras seções:
 
 - **Jogo em grafo com empate** → BFS retrógrada (teoria dos jogos).
@@ -1386,7 +1357,7 @@ Primeira pergunta: a resposta depende da raiz? Se sim, pense em rerooting ou cen
 - **Para toda raiz** → rerooting (prefixo/sufixo dos filhos se a operação não é invertível).
 - **Todos os pares de caminhos** → contribuição por aresta: sz·(n − sz); ou centroide.
 - **Caminhos com condição (comprimento k, soma ≤ x)** → centroid decomposition; ou small-to-large de maps.
-- **Diâmetro** → duas BFS (sem pesos) ou dois DFS/Dijkstra (pesos ≥ 0); distância máxima de cada vértice = até uma das pontas do diâmetro.
+- **Diâmetro** → duas BFS; distância máxima de cada vértice = até uma das pontas do diâmetro.
 - **Queries de caminho** → LCA (binary lifting/Euler + sparse); com updates → HLD + segtree.
 - **Queries de subárvore** → Euler tour (tin/tout) vira intervalo de array.
 - **Contar cores/valores distintos em subárvore** → small-to-large (DSU on tree / sack).
@@ -1399,37 +1370,37 @@ Primeira pergunta: a resposta depende da raiz? Se sim, pense em rerooting ou cen
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
-- **Euler tour de aresta (2n − 2 posições) ou de vértice (2n − 1); eventos tin/tout = 2n.** Registre o vértice na entrada e saída; subárvore = intervalo; caminho u–v em Mo ou em BIT de ±: guarde +x em tin e −x em tout para "soma de caminho raiz–v".
+- **Euler tour de aresta (2n − 1 ou 2n posições).** Registre o vértice na entrada e saída; subárvore = intervalo; caminho u–v em Mo ou em BIT de ±: guarde +x em tin e −x em tout para "soma de caminho raiz–v".
 - **LCA com sparse table sobre ordem de DFS (n posições, sem 2n).** Para u ≠ v com tin[u] < tin[v], LCA = pai do vértice de menor profundidade em (tin[u], tin[v]]; meia memória e O(1).
 - **LCA offline (Tarjan)** → DFS + DSU: ao sair de v, una v ao pai; para query (u, v) com u já visitado, LCA = find(u). Útil quando memória é restrita.
 - **LCA em árvores dinâmicas (adicionar folha online)** → binary lifting preenchido na criação (O(log) por folha) ou skew-binary jump pointers (O(1) memória extra por vértice, O(log) por query).
 - **k-ésimo ancestral** → binary lifting O(log); O(1) com ladder decomposition + binary lifting (long-path); offline: DFS com pilha de caminho atual (ancestral à profundidade d − k = stack[d − k]).
 - **Distância em árvore** = d[u] + d[v] − 2·d[lca]; **k-ésimo vértice no caminho u–v** = sobe de u se k ≤ d[u] − d[lca], senão sobe de v o complemento.
-- **Soma/xor/qualquer grupo abeliano em caminho** → prefixo da raiz (valores em vértices): f(u) + f(v) − 2·f(lca) + a[lca]; para xor, f(lca) aparece duas vezes e cancela: pre[u] ⊕ pre[v] ⊕ a[lca]. Com valores em arestas não há o termo a[lca].
+- **Soma/xor/qualquer grupo em caminho** → prefixo da raiz (valores em vértices): f(u) + f(v) − 2·f(lca) + a[lca]; para xor, f(lca) aparece duas vezes e cancela: pre[u] ⊕ pre[v] ⊕ a[lca]. Com valores em arestas não há o termo a[lca].
 - **Max/min em caminho sem updates** → binary lifting guardando (pai 2^k, max); ou HLD + sparse table nas cadeias; ou Kruskal reconstruction tree quando o peso está nas arestas e query é minimax.
 - **Árvore com updates em aresta** → coloque o peso da aresta no filho; update em subárvore/caminho como Euler tour/HLD.
 - **HLD com subárvore também por segtree** → numere filho pesado primeiro; subárvore = [pos[v], pos[v] + sz[v] − 1], cadeia = intervalo contíguo; ambos funcionam no mesmo array.
 - **HLD: query não comutativa** → mantenha lado esquerdo e direito separados (u→lca e v→lca invertido) e combine na ordem do caminho.
 - **HLD offline com 2 Fenwicks para "adicione x no caminho, some caminho"** → diferenças no array HLD; por contribuição do vértice × tamanho: Σ_{v em caminho} a_v = prefixos da raiz.
-- **Link-cut tree** quando a árvore muda (link/cut) e ainda há queries de caminho; `access`/`makeroot`/`splay` → O(log n) amortizado; também mantém MST incremental (só inserções; MST totalmente dinâmico exige D&C/ETT) com arestas ordenadas por peso (max no caminho), "o grafo é floresta?", e subárvore virtual (info de subárvore).
+- **Link-cut tree** quando a árvore muda (link/cut) e ainda há queries de caminho; `access`/`makeroot`/`splay` → O(log n) amortizado; também mantém MST dinâmico com arestas ordenadas por peso (max no caminho), "o grafo é floresta?", e subárvore virtual (info de subárvore).
 - **Top tree / Euler tour tree** → estruturas para subárvore + dinâmico; ETT (árvore de Euler em balanced BST) deixa link/cut e consulta de componente/soma em O(log n); top tree é o caso geral (diâmetro dinâmico, centro dinâmico).
 - **Diâmetro: propriedades.** Todos os diâmetros se cruzam no centro (1 ou 2 vértices); a distância máxima de v = max(d(v, a), d(v, b)) com (a, b) diâmetro; ao unir duas árvores por uma aresta (u, v), o novo diâmetro tem pontas entre os 4 candidatos {a1, b1, a2, b2}; vale também para união de conjuntos (distância máxima mergeable).
-- **Two-sweep não vale com pesos negativos** (use DP); com pesos ≥ 0, dois DFS/Dijkstra valem (BFS só sem pesos); para "diâmetro após remover vértice", use prefixo/sufixo ou rerooting guardando os 2–3 maiores filhos.
-- **Raio = ⌈diâmetro/2⌉** (só com arestas unitárias; com pesos, raio ≥ diam/2 e não há fórmula fechada); centro minimiza a excentricidade; ao adicionar uma folha por aresta de peso w, o diâmetro cresce no máximo w e atualiza-se comparando distâncias às pontas atuais.
-- **Distâncias a k (todos os vértices com dist exata k)** → rerooting guardando contagens por profundidade; para k fixo, DP com dp[v][d] só até d ≤ k: O(nk) tempo/memória (O(n) só com long-path decomposition ou k constante).
+- **Diâmetro com pesos negativos não vale**; com pesos ≥ 0, duas BFS valem; para "diâmetro após remover vértice", use prefixo/sufixo ou rerooting guardando os 2–3 maiores filhos.
+- **Raio = ⌈diâmetro/2⌉**; centro minimiza a excentricidade; ao adicionar uma folha o diâmetro cresce no máximo 1 e atualiza-se comparando distâncias às pontas atuais.
+- **Distâncias a k (todos os vértices com dist exata k)** → rerooting guardando contagens por profundidade; para k fixo, DP com dp[v][d] só até d ≤ k (merge de listas de profundidade com cauda longa: O(n)).
 - **dp[v][d] "profundidade" com merge O(n)** → long-path decomposition: herde o vetor do filho de maior altura e some os outros elementos em O(altura); resolve "contar vértices na subárvore com dist exata d" e "profundidade mais comum" em O(n).
-- **Small-to-large por cadeia pesada (DSU on tree/sack)**: mantenha a estrutura do filho pesado, adicione todos os vértices das subárvores leves, limpe só nos leves; O(n log n) com contadores em vetor.
+- **Small-to-large por cadeia pesada (DSU on tree/sack)**: mantenha a estrutura do filho pesado, adicione as folhas dos leves, limpe só nos leves; O(n log n) com contadores em vetor.
 - **Small-to-large com sets e queries "k-ésimo na subárvore" ou "primeiro ≥ x"** → merge de sets/mapas; ou merge de segtrees dinâmicas (O(n log n) total) com consulta na raiz.
 - **Merge de segtree dinâmica** para "para cada vértice, o mais frequente / soma de conjunto" em subárvore: cada operação cria O(log) nós e o merge custa O(total de nós) amortizado.
 - **Centroide: propriedades.** Todo componente ao remover o centroide tem ≤ n/2 vértices; existem 1 ou 2 centroides (2 ⇔ aresta que divide n/2 e n/2); o centroide minimiza Σ dist (mediana da árvore): ele é a "mediana ponderada".
 - **Árvore de centroides (centroid tree)** → altura ≤ log n; para query de distância ao vértice marcado mais próximo, guarde best[c] e, para cada ancestral c do vértice v, dist(v, c) + best[c]; pré-calcule dist(v, c) por nível (O(n log n) memória).
 - **Centroid tree com soma de distâncias de v a todos os marcados** → em cada centroide c guarde (cnt, sum de dist ao c) e (cnt, sum de dist ao pai de c na centroid tree) para excluir o subcentroide; query em O(log n).
-- **Centroid tree: caminho u–v passa por LCA na centroid tree** (o ancestral comum mais baixo) → distância(u, v) = dist(u, c) + dist(v, c) para c = LCA centroide (exato: c sempre está no caminho u–v).
+- **Centroid tree: caminho u–v passa por LCA na centroid tree** (o ancestral comum mais baixo) → distância(u, v) = dist(u, c) + dist(v, c) para c = LCA centroide (se pelo menos um caminho passa por c); para dist exata, ainda use LCA normal.
 - **Contar caminhos com soma de peso ≤ K ou comprimento = k via centroide** → para cada centroide, ordene as distâncias e use two pointers; subtraia o par da mesma subárvore filha (ou faça por subárvore com BIT). Com comprimento exato k e k pequeno, use vetor de contagem por profundidade e processe filhos do menor para o maior.
 - **Contar caminhos com condição "produto/mod"** → centroide + hash map: guarde o valor prefixo de v até c e o sufixo para combinar (inverso modular) em O(n log n).
 - **Contribuição por aresta** → número de caminhos através da aresta = sz·(n − sz); soma de distâncias entre todos os pares = Σ_e w_e·sz_e·(n − sz_e); valor esperado de distância em árvore aleatória idem.
 - **Caminhos que passam por um conjunto de vértices (queries com k vértices)** → árvore virtual (auxiliary tree) ordenando por tin, adicionando LCAs de adjacentes, ligando por pilha; Σk ≤ 2·10⁵ → O(Σk log).
-- **Virtual tree + DP** → dp[v] só sobre vértices relevantes, com arestas ponderadas pela distância original; tipicamente "mínimo de cortes/custo para separar os especiais da raiz": defina dp[v] = custo de separar v do pai; se v é especial é obrigatório cortar acima dele (dp[v] = menor peso no caminho pai→v, não min com os filhos); senão dp[v] = min(menor peso no caminho pai→v, Σ dp filhos).
+- **Virtual tree + DP** → dp[v] só sobre vértices relevantes, com arestas ponderadas pela distância original; tipicamente "mínimo de cortes para separar os especiais da raiz": dp[v] = min(cap do corte, Σ dp filhos).
 - **Rerooting com monoide não invertível** → prefixo/sufixo de filhos; com invertível, "total − contribuição"; para max, guarde os dois melhores filhos; para min/máx de duas coisas, combine por top-2.
 - **Rerooting em árvore com estado "removi uma aresta"** → para cada aresta, resultado da componente de cima e de baixo: down[v] e up[v] e depois combine; para "melhor aresta para cortar" itere e combine as duas metades.
 - **Árvore → intervalos.** Ordem de DFS de subárvores gera intervalos aninhados (laminar); duas subárvores ou são disjuntas ou uma contém a outra, então qualquer família laminar de intervalos é uma árvore (use para contar/conectar com "pilha de intervalos").
@@ -1450,8 +1421,8 @@ Primeira pergunta: a resposta depende da raiz? Se sim, pense em rerooting ou cen
 - **Dominating set de raio r em árvore** → guloso: processe de baixo para cima, o vértice mais profundo não coberto escolhe seu ancestral a r níveis acima; O(n) com dp (dist ao mais perto coberto/não coberto).
 - **Facility location (p-mediana/p-centro) em árvore** → p-centro: binária no raio + guloso de baixo para cima; p-mediana: DP O(n²p) ou O(np) com Aliens.
 - **Cortar a árvore em componentes com condição (tamanho ≥ k, soma ≤ S)** → guloso pós-ordem: acumule sz, se ≥ k corte a aresta e zere; para soma máxima por componente + "minimizar # de cortes", binária no limite e guloso (combine os menores filhos primeiro).
-- **Dividir a árvore em componentes de tamanho exatamente k/igual** → só cortar arestas com sz múltiplo de k; isso é necessário, não suficiente (ex.: estrela K1,5, n=6, k=2). Se a partição existe (k | n), os cortes são exatamente os v ≠ raiz com sz_v ≡ 0 mod k, e há n/k − 1 cortes.
-- **Remover aresta e comparar partes** → sz_v e n − sz_v; somas de xor/soma de subárvore equilibram: "remover duas arestas para xors iguais" → procure três partes com xor igual: se total ≠ 0, ou dois vértices incomparáveis com xor = total, ou um ancestral com xor 0 e um descendente com xor = total; se total = 0, dois vértices não-raiz com xor 0.
+- **Dividir a árvore em componentes de tamanho exatamente k/igual** → só cortar arestas com sz múltiplo de k; contagem de cortes possíveis = # de v com sz_v ≡ 0 mod k (número de componentes é n/k).
+- **Remover aresta e comparar partes** → sz_v e n − sz_v; somas de xor/soma de subárvore equilibram: "remover duas arestas para xors iguais" → procure três partes com xor igual (se total ≠ 0, xor(v) = total e outra descendente com xor = total).
 - **Ordenação topológica de árvore (ordem pai antes do filho) contada** → n!/∏ sz_v; "heap ordenado" idem; número de ordens de DFS = ∏ (filhos)! ; "permutações onde cada elemento aparece depois do pai" = n!/∏ sz.
 - **Ordem de DFS livre (escolha da ordem dos filhos).** Dá intervalos de subárvores contíguos; para maximizar/minimizar algo (soma |pos_u − pos_v|, tempo de percurso) ordene filhos por uma chave com exchange argument (ex.: sz/custo).
 - **Passeio de Euler e distância percorrida** → andar visitando todos e voltar = 2·Σ w; sem voltar = 2·Σ w − maior distância (do começo ao fim, diâmetro/distância do ponto de partida); ao visitar k vértices especiais, só vale a árvore virtual.
@@ -1479,7 +1450,7 @@ Primeira pergunta: a resposta depende da raiz? Se sim, pense em rerooting ou cen
 - **Árvore de segmentos implícita sobre os filhos** → vértices com grau enorme e queries por intervalo de filhos: crie "árvore de prefixos" dos filhos (cadeia auxiliar) para reduzir arestas de O(deg²) para O(deg) em grafos derivados.
 - **Árvore geradora como estrutura "ancestral–descendente" (DFS tree).** Em grafo não direcionado, toda aresta fora da árvore DFS liga ancestral–descendente (sem cross edges): usado para pontes, ciclos (cada aresta de retorno fecha um ciclo fundamental), caminhos longos (≥ k se grau ≥ k) e "cobrir com √n caminhos/ciclos".
 - **DFS tree e coloração/independent set grande** → ou há caminho com ≥ √n vértices (profundidade da DFS), ou alguma camada grande (independência por níveis): "ache caminho de tamanho ≥ √n ou conjunto independente de tamanho ≥ √n" (par de níveis).
-- **BFS tree e dual:** em BFS cada aresta liga níveis consecutivos ou iguais; ciclo ímpar ⇔ aresta entre vértices do mesmo nível; ciclo mais curto através de v = min sobre arestas (u, w) com lca(u, w) = v de d(u) + d(w) + 1 − 2·d(v) (d(u) + d(w) + 1 sozinho é passeio fechado).
+- **BFS tree e dual:** em BFS cada aresta liga níveis consecutivos ou iguais; ciclo ímpar ⇔ aresta entre vértices do mesmo nível; ciclo mais curto através de v em (d(u) + d(w) + 1).
 - **Árvore e 2-coloração por profundidade** → qualquer árvore é bipartida; grafo = árvore + arestas extras: cada aresta extra decide a paridade; caminhos de comprimento par/ímpar entre u e v dependem de uma aresta extra de ciclo ímpar.
 - **Árvores de menor caminho (SPT) e restrições adicionais** → "remova uma aresta e recalcule distâncias": usar a árvore de caminhos mínimos de s, e para a aresta (u, v) da SPT usar candidatos de arestas fora da árvore (substituição, "replacement path"); método clássico: Dijkstra com "lowest cross edge" ou LCT + sweep por distância.
 - **Replacement path em árvore geradora mínima (substituir aresta removida)** → varra arestas fora da árvore em ordem crescente de peso e pinte o caminho ainda não pintado com DSU "pular caminhos pintados": cada aresta da MST recebe a menor aresta fora que a cobre.
@@ -1510,7 +1481,7 @@ Perguntas: dá para responder offline? Dá para ordenar as queries? A operação
 - **Mo** quando add/remove é O(1) e não há updates; com updates → Mo com tempo (n^(5/3)).
 - **Segtree:** pense em qual informação do nó permite juntar dois filhos (max prefixo, max sufixo, soma, resposta). Esse é o problema inteiro.
 - **Lazy** para update em intervalo; **segtree beats** para chmin/chmax; **persistente** para versões ou "k-ésimo em \[l, r\]".
-- **a\_i ← a\_i mod x, a\_i ← √a\_i, a\_i ← gcd** → cada elemento muda poucas vezes; pule os que não mudam. A poda por max no nó vale para mod/√; para gcd guarde o lcm do nó e pule quando lcm | x (senão O(nq)).
+- **a\_i ← a\_i mod x, a\_i ← √a\_i, a\_i ← gcd** → cada elemento muda poucas vezes; pule os que não mudam (max no nó).
 - **Sparse table** para RMQ estático em O(1).
 - **Set de intervalos** (Chtholly / ODT) para "atribua valor em \[l, r\]".
 - **Sqrt decomposition** quando a operação não é associativa ou é estranha; blocos de √n e reconstrução periódica.
@@ -1569,7 +1540,7 @@ Combinações de estruturas (uma transformação + uma estrutura):
 - **Segtree dinâmica (esparsa).** Domínio até 10⁹ ou 10¹⁸ → crie nós sob demanda; memória O(q log U). Útil para DP com CHT/Li Chao sobre x grande e para BIT-de-segtree online em 2D.
 - **Segtree de segtrees (2D online).** Update de ponto e query de retângulo com a camada externa em x e interna dinâmica em y: O(log² ) por op, memória O(q log² ). Para queries só de max sem update de decremento, a camada interna pode ser BIT.
 - **Segtree 2D com lazy é doloroso.** Prefira offline: sweep em x + segtree 1D em y, ou transforme retângulo em 4 queries de prefixo 2D por inclusão-exclusão.
-- **Segtree kinetic (KTT) / kinetic segment tree.** Guarda retas m_i·t_i + c_i em cada nó para "max de m_i·t_i + c_i"; cada t_i só cresce (update soma δ > 0 a t_i no intervalo, o que equivale a c_i += m_i·δ); reconstrua o nó quando o tempo ultrapassa o ponto de troca. Amortizado polilog (O(log³ n) na análise clássica) com δ > 0.
+- **Segtree kinetic (KTT) / kinetic segment tree.** Guarda retas a·t + b em cada nó para "max de a_i + t·b_i" com t só crescendo; reconstrua o nó quando o tempo ultrapassa o ponto de troca. Amortizado polilog quando os updates de b são não negativos.
 - **Segtree com merge de nós via small-to-large / merge de segtrees.** Em DP de subárvore com estruturas indexadas por valor, funda segtrees dinâmicas dos filhos em O(n log n) total (merge destrutivo; o custo amortizado é o número de nós criados).
 - **Segtree iterativa bottom-up.** 2–3× mais rápida; funciona para operações não comutativas se tratar esquerda/direita, mas lazy exige a versão recursiva ou a variante "push do topo até a folha" antes da query.
 - **Disjoint sparse table.** Query de qualquer operação associativa (não idempotente: soma, produto mod, xor, composição) em O(1) com preprocessamento n log n: para cada nível guarde prefixos/sufixos a partir do meio do bloco.
@@ -1591,13 +1562,13 @@ Combinações de estruturas (uma transformação + uma estrutura):
 - **Offline sweep de valor.** "Contar pares (i, j) com a_i + a_j ≤ x e outra condição" → ordene por valor, insira conforme o limite cresce, mantenha estrutura nas posições.
 - **Offline: ordene queries por limite e elementos por peso.** Padrão "quantos elementos de peso ≤ w têm propriedade P no intervalo/subárvore" = adicionar elementos em ordem de peso numa BIT.
 - **Distintos em intervalo, versão com soma.** Soma dos valores distintos em [l, r]: mesmo sweep por r, BIT guarda valor em prev(i) apagado e i ativo. Versão com multiplicidade (≥ 2 vezes) usa prev de segunda ordem.
-- **Moda em intervalo (range mode).** Sem update: frequência por valor + sqrt (candidatos = modas dos blocos mais valores avulsos, checando por vetor de posições + binária) em O(n√n + q√n log n); com tabela de contagens por bloco (O(n√n) de memória) a checagem é O(1) e o total cai para O((n+q)√n); resposta online pelo "pesado/leve" por frequência.
-- **Range kth online.** Wavelet matrix ou persistente O(log n); com updates → BIT de segtrees dinâmicas, ou sqrt; binária paralela é offline (todas as queries conhecidas), não responde online.
-- **Contar inversões em intervalo.** Mo + BIT (n√n log n); com blocos de contagem sobre valores, o update é O(1) mas a query é O(√n), e como são O(n√n) movimentos isso leva a O(n²). Para O(n√n) use Mo secundário (2nd offline) calculando via prefixos; alternativa: decomposição sqrt estática.
+- **Moda em intervalo (range mode).** Sem update: frequência por valor + sqrt (candidatos = modas dos blocos mais valores avulsos, checando por vetor de posições + binária) em O(n√n); resposta online pelo "pesado/leve" por frequência.
+- **Range kth online.** Wavelet matrix ou persistente O(log n); com updates → BIT de segtrees dinâmicas, ou sqrt, ou binária paralela.
+- **Contar inversões em intervalo.** Mo + BIT (n√n log n) ou Mo com blocos de contagem O(1) update/O(√n) query (n√n); alternativa: Mo secundário (2nd offline) calculando via prefix para O(n√n).
 - **Inversões após swaps / updates pontuais.** Mantenha BIT de BITs, ou decomposição em blocos; ou CDQ (tempo, posição, valor), problema de dominância 3D.
-- **MEX em intervalo.** Offline por r: para cada valor guarde a última ocorrência last[v] em segtree de mínimo; mex de [l, r] = menor v com last[v] < l (descida na segtree). Para mex com updates → contagem não indica presença em [l, r]: guarde as posições de cada valor (ordered set) e teste presença com estrutura 2D.
+- **MEX em intervalo.** Offline por r: para cada valor guarde a última ocorrência last[v] em segtree de mínimo; mex de [l, r] = menor v com last[v] < l (descida na segtree). Para mex com updates → segtree por valor com contagem.
 - **Xor máximo com x em [l, r].** Trie persistente por prefixo com contagem; query compara contagem(r) − contagem(l−1) em cada nível. Alternativa: trie com "maior índice" em cada nó e query com l.
-- **Maior subarray de xor / par com xor máximo no intervalo.** Subarray: prefix xor + trie persistente (par de prefixos); base linear com "prefix linear basis" (mantém, para cada prefixo, base com timestamps mais recentes) responde "base de [l, r]" em O(log) por query. Par de elementos (a_i xor a_j, ambos em [l, r]): prefix xor não resolve; use trie sobre os valores com Mo + rollback (só adições) ou D&C offline.
+- **Maior subarray de xor / par com xor máximo no intervalo.** Prefix xor + trie persistente, ou base linear com "prefix linear basis" (mantém, para cada prefixo, base com timestamps mais recentes) para "base de [l, r]" em O(log) por query.
 - **Prefix linear basis (timestamp).** Na inserção de x no índice i, em cada bit, se o ocupante tem índice menor, troque (guarde o mais recente); então a base de [l, r] usa só vetores com índice ≥ l. Resolve xor máximo em subarray.
 - **Maior retângulo em histograma/queries.** Estático: pilha monotônica. Com query de intervalo → Cartesian tree + sparse table (retângulo máximo que contém o mínimo) ou segtree com (min, melhor, prefixo/sufixo do nível).
 - **Maior retângulo de 1s em matriz binária.** Histograma por linha + pilha: O(nm). Com updates → segtree por coluna é difícil; geralmente reduza.
@@ -1609,25 +1580,25 @@ Combinações de estruturas (uma transformação + uma estrutura):
 - **DSU com paridade / potencial.** Cada nó guarda a diferença (xor, soma, mod k) até o pai; find acumula. Detecta inconsistência de equações x_a − x_b = w e bipartição online.
 - **DSU "próximo livre".** pai[i] = próximo índice não processado ≥ i; resolve "pintar intervalo, cada posição só pintada uma vez" e "atribuir valores distintos" em quase O(n α).
 - **DSU com merge de listas / small-to-large.** Mantenha em cada raiz um set/map e una pequeno no grande, O(n log² n); para consultas de componente mais frequente ou menor elemento.
-- **DSU offline dinâmico (segtree no tempo).** Cada aresta vale em [t₁, t₂): insira na segtree sobre o tempo em O(log) nós; DFS aplicando uniões com rollback; responde conectividade e bipartição. MST com remoções (mesmo max-spanning com pesos) não sai do rollback — use LCT/dynamic MST.
+- **DSU offline dinâmico (segtree no tempo).** Cada aresta vale em [t₁, t₂): insira na segtree sobre o tempo em O(log) nós; DFS aplicando uniões com rollback; responde conectividade, bipartição, MST com remoções (se for max-spanning com pesos, usar LCT).
 - **Treap/splay implícito.** Chave = posição (tamanho do subárvore); split/merge permitem inserir, remover, mover bloco, cortar-colar de substring e reverter intervalo com flag lazy de "reverse".
 - **Treap com lazy de adição/atribuição e agregado.** Qualquer segtree com inserção/remoção no meio → treap implícito; custo ~5× mais lento, use só quando a operação precisa de estrutura mutável.
 - **Splay: amortizado e "acesso recente".** Sequência de n acessos custa O(n log n) + pior caso sobre as chaves; usado em link-cut e em problemas com operações "mover para frente".
-- **Chtholly / ODT.** Mapa de intervalos com valor constante; só funciona se há atribuição aleatória em intervalo (custo esperado O((n+q) log n) sob assigns aleatórios) ou o número total de splits é amortizado O(n + q). Pior caso O(nq).
+- **Chtholly / ODT.** Mapa de intervalos com valor constante; só funciona se há atribuição aleatória em intervalo (o número de intervalos cai a O(log n) esperado) ou o número total de splits é amortizado O(n + q).
 - **Link-cut com informação de subárvore (virtual).** Para somas em subárvore mantenha "soma de filhos virtuais" além da soma da splay; permite update de ponto + query de componente.
 - **Euler tour tree (ETT).** Floresta dinâmica com sequência de Euler guardada em treap/splay: link/cut/reroot em O(log n), query de subárvore como intervalo; alternativa ao LCT quando só precisa de subárvores.
 - **Ordered set trick (pbds / treap).** Rank e k-ésimo em O(log n) com multiconjuntos dinâmicos; para valores com duplicatas insira (valor, id). Inversões online e "mediana dinâmica" se resolvem assim.
 - **Mediana dinâmica com dois heaps.** Heap de max (metade inferior) + heap de min (metade superior), com remoção preguiçosa; contagens por lado separadas para soma de desvios absolutos.
 - **Heap com remoção preguiçosa.** Dois heaps (ativos e deletados); ao topar, desempilhe enquanto os topos coincidem. Troque por set/multiset se precisar de iteração; por heap de pares (valor, versão) com array de versões se o item muda de valor.
 - **Heap mergeable (leftist / skew / pairing).** União de duas filas de prioridade em O(log n): permite "juntar heaps de filhos" em árvore (ex.: slope trick em árvore, "escolher k mínimos da subárvore") sem small-to-large.
-- **Li Chao.** Insira reta em O(log) e segmento em O(log²); consulte o mínimo em x em O(log); sem exigir monotonicidade das inclinações; dinâmico (domínio 10⁹) funciona. Persistente em árvore ("CHT em árvore": DP no caminho raiz, rollback na volta).
+- **Li Chao.** Insira reta/segmento e consulte o mínimo em x em O(log); sem exigir monotonicidade das inclinações; dinâmico (domínio 10⁹) funciona. Persistente em árvore ("CHT em árvore": DP no caminho raiz, rollback na volta).
 - **CHT em árvore.** dp[v] = min sobre ancestrais u de dp[u] + b_u·a_v (queries no caminho) → Li Chao com rollback (guarde os nós modificados, O(log) por inserção) e DFS; ou Li Chao persistente.
 - **CHT com inclinações monótonas e queries monótonas** → deque O(n); queries arbitrárias → busca binária no hull; inserções arbitrárias → Li Chao ou "CHT dinâmico" com set ordenado de retas.
-- **Logarithmic method (Bentley-Saxe).** Estrutura estática com merge O(n) + só inserções → mantenha ≤ log n estruturas de tamanhos 2^i e recombine como contador binário; query consulta todas. Torna estático insertion-only (hull, k-d tree, índice de SA) com inserção amortizada O(log n) e query O(log n · Q), onde Q é o custo da query estática (O(log²) só se Q = O(log)).
+- **Logarithmic method (Bentley-Saxe).** Estrutura estática com merge O(n) + só inserções → mantenha ≤ log n estruturas de tamanhos 2^i e recombine como contador binário; query consulta todas. Torna estático insertion-only (hull, k-d tree, índice de SA) em O(log²).
 - **Remoção com Bentley-Saxe offline.** Se o tempo de vida de cada item é conhecido, segtree no tempo + estrutura com rollback/estática por nó.
 - **Contador binário e custo amortizado.** Incrementos custam O(1) amortizado (potencial = número de 1s); vale para "reconstruir quando metade foi mudado" (rebuild global em dobra de tamanho) e para analisar pilhas com undo.
 - **Potencial para amortizar.** Defina Φ = tamanho da pilha/#bits/#componentes; custo real + ΔΦ ≤ constante. "Pop while condition" é amortizado O(1) pelo potencial.
-- **Bitset como estrutura.** Matrizes booleanas, alcançabilidade em DAG com n ≤ 5·10⁴ (n/64 palavras por vértice; n²/64 no total, tempo O(mn/64)), mochila, soma de subconjuntos, filtro de vizinhos em grafos densos; use _Find_first/_Find_next para iterar bits ligados.
+- **Bitset como estrutura.** Matrizes booleanas, alcançabilidade em DAG com n ≤ 5·10⁴ (n²/64 por vértice), mochila, soma de subconjuntos, filtro de vizinhos em grafos densos; use _Find_first/_Find_next para iterar bits ligados.
 - **Bitset + transições do tipo shift-or.** "Existe subconjunto/par com soma/diferença x" → dp |= dp << a; "x + a_i para todo i" → bitset de valores deslocado.
 - **K-d tree.** Contagem em retângulo em O(√n) em 2D; vizinho mais próximo é rápido na média, mas O(n) no pior caso; reconstrução parcial (scapegoat) para inserções. Escolha mediana alternando eixos; poda por distância à caixa.
 - **Quadtree/octree.** Para pontos muito agrupados com queries aproximadas ou colisão; no pior caso (pontos colineares) degenera; a k-d tree dá garantia.
@@ -1641,7 +1612,7 @@ Combinações de estruturas (uma transformação + uma estrutura):
 - **Segtree de soma histórica.** Para "soma dos valores de a_i em todos os tempos passados" guarde (valor atual, soma histórica, lazy de 'a' e de 'b') e componha tags 2D; clássico "historic sum" / sweep de r para "soma de max/min de todos os subarrays".
 - **Sweep com segtree: máximo de cobertura.** Evento +1/−1 em intervalo, query = max global; "ponto coberto por mais retângulos", "máximo de sobreposição ponderada"; coordenada comprimida, lazy sem push-down.
 - **Contagem de pares (i, j) com f(i) ≤ g(j) em estrutura de dois pontos.** Ordene f e g juntos num único conjunto, tipo de evento; BIT sobre o outro tipo (merge-sort-like). Evita D&C.
-- **Árvore de Fenwick para máximos de prefixo em "DP LIS com peso".** dp[v] = max dp[u] com u < v e a_u < a_v → BIT de max por valor comprimido; reconstrução guardando o índice.
+- **Árvore de Fenwick para mínimos de sufixos em "DP LIS com peso".** dp[v] = max dp[u] com u < v e a_u < a_v → BIT de max por valor comprimido; reconstrução guardando o índice.
 - **Binary lifting guardando agregado e "salto com condição".** Para "primeiro ancestral com valor ≥ x" use binary lifting com max por salto; ou sparse por saltos; ou HLD + descida na segtree.
 - **Chunking temporal de queries (offline por blocos).** Quando as queries e updates são em √q lotes, as mudanças do lote são poucas → comprima a árvore/array nesses ≤ √q pontos relevantes e responda cada query em O(√q).
 - **Persistência fat-node / path copy e rollback de memória.** Persistir uma estrutura é equivalente a árvore de versões; para "voltar a versão k" use DFS na árvore de versões com rollback quando os ops são desfazíveis (mais barato que persistência).
@@ -1658,7 +1629,7 @@ Repetidas de outras seções:
 - **Base linear com prefixo** (mantendo o vetor mais recente por pivô) → max xor de subconjunto em [l, r] offline por r ou online.
 - **Trie xor persistente** → max x⊕a_i em [l, r] por diferença de cnt entre versões.
 - **Ocorrências de padrão em prefixo por AC + BIT na link tree** → +1 no nó visitado, query soma de subárvore.
-- **Mo em árvore (Euler de 2n)**: v aparece duas vezes; alterne add/remove a cada ocorrência (o vértice está ativo quando o número de ocorrências no segmento é ímpar); query (u, v) com tin[u] < tin[v] → [tin[u], tin[v]] se u é ancestral de v (sem lca extra), senão [tout[u], tin[v]] mais o lca explicitamente.
+- **Mo em árvore (Euler de 2n)**: v aparece duas vezes; alterne add/remove ao ver o vértice pela segunda vez; query (u, v) com tin[u] < tin[v] → [tin[u], tin[v]] se u é ancestral de v (sem lca extra), senão [tout[u], tin[v]] mais o lca explicitamente.
 - **Union-find com rollback e Mo** → Mo com rollback (ordena por bloco de l, r crescente, desfaz o lado esquerdo) quando a operação só tem "adicionar".
 - **Árvore de Fenwick em Euler tour** para update de subárvore + query de ponto/subárvore com dois BITs (range-update/range-query).
 - **Hash de multiconjunto em intervalo** → soma de valores aleatórios por prefixo: [l, r] é permutação de 1..k ⇔ hash(r) − hash(l−1) = hash(1..k) (aleatorização).
@@ -1716,12 +1687,12 @@ Interativos:
 - **Armadilha: múltiplas soluções.** Se há checker, não force a resposta de exemplo; se o exemplo parece "estranho", ele costuma mostrar a construção do autor.
 - **Busca binária interativa.** Cada pergunta de resposta binária resolve 1 bit: ⌈log₂ N⌉ queries; para N = 10¹⁸ são 60. Perguntas de 3 respostas (<, =, >) dão log₃.
 - **Flush e protocolo.** Imprima com flush após cada query, leia a resposta (−1 ou erro = abortar), conte queries localmente e teste com interator caseiro; misturar cin e scanf sem sync causa deadlock.
-- **Achar máximo/pico com queries** → compare a\[m\] e a\[m+1\] (binária); posição do segundo maior: consulte o max de \[1, n\] e localize a posição p do máximo por binária (o lado cujo max é o global contém p); o segundo maior é o maior entre o max de \[1, p−1\] e o de \[p+1, n\], em O(log n) queries.
-- **Min e max juntos** em ⌈3n/2⌉ − 2 comparações (pareie e compare vencedores com vencedores); **segundo maior** em n + ⌈log₂ n⌉ − 2 com torneio; **ordenar com mínimo de comparações** → inserção binária (n log n) ou Ford–Johnson (merge insertion), ótimo para n ≤ 22 mas não em geral: há algoritmos com menos comparações em certos n (por exemplo, n = 47) e ele não alcança ⌈log₂ n!⌉ para todo n.
-- **Reconstruir permutação com queries de soma/xor/and de pares.** Três queries de soma (a+b, b+c, a+c) determinam três números; com and não (bit com um único 1 é indistinguível) e com xor só se determinam diferenças (a menos de um xor global); para n posições fixe a\_1 por 3 queries e depois n − 3 queries "a\_1 + a\_i".
-- **Permutação com queries p\_i mod p\_j.** Compare (i, j) nos dois sentidos: o maior dos dois resultados é min(p\_i, p\_j) (se p\_i < p\_j, p\_i mod p\_j = p\_i); o menor é só o resto de p\_j mod p\_i; mantenha o candidato a maior e descubra todos os outros em ≤ 2n queries.
+- **Achar máximo/pico com queries** → compare a\[m\] e a\[m+1\] (binária); posição do segundo maior: consulte o max de \[1, n\], depois max de metade e veja se o segundo está do mesmo lado, binária em O(log n).
+- **Min e max juntos** em ⌈3n/2⌉ − 2 comparações (pareie e compare vencedores com vencedores); **segundo maior** em n + ⌈log₂ n⌉ − 2 com torneio; **ordenar com mínimo de comparações** → inserção binária (n log n) ou Ford–Johnson (merge insertion) quando o limite é ⌈log₂ n!⌉.
+- **Reconstruir permutação com queries de soma/xor/and de pares.** Três queries (a+b, b+c, a+c) determinam três números; para n posições fixe a\_1 por 3 queries e depois n − 3 queries "a\_1 + a\_i".
+- **Permutação com queries p\_i mod p\_j.** Compare (i, j) nos dois sentidos: o menor valor sai como resposta (p\_i < p\_j → p\_i); mantenha o candidato a maior e descubra todos os outros em ≤ 2n queries.
 - **Permutação com queries "quantos antes de i são menores".** Reconstrua de trás para frente com k-ésimo livre num BIT (inverso da codificação de Lehmer).
-- **Queries em árvore: achar vértice escondido.** Se a resposta diz de que lado do centroide está o alvo, ⌈log₂ n⌉ queries no total (uma por centroide, a cada nível). Com queries de distância, d(u, x), d(v, x) e d(u, v) dão a projeção de x no caminho u–v: dist de u = (d(u,v) + d(u,x) − d(v,x)) / 2.
+- **Queries em árvore: achar vértice escondido.** Se a resposta diz de que lado do centroide está o alvo, ⌈log₂ n⌉ queries por centroide. Com queries de distância, d(u, x), d(v, x) e d(u, v) dão a projeção de x no caminho u–v: dist de u = (d(u,v) + d(u,x) − d(v,x)) / 2.
 - **Reconstruir árvore escondida com distâncias.** d(r, ·) dá as camadas; para cada vértice, o pai é um vértice da camada anterior que está a distância 1 (query d(v, candidato)); busque por binária entre candidatos quando possível, ou use pares de folhas para reduzir.
 - **Mentiras limitadas.** Se o juiz mente até k vezes (ou em até uma de duas consecutivas), repita a query em janelas de k + 1 ou mantenha intervalo candidato com folga e reduza apenas quando houver consenso; calcule o número de queries com a folga.
 - **Quente/frio.** Perguntas "mais perto de x que antes?" → compare dois palpites, o ponto médio entre eles divide o espaço; reduz a binária no ponto médio.
@@ -1762,7 +1733,7 @@ Ferramentas:
 - **Staircase Nim** → só as posições ímpares importam. **Nim em árvore (Green Hackenbush)** → Grundy(v) = xor de (Grundy(filho) + 1).
 - **Jogo em grafo com ciclos (empate possível)** → BFS retrógrada a partir dos estados finais, com contador de saídas.
 - **Jogos de soma de pontos (minimax)** → DP em intervalo (pegar das pontas), dp = melhor diferença para quem joga.
-- **Dois jogadores escolhem itens alternadamente com valores a\_i (Alice) e b\_i (Bob)** → ordene por a\_i + b\_i em ordem decrescente e pegue nessa ordem.
+- **Dois jogadores escolhem itens alternadamente com valores a\_i (Alice) e b\_i (Bob)** → ordene por a\_i + b\_i e pegue em ordem.
 - **Grundy grande demais** → calcule pequenos, encontre periodicidade, prove depois.
 
 Gatilhos por tipo:
@@ -1778,7 +1749,7 @@ Gatilhos por tipo:
 - **Moore's Nim_k.** Pode tirar de até k pilhas por lance → escreva as pilhas em binário e some cada coluna de bit mod (k+1); posição perdedora ⇔ todas as colunas ≡ 0. Para k = 1 é o Nim comum.
 - **Fibonacci Nim.** Uma pilha; o 1º lance tira de 1 até n−1; depois cada um tira de 1 até 2× o que o outro acabou de tirar. Perdedor para quem começa ⇔ n é Fibonacci (Zeckendorf: tire o menor termo da representação).
 - **Nim com conjunto de subtração S.** Grundy de uma pilha = mex{g(n − s)}; é eventualmente periódico para S finito. Calcule 2–3 mil valores e detecte o período; "tirar 1..k" é o caso n mod (k+1).
-- **Subtraia só quadrados / primos / potências.** Sem fórmula: g(n) por DP em O(n·|S|) com mex; se n ≤ 10⁶, é só isso. Se n ≤ 10¹⁸, não presuma período: periodicidade de Grundy só é garantida para S finito; com quadrados/primos/potências (S infinito) não há garantia — para quadrados é problema aberto.
+- **Subtraia só quadrados / primos / potências.** Sem fórmula: g(n) por DP em O(n·|S|) com mex; se n ≤ 10⁶, é só isso. Se n ≤ 10¹⁸, procure período por brute force antes de pensar.
 - **Kayles e Dawson.** Kayles (derrubar 1 pino ou 2 adjacentes numa fileira; vira soma de duas fileiras) tem Grundy periódico de período 12 após exceções iniciais; Dawson's Kayles (só 2 adjacentes) tem período 34. Qualquer "remover bloco e partir a fileira em duas" → soma de jogos e Grundy por DP em n².
 - **Lasker's Nim.** Pilha: tirar qualquer quantidade OU dividir em duas não vazias → g(4k+1) = 4k+1, g(4k+2) = 4k+2, g(4k+3) = 4k+4, g(4k+4) = 4k+3. Mostra que "dividir" pode tornar o Grundy quase o tamanho.
 - **Grundy limitado pelo grau.** g(v) ≤ grau de saída de v, e num grafo com m arestas g ≤ O(√m) (um vértice com g = x precisa de sucessores com 0..x−1, e eles de sucessores próprios). Vetor de "valores vistos" pode ser pequeno.
@@ -1791,12 +1762,12 @@ Gatilhos por tipo:
 - **Hackenbush azul-vermelho (partizan).** Hastes só azuis valem +n inteiros, só vermelhas −n; ao trocar de cor o valor binário acrescenta ±1/2, ±1/4… Soma dos valores > 0 ⇒ Esquerda ganha começando ou não; = 0 ⇒ quem começa perde; < 0 ⇒ Direita ganha.
 - **Jogos partizan: compare com 0.** Quando cada jogador tem lances próprios, defina o valor do jogo (número dyadic, ou jogo quente) e some; o sinal do total decide. "Cada um só pode mexer nas suas peças" → valores numéricos, soma, sinal.
 - **Jogos quentes (switches).** {a ∣ b} com a > b: quem joga primeiro ganha (a−b)/2 em relação à média; média (a+b)/2 e temperatura (a−b)/2. Em jogos de pontuação em que mover é bom, jogue primeiro o de maior temperatura (heurística exata nos casos simples; confirme por brute force).
-- **Cram e Domineering.** Cram (colocar dominó sem sobrepor, ambos com os mesmos lances): as duas dimensões pares → o 2º espelha pelo centro; exatamente uma ímpar → o 1º coloca um dominó central simétrico e espelha; ímpar×ímpar não é coberto pela simetria central (3×3, 5×5, 1×5 são P; 3×5, 1×3 são N) → Grundy/brute. Em Domineering (partizan) use contagem de lances seguros de cada lado.
-- **Strategy stealing em Chomp.** Chomp com tabuleiro retangular m×n: para m·n ≥ 2 o 1º sempre ganha (se o lance de pegar o canto perdedor perdesse, o 2º teria uma resposta que o 1º poderia ter feito já); 1×1 é a exceção (o 1º é obrigado a comer a casa envenenada e perde). Construtivo em casos especiais: n×n → tire (2,2) e espelhe o L; 2×n → deixe a 1ª linha 1 maior que a 2ª.
+- **Cram e Domineering.** Cram (colocar dominó sem sobrepor, ambos com os mesmos lances): tabuleiro com as duas dimensões pares → o 2º espelha pelo centro; exatamente uma dimensão ímpar → o 1º joga no centro e espelha. Em Domineering (partizan) use contagem de lances seguros de cada lado.
+- **Strategy stealing em Chomp.** Chomp com tabuleiro retangular: o 1º sempre ganha (se o lance de pegar o canto perdedor perdesse, o 2º teria uma resposta que o 1º poderia ter feito já). Construtivo em casos especiais: n×n → tire (2,2) e espelhe o L; 2×n → deixe a 1ª linha 1 maior que a 2ª.
 - **Hex lemma.** Tabuleiro cheio de Hex tem exatamente um vencedor (nunca empate) ⇒ por stealing o 1º ganha. "Bloquear o outro = conectar eu" também vale em jogos de conexão em grade/triangular.
 - **m,n,k-games.** Em jogos de alinhar k (tic-tac-toe generalizado) o 2º nunca ganha por stealing; a pergunta real é empate vs vitória do 1º → brute force com poda.
 - **Geography em grafo não-direcionado.** Token percorrendo arestas sem revisitar vértices: o jogador que move a partir de v ganha ⇔ v está em todo emparelhamento máximo (calcule matching máximo com e sem v). Em direcionado geral o problema é PSPACE-completo, então o enunciado tem estrutura (DAG, árvore, bipartido).
-- **Euclid game.** (a, b) com a > b: tirar múltiplo de b de a. Se ⌊a/b⌋ ≥ 2 quem joga ganha (escolhe entre terminar em a mod b ou a mod b + b); senão o lance é forçado → simule Euclides e conte os passos forçados; a paridade decide, mas depende do terminal: quociente ≥ 2 (ganha quem move) ou b = 0 (perde quem move).
+- **Euclid game.** (a, b) com a > b: tirar múltiplo de b de a. Se ⌊a/b⌋ ≥ 2 quem joga ganha (escolhe entre terminar em a mod b ou a mod b + b); senão o lance é forçado → simule Euclides e conte passos forçados; ganha por paridade.
 - **Trie de palavras (jogo de prefixos).** Jogadores alternam acrescentando uma letra mantendo prefixo de alguma palavra; quem não pode perde. Calcule em cada nó win(v) e lose(v) (pode forçar perder?). Com k partidas em que o perdedor começa a próxima: se pode forçar ganhar e perder → 1º ganha; só ganhar → vence ⇔ k ímpar; nenhum → 2º.
 - **Jogo com bitmask de itens usados.** "Escolher números distintos de 1..n até a soma passar T" → estado = máscara de usados (a vez vem do popcount, e a soma da própria máscara). n ≤ 20, dp[mask] ∈ {vence, perde}.
 - **Memoização com hash em jogos de busca.** Tabela de transposição (tabuleiro → resultado) e ordenar lances (melhor primeiro) fazem alpha-beta cortar a maior parte; ainda é exponencial, então só vale com poucos lances ou profundidade ≤ ~20.
@@ -1804,9 +1775,9 @@ Gatilhos por tipo:
 - **Pegar das pontas com n par.** O 1º pode garantir todas as posições pares ou todas as ímpares → nunca perde (empata ou ganha); decida pelo maior somatório. Para n ímpar ou regra diferente → dp[l][r] em O(n²), com array 1D rolando se a memória for curta.
 - **Diferença como DP.** dp[l][r] = max(a[l] − dp[l+1][r], a[r] − dp[l][r−1]): a mesma recorrência vale para qualquer jogo de soma zero com dois jogadores alternados (subtraia o valor do adversário). Evite guardar dois valores.
 - **Jogos de soma não zero / multi-jogador.** Sem Sprague-Grundy; cada estado vira vetor de payoffs e cada um maximiza a própria coordenada (backward induction). Empates de desempate entram na ordem da comparação, defina-os no enunciado.
-- **Jogos probabilísticos.** dp[estado] = probabilidade de vencer quem joga; em estados com ciclo e só acaso (sem escolhas) vira sistema linear (Gauss); com escolhas max/min a equação de Bellman não é linear → iteração de valores ou LP. Se sem ciclo, DP de trás pra frente. Ambos escolhem lances: expectiminimax.
+- **Jogos probabilísticos.** dp[estado] = probabilidade de vencer quem joga; em estados com ciclo vira sistema linear (Gauss) ou iteração de ponto fixo; se sem ciclo, DP de trás pra frente. Ambos escolhem lances: expectiminimax.
 - **Loopy Grundy (Smith).** Com ciclos o valor de um estado é um nimber ou ∞ com conjunto de sucessores; para soma de jogos cíclicos: se algum componente é ∞ o resultado vira empate/ganho conforme os sucessores finitos. Geralmente basta BFS retrógrada e, em somas, evite o caso.
-- **Misère além de Nim.** Último a mover perde: a classificação difere da normal só perto do fim; teste por brute force e compare com a normal. Em Nim com pilhas todas 1, ganha quem tem número par de pilhas. Se o jogo é "tame" (comporta-se como Nim) o misère se resolve com a normal exceto quando todas as componentes são pequenas; Kayles é tame (quociente de misère de ordem 40, período 12), mas Dawson's Kayles não é conhecido como tame (comportamento wild; análise de misère em aberto): use brute force.
+- **Misère além de Nim.** Último a mover perde: a classificação difere da normal só perto do fim; teste por brute force e compare com a normal. Em Nim com pilhas todas 1, ganha quem tem número par de pilhas. Se o jogo é "tame" (comporta-se como Nim) o misère se resolve com a normal exceto quando todas as componentes são pequenas; Kayles e Dawson's Kayles não são tame: use brute force.
 - **Jogo com passe ou lance livre.** Se alguém pode passar, ninguém pode ficar em zugzwang; vence quem consegue empatar a contagem de lances seguros → conte lances seguros por jogador.
 - **Jogo interativo adversarial.** O interator escolhe a resposta mais cruel consistente; mantenha o conjunto de candidatos possíveis, e a melhor pergunta é a que divide o pior caso ao meio (ou em três, se a resposta tem 3 valores). Prove limite inferior contando folhas da árvore de decisão: ⌈log₃ N⌉ ou ⌈log₂ N⌉.
 - **Alice/Bob em strings.** Se cada um escolhe um caractere para formar a string final (um quer a menor, outro a maior), o ótimo é guloso dos extremos, com uma virada (CF 794C): enquanto o menor de Alice < o maior de Bob, cada um põe o seu melhor na primeira posição livre; quando deixa de valer, cada um passa a pôr o seu pior na última posição livre. Se há simetria entre posições → espelho.
@@ -1832,11 +1803,11 @@ Use inteiros sempre que puder: produto vetorial e escalar resolvem quase tudo se
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
-- **Cross como orientação.** cross(b − a, c − a) > 0 ⇒ anti-horário; = 0 ⇒ colinear; o sinal decide tudo sem divisões. Com coordenadas até 10⁹ as diferenças chegam a 2·10⁹ e o cross a 2·(2·10⁹)² ≈ 8·10¹⁸, que ainda cabe em int64 (perto do limite); com 10¹⁸ use __int128.
-- **Dot como ângulo / projeção.** dot > 0 agudo, = 0 reto, < 0 obtuso; projeção de p em reta ab devolve o parâmetro t = dot(p − a, b − a)/|b − a|²; pé foot = a + t·(b − a); reflexão de p = 2·foot − p.
+- **Cross como orientação.** cross(b − a, c − a) > 0 ⇒ anti-horário; = 0 ⇒ colinear; o sinal decide tudo sem divisões. Valores até (2·10⁹)² cabem em int64 com coordenadas até 10⁹; com 10¹⁸ use __int128.
+- **Dot como ângulo / projeção.** dot > 0 agudo, = 0 reto, < 0 obtuso; projeção de p em reta ab é dot(p − a, b − a)/|b − a|²; reflexão de p = 2·proj − p.
 - **Cross e dot juntos dão ângulo orientado.** atan2(cross, dot) ∈ (−π, π]; evite atan2 como chave de ordenação: use meio-plano (y > 0 ou y = 0 e x > 0) + cross como comparador exato.
 - **Ordenação por ângulo exata.** Divida em semiplanos e compare por cross > 0; pontos colineares na mesma direção: desempate por distância. Evita erro de atan2 em coordenadas grandes.
-- **Interseção de segmentos (inteira).** Segmentos se cruzam se o1·o2 ≤ 0 e o3·o4 ≤ 0, onde o1, o2 são as orientações de (a, b, c) e (a, b, d) e o3, o4 as de (c, d, a) e (c, d, b); quando algum oi = 0 cheque onSegment (ponto sobre o outro segmento); caso colinear: cheque sobreposição das caixas (intervalo de projeção).
+- **Interseção de segmentos (inteira).** Segmentos se cruzam se as orientações de (a, b, c) e (a, b, d) têm sinais opostos e as de (c, d, a), (c, d, b) também; caso colinear: cheque sobreposição das caixas (intervalo de projeção).
 - **Ponto de interseção de retas** como a + t·d com t = cross(c − a, e)/cross(d, e); mantenha frações (num/den) em inteiros para comparar sem erro.
 - **Ponto em polígono.** Convexo: busca binária por ângulo a partir de v₀ em O(log n); qualquer polígono: contagem de cruzamentos de raio (cuide de vértices no raio com a regra "y_a ≤ y < y_b") ou winding number.
 - **Área e sinal do polígono.** Shoelace dá área sinalizada: positivo ⇒ anti-horário. Área de triângulo = |cross|/2; guarde 2·área em inteiros.
@@ -1853,9 +1824,9 @@ Use inteiros sempre que puder: produto vetorial e escalar resolvem quase tudo se
 - **LP em 2D / 3D por randomização.** Seidel: O(n) esperado em dimensão fixa; ou HPI em 2D. Gatilho: "maximize ax + by sujeito a desigualdades lineares" com poucas variáveis.
 - **Par de pontos mais próximo.** D&C por x e tira de largura 2d ordenada por y (cada ponto checa ≤ 7 vizinhos), O(n log n); ou sweep com set ordenado por y; ou grid de hash com tamanho d em O(n) esperado (reconstrói o grid quando d cai, amortizado com ordem aleatória).
 - **Círculo mínimo envolvente (Welzl).** Embaralhe os pontos; incremental com 3 laços aninhados "se p fora do círculo atual, refaça com p na fronteira": O(n) esperado. Círculo por 2 pontos = diâmetro; por 3 = circuncentro.
-- **Circuncentro e incentro.** Circuncentro: resolver 2 equações lineares de mediatrizes (não bissetoras); use denominador D = 2·cross e mantenha numeradores; compare raios com frações para evitar ponto flutuante. Incentro = (a·A + b·B + c·C)/(a + b + c) com a, b, c = lados opostos (raízes), em geral não inteiro.
+- **Circuncentro e incentro por fórmula inteira.** Circuncentro: resolver 2 equações lineares de bissetoras; use denominador D = 2·cross e mantenha numeradores; compare raios com frações para evitar ponto flutuante.
 - **Teste de ponto em círculo circunscrito (in-circle).** Determinante 4×4 (ou 3×3 após subtrair) dá sinal exato com inteiros; base de Delaunay e da checagem de "círculo vazio".
-- **Delaunay / Voronoi.** Maior círculo vazio, vizinho mais próximo para todos os pontos, MST euclidiano (MST está contido em Delaunay), O(n log n); em contestes normalmente se evita implementando a MST euclidiana via Boruvka+k-d tree; os 8 octantes são da MST Manhattan, não da euclidiana.
+- **Delaunay / Voronoi.** Maior círculo vazio, vizinho mais próximo para todos os pontos, MST euclidiano (MST está contido em Delaunay), O(n log n); em contestes normalmente se evita implementando com a MST via Boruvka+k-d tree ou por 8 octantes (Manhattan MST).
 - **MST Manhattan.** Para cada ponto, em cada um dos 4 octantes só o vizinho mais próximo importa (sweep + BIT de min por x+y); 4n arestas candidatas + Kruskal.
 - **Manhattan e Chebyshev.** |dx| + |dy| = max(|dx + dy|, |dx − dy|); maior distância Manhattan entre pontos = max sobre as 4 combinações de sinais (x ± y). Em dimensões d use 2^(d−1) máscaras de sinais.
 - **Distância Manhattan com sweep.** Para o ponto mais próximo/discos Manhattan, separe os 4 quadrantes por simetria (troca de sinal) e reduza para "max/min de (x + y) com restrição de ordem" → BIT/segtree. Discos Manhattan viram quadrados rotacionados.
@@ -1896,12 +1867,12 @@ Use inteiros sempre que puder: produto vetorial e escalar resolvem quase tudo se
 - **Alturas/ângulos inteiros: tangente como fração.** Compare ângulos via cross em vez de atan2; ângulo entre direções ≤ 90° ⇔ dot ≥ 0; "ângulo do vetor em relação a outro" por cross/dot sem funções trigonométricas.
 - **Contagem de pontos dentro de círculos/ retângulos por consultas offline.** Retângulo = 4 prefixos 2D (inclusão-exclusão), com sweep + BIT; círculos de raio fixo → grade de células de lado r e examinar 3×3 vizinhanças.
 - **Geometria com float: epsilon relativo.** Compare |a − b| ≤ eps·max(1, |a|, |b|); para ordens use comparador por cross inteiro quando as coordenadas são inteiras; evite acos fora de [−1, 1] (clamp) e sqrt de negativo pequeno (max(0, x)).
-- **Geometria em inteiros: ordem de grandeza.** Coordenadas até 10⁹: cross cabe em int64 (≤ 2·(2·10⁹)² ≈ 8·10¹⁸, perto do limite), mas produtos de cross (in-circle) exigem __int128 ou long double com cuidado; para interseção de retas em frações use __int128 em num/den.
+- **Geometria em inteiros: ordem de grandeza.** Coordenadas até 10⁹: cross cabe em int64 (≤ 2·10¹⁸·2), mas produtos de cross (in-circle) exigem __int128 ou long double com cuidado; para interseção de retas em frações use __int128 em num/den.
 - **Orientação robusta com long double.** Quando as coordenadas são float, o sinal de cross com |cross| < eps·|a||b| é duvidoso; reformule como inteiros escalados (multiplique por 10^k) se a entrada tem poucas casas decimais.
 - **Áreas e probabilidade geométrica.** "Escolha pontos aleatórios em região" → área da região favorável / total; integral com Simpson para áreas de interseção de formas curvas (adaptativo se não for suave).
 - **Simpson / integração numérica.** Função convexa/unimodal em um intervalo → ternária; áreas de união de círculos/elipses como integral ao longo de x do comprimento coberto (Simpson adaptativo).
 - **Ternária e geometria.** "Distância mínima de um ponto em movimento" ou "posição do ponto em reta que minimiza soma de distâncias" é convexo em t → ternária (ou ponto de Fermat); quando a função é dist linear por partes, vale busca de ponto ótimo nos vértices.
-- **Soma de distâncias mínima.** Ponto que minimiza Σ|p − p_i|₁ = mediana por eixo; Σ|p − p_i|₂ (Fermat/geometric median) → Weiszfeld ou ternária aninhada; Chebyshev (L∞) → centro da caixa envolvente alinhada (não rotacionada; a rotação de 45° apenas relaciona L1 e L∞).
+- **Soma de distâncias mínima.** Ponto que minimiza Σ|p − p_i|₁ = mediana por eixo; Σ|p − p_i|₂ (Fermat/geometric median) → Weiszfeld ou ternária aninhada; Chebyshev → centro da caixa envolvente rotacionada.
 - **Menor caixa/quadrado envolvendo pontos após rotação.** O ótimo ocorre quando um lado do retângulo é colinear com uma aresta do hull → calipers, O(n) após o hull.
 - **Menor distância entre duas curvas/pontos convexos.** Funções convexas → ternária aninhada; polígonos → calipers; distância de polígonos ao ponto → min de pontos-segmento.
 - **Cobertura por intervalos angulares.** "Um ponto vê quantos objetos" / "o laser cobre todos?" → cada objeto vira um intervalo angular; ordene eventos e faça sweep circular (duplique a lista em 2π para wrap).
@@ -1916,17 +1887,11 @@ Use inteiros sempre que puder: produto vetorial e escalar resolvem quase tudo se
 - **Mínimo de x² + y² sob restrição de grid / retas inteiras.** Reduza com Euclides estendido para achar solução paramétrica (x₀ + t·b/g, y₀ − t·a/g) e minimize função convexa em t.
 - **Áreas de cruz de vetores e determinantes.** O sinal de determinante 2×2 testa dependência linear (paralelismo); em 3D o triplo produto = 0 ⇔ coplanares. Dimensão d: rank por Gauss.
 
-*(adicionado em 2026-11-11 a partir dos editoriais de CF Div. 2/3/4, A–D; triado contra o catálogo)*
-
-- **Diagonais de grade.** Células com mesmo i + j (antidiagonal) ou mesmo i − j (diagonal) são n + m − 1 linhas cada; soma de "bispo" = soma da diagonal + antidiagonal − a célula. Ex.: CF 1676D.
-- **Camadas concêntricas.** A camada de (i, j) num grid n×m (0-based) é min(i, j, n − 1 − i, m − 1 − j). Ex.: CF 1873C.
-- **Cortes que separam origem e destino.** Cada linha/corte que separa os dois pontos tem de ser cruzado: o nº de cortes é cota inferior; mostre que cruzar cada um uma vez basta. Ex.: CF 2148B.
-
 Repetidas de outras seções:
 
 - **Pontos de rede num segmento** → gcd(|dx|, |dy|) + 1; Pick com isso; círculo de Gauss O(r).
 - **Dualidade ponto-reta ⇔ CHT / Li Chao** (hull superior de pontos = envelope inferior de retas); uso em DP (estruturas).
-- **Dominância 2D/3D e frente de Pareto** → BIT/CDQ por coordenada (estruturas); frente de Pareto (não dominados) ≠ camadas convexas: um ponto do hull pode ser dominado (ex.: (0,0) com (1,1) presente).
+- **Dominância 2D/3D e frente de Pareto** → BIT/CDQ por coordenada (estruturas); camadas convexas e Pareto são o mesmo "pontos não dominados".
 - **Área da união de retângulos/segmentos** → sweep + segtree com (cobertura, comprimento coberto) (estruturas).
 
 ## Aleatorização
@@ -1935,10 +1900,10 @@ Gatilho: "um elemento aparece em pelo menos metade" ou "a resposta é compartilh
 
 - **Elemento frequente** (≥ n/2, ≥ n/k): escolha aleatória acerta com probabilidade ≥ 1/2 (≥ 1/k no caso n/k); repita 30–60 vezes (k vezes mais no caso n/k).
 - **gcd de pelo menos metade** → sorteie um a\_i, teste cada divisor dele.
-- **Hashing aleatório de conjuntos/multiconjuntos**: atribua um número aleatório de 64 bits a cada valor; soma identifica o multiconjunto; xor só identifica conjunto/paridade ({a, a} = ∅), não multiplicidade.
+- **Hashing aleatório de conjuntos/multiconjuntos**: atribua um número aleatório de 64 bits a cada valor; soma ou xor identifica o conjunto.
 - **XOR hashing**: "todo valor aparece um número par de vezes em \[l, r\]" → prefix xor dos hashes = 0.
 - **Shuffle da entrada** para quebrar casos ruins (inserção em BST, incremental de círculo mínimo em O(n) esperado).
-- **Color coding**: caminho simples de k vértices → pinte com k cores aleatórias e faça DP em máscara; a chance de um conjunto fixo ficar colorido é k!/k^k ≈ e^{−k}, então repita Θ(e^k) vezes.
+- **Color coding**: caminho simples de k vértices → pinte com k cores aleatórias e faça DP em máscara.
 - **Matriz/polinômio** → teste de Freivalds ou Schwartz-Zippel avaliando em ponto aleatório.
 - **Anti-hack:** use mt19937\_64 com semente de chrono e hash customizado no unordered\_map.
 
@@ -1946,18 +1911,18 @@ Gatilho: "um elemento aparece em pelo menos metade" ou "a resposta é compartilh
 
 - **Karger (corte mínimo global).** Contraia arestas aleatórias até restar 2 vértices; sucesso ≥ 2/(n(n − 1)); repita O(n² log n) vezes (ou Karger–Stein em O(n² log³ n)). Hoje Stoer–Wagner O(nm) é determinístico e mais simples para n ≤ 500.
 - **Treap.** Prioridade aleatória no BST dá altura O(log n) esperada independentemente da entrada; split/merge por prioridades. É a base de sequências implícitas.
-- **Hash polinomial seguro.** Módulo 2⁶¹ − 1 com base aleatória em [2, p − 2]; dupla base mod 10⁹ + 7 não basta (colisão por par ~(n/p)² ≈ 10⁻⁸ para n = 10⁵, e em n² comparações isso colide); probabilidade de colisão por par ≤ n/p por módulo (grau do polinômio sobre o corpo). Para n² comparações use 2⁶¹ − 1 com duas bases (ou dois primos grandes).
+- **Hash polinomial seguro.** Módulo 2⁶¹ − 1 com base aleatória em [2, p − 2]; dupla base mod 10⁹ + 7 também funciona; probabilidade de colisão por par ≤ n/p (grau do polinômio sobre o corpo). Para n² comparações use 2⁶¹ − 1.
 - **Anti-anti-hash.** Nunca use base fixa, mod 2⁶⁴ natural (Thue–Morse quebra qualquer base), nem base pequena previsível; ler a base de chrono::steady_clock e de /dev/urandom/time. Em Codeforces sempre há hacks.
 - **Hash de unordered_map customizado.** splitmix64 com semente aleatória: o padrão do GCC é atacável (primos de bucket); alternativamente use gp_hash_table com hash customizado ou map/sort.
 - **Pollard rho.** Fatora n ≤ 10¹⁸ em O(n^(1/4)) esperado com ciclo de Floyd/Brent e gcd em lotes; combine com Miller–Rabin recursivo. Paradoxo do aniversário explica o √p.
 - **Freivalds.** Verificar A·B = C em O(n²): sorteie r ∈ {0,1}ⁿ (ou do corpo) e compare A(Br) = Cr; erro ≤ 1/2 por rodada. Também verifica identidade de matrizes inversas e produtos de polinômios.
 - **Schwartz–Zippel.** Polinômio não nulo de grau d em corpo F se anula em ponto aleatório com prob ≤ d/|F|. Testa identidade de polinômios, igualdade de multiconjuntos (Π(x − a_i)), determinante nulo (matching).
-- **Matching por determinante (Tutte/Edmonds).** Matriz de Tutte com variáveis aleatórias mod p: grafo tem matching perfeito ⇔ det ≠ 0 (com alta prob., n par); o rank da matriz de Tutte é 2ν(G), logo o matching máximo é ν = rank/2, em O(n³) para grafos gerais.
+- **Matching por determinante (Tutte/Edmonds).** Matriz de Tutte com variáveis aleatórias mod p: grafo tem matching perfeito ⇔ det ≠ 0 (com alta prob.); rank dá o tamanho do matching máximo em O(n³) para grafos gerais.
 - **Reservoir sampling.** Escolha uniforme de 1 em stream de tamanho desconhecido: o i-ésimo substitui com prob 1/i; k itens: i-ésimo entra com prob k/i substituindo um aleatório do reservatório.
 - **Amostragem uniforme em estruturas.** Elemento uniforme de conjunto com remoções → vetor + swap-pop; uniforme em segtree → desça escolhendo filho com prob proporcional à soma; sorteio ponderado → prefix sums + binária ou alias method.
 - **Las Vegas vs Monte Carlo.** Las Vegas: sempre certo, tempo aleatório (quicksort aleatório, Welzl, seleção); Monte Carlo: tempo fixo, erro com prob. pequena (Freivalds, Miller–Rabin). Amplifique Monte Carlo repetindo; converta para Las Vegas se há verificador barato.
 - **Probabilidade de falha e repetições.** Se cada tentativa acerta com prob p, k = ⌈ln(1/ε)/p⌉ tentativas dão falha ≤ ε. Elemento que cobre ≥ 1/2: 30 tentativas ⇒ 2⁻³⁰; cobre ≥ 1/k: k·ln(1/ε) tentativas.
-- **Sorteio por pares (amostragem de pares).** "Existe par/triple com propriedade comum a muitos pares" → sorteie pares e teste; se a fração de pares bons é δ, ~1/δ amostras bastam. Ex.: reta com ≥ n/2 dos pontos → sorteie 2 pontos sem reposição: a reta por eles acerta com prob (n−2)/(4(n−1)) < 1/4 (com reposição, ≥ 1/4).
+- **Sorteio por pares (amostragem de pares).** "Existe par/triple com propriedade comum a muitos pares" → sorteie pares e teste; se a fração de pares bons é δ, ~1/δ amostras bastam. Ex.: reta com ≥ n/2 dos pontos → sorteie 2 pontos, a reta por eles acerta com prob ≥ 1/4.
 - **Maioria/mediana aproximada por amostragem.** A mediana de uma amostra de k elementos está dentro de ε·n do verdadeiro com alta prob. se k = O(1/ε² · log(1/δ)); serve para quantis, pivôs de seleção e para estimar contagens.
 - **Shuffle em guloso e DP aleatório.** Quando a ordem de processamento arbitrária tem pior caso adversarial (ex.: inserções em BST, círculo mínimo, LP incremental), embaralhe a entrada: esperado O(n) ou O(n log n) pela análise de "elemento de trás" (probabilidade 3/i de mudar o ótimo).
 - **Análise "backward".** O i-ésimo ponto muda a solução com prob ≤ d/i (d = tamanho da base); o custo esperado total é Σ d/i · custo(refazer) — sustenta Welzl, Seidel, closest pair randomizado e quicksort.
@@ -1971,12 +1936,12 @@ Gatilho: "um elemento aparece em pelo menos metade" ou "a resposta é compartilh
 - **Greedy randomizado + melhor de N.** Execute guloso com desempates aleatórios N vezes e fique com o melhor; funciona para construtivos com TL alto e para aproximar problemas NP-difíceis pequenos.
 - **Polynomial identity para string/permutação.** Checar "a e b são permutações um do outro" → compare Π(x − a_i) em x aleatório mod p; ou soma de f(a_i) com f aleatória (hash aditivo). "Sequência é permutação de 1..k em [l, r]" → soma de hash = soma esperada com hash de prefixos.
 - **Hash de árvores (isomorfismo).** Hash de subárvore = f(multiconjunto de hashes dos filhos) com f aleatória (p. ex. Π(x + h_filho) mod p ou soma de φ(h)); duas árvores enraizadas iguais ⇔ hashes iguais com alta prob.; para não enraizadas, enraize no centro.
-- **Hash de grafos / conectividade por xor.** Cada aresta recebe valor aleatório; vértice guarda xor das arestas incidentes; um conjunto S é uma componente fechada / corte vazio ⇔ xor dos vértices = 0 (se é corte o xor é sempre 0; a recíproca vale com alta probabilidade, não deterministicamente). Detecta corte e conectividade com remoções de arestas por xor de cortes.
-- **Xor de valores aleatórios em árvore (cut hashing).** Dê a cada aresta que não está na árvore geradora um valor aleatório e a cada aresta da árvore o xor das de não-árvore que a cobrem; então arestas formam corte ⇔ xor = 0 com alta probabilidade (mincut com ≤ k arestas, pontes).
+- **Hash de grafos / conectividade por xor.** Cada aresta recebe valor aleatório; vértice guarda xor das arestas incidentes; um conjunto S é uma componente fechada / corte vazio ⇔ xor dos vértices = 0. Detecta corte e conectividade com remoções de arestas por xor de cortes.
+- **Xor de valores aleatórios em árvore (cut hashing).** Dê a cada aresta que não está na árvore geradora um valor aleatório e a cada aresta da árvore o xor das de não-árvore que a cobrem; então arestas formam corte ⇔ xor = 0 (mincut com ≤ k arestas, pontes).
 - **Contagem aproximada (Monte Carlo).** Estimar |S| amostrando e extrapolando; para contar elementos distintos em stream → HyperLogLog/k-mínimos (mantenha os k menores hashes; estimativa = k/h_k).
 - **Seleção randomizada (quickselect).** Pivô aleatório → O(n) esperado para k-ésimo; mediana das medianas dá O(n) determinístico mas é pesado. std::nth_element já é introselect.
 - **Sorteio com viés e "prefixo ponderado".** Para escolher índice com prob ∝ w_i com updates → BIT/segtree com descida; para o resultado só em O(1) amortizado → alias method com tabela reconstruída em lotes.
-- **Aleatorização em grafos: coloração / separação.** Particionar vértices em dois lados aleatoriamente captura qualquer aresta/par fixo com prob 1/2 (ou 1/4 para dois); use para max-cut ≥ m/2, "MAX-3SAT ≥ 7/8" (MAX-2SAT ≥ 3/4; cláusula k: 1 − 2^{−k}), e para color coding com repetição.
+- **Aleatorização em grafos: coloração / separação.** Particionar vértices em dois lados aleatoriamente captura qualquer aresta/par fixo com prob 1/2 (ou 1/4 para dois); use para max-cut ≥ m/2, "MAX-SAT ≥ 7/8", e para color coding com repetição.
 - **Probabilistic method (existência).** Se a esperança de uma contagem é ≥ k, existe configuração com ≥ k: "max-cut ≥ m/2", "tournament com caminho hamiltoniano", "sub-conjunto independente de tamanho ≥ n/(d + 1)". Desrandomize pelo método das esperanças condicionais.
 - **Desaleatorização por esperança condicional.** Fixe uma variável por vez escolhendo o valor que mantém a esperança ≥ alvo: transforma o argumento probabilístico em algoritmo guloso determinístico.
 - **Estimar com poucas amostras: aproximação por tamanho.** Se a resposta desejada é "existe vértice com grau ≥ d" e há muitos candidatos, amostrar por aresta aleatória escolhe vértices proporcionalmente ao grau.
@@ -2004,14 +1969,14 @@ Quando a contagem vira produto de polinômios, recorrência linear ou sistema li
 - **Convolução cíclica / tamanho não potência de 2.** Para mod xⁿ − 1 com n arbitrário: convolução linear e dobre; para DFT de tamanho primo ou arbitrário → Bluestein (chirp-z) usa ij = C(i+j,2) − C(i,2) − C(j,2).
 - **Chirp-z.** Avaliar P em a·wᵏ, k = 0..m−1 (progressão geométrica) em O(n log n) com uma convolução: usa wʲᵏ = w^{C(j+k,2)}/(w^{C(j,2)}·w^{C(k,2)}). Aparece em "avalie o polinômio em todas as raízes da unidade de ordem n qualquer".
 - **Inverso de série.** B ← B·(2 − A·B) mod x^{2k} dobra a precisão (Newton); exige a₀ ≠ 0. Custo total O(n log n) com constante ≈ 3 multiplicações (convolução de tamanho 2n).
-- **ln, exp, sqrt, potência.** ln A = ∫ A′/A (a₀ = 1); exp (exige A(0) = 0): B ← B·(1 − ln B + A); sqrt: B ← (B + A/B)/2 (a₀ quadrado, normalmente 1); Aᵏ = exp(k·ln A) para a₀ = 1; senão fatore x^t e a₀ᵏ (k grande: guarde k mod p e k mod (p−1) separados).
+- **ln, exp, sqrt, potência.** ln A = ∫ A′/A (a₀ = 1); exp: B ← B·(1 − ln B + A); sqrt: B ← (B + A/B)/2 (a₀ quadrado, normalmente 1); Aᵏ = exp(k·ln A) para a₀ = 1; senão fatore x^t e a₀ᵏ (k grande: guarde k mod p e k mod (p−1) separados).
 - **Divisão de polinômios.** rev(Q) = rev(A)·rev(B)⁻¹ mod x^{n−m+1}, depois R = A − QB. É o bloco básico de multipoint e de "x^N mod f(x)".
 - **Produto de muitos polinômios.** ∏(x − r_i) ou ∏(1 + a_i x) por D&C com pares do mesmo tamanho: O(n log² n). Em problemas de "escolher subconjunto com peso", o produto ∏(1 + x^{w_i}) agrupa por peso e usa potência binomial.
-- **Knapsack de contagem via ln/exp.** Subconjuntos de soma s (cada uma das cnt_w cópias entra 0/1): ∏(1 + x^w)^{cnt_w} = exp(Σ cnt_w·ln(1 + x^w)); mochila ilimitada (multiconjunto, cópias ilimitadas de cada peso): exp(Σ cnt_w Σ_k x^{wk}/k) = ∏(1 − x^w)^{−cnt_w}; limitada a cnt_w cópias por peso: ∏(1 − x^{w(cnt_w+1)})/(1 − x^w) — soma harmônica S log S para montar o argumento.
+- **Knapsack de contagem via ln/exp.** Número de subconjuntos (multiconjuntos) de soma s para todo s ≤ S: ∏(1 + x^w)^{cnt_w} = exp(Σ cnt_w·ln(1 + x^w)); multiconjuntos: exp(Σ cnt_w Σ_k x^{wk}/k) — soma harmônica S log S para montar o argumento.
 - **Partições.** p(n) para todos até N: 1/∏(1 − xᵏ) por pentagonal (Euler) em O(N√N): p(n) = Σ (−1)^{k+1}[p(n − k(3k−1)/2) + p(n − k(3k+1)/2)]. Partições em partes distintas = ∏(1 + xᵏ); em partes ≤ k: 1/∏_{i≤k}(1 − xⁱ). Valores: p(100) = 190 569 292.
 - **Transformada de Euler.** Contagem de estruturas "multiconjuntos de componentes conexas" (não rotuladas): exp(Σ c_k·Σ_j x^{kj}/j); para rotuladas (EGF): todas = exp(conexas), conexas = ln(todas). Ex.: grafos conexos rotulados = n!·[xⁿ] ln(Σ 2^{C(n,2)} xⁿ/n!).
 - **Funções geradoras como ferramenta.** Ordinária (OGF) para escolhas não ordenadas, exponencial (EGF) para arranjos rotulados (produto de EGFs = escolher quais rótulos vão em cada parte). Restrição "cada tipo aparece em {a,b,c} cópias" → polinômio por tipo e produto.
-- **Lagrange inversion.** Se f(g(x)) = x, [xⁿ]g = (1/n)[x^{n−1}](x/f(x))ⁿ; mais geral: [xⁿ]H(g) = (1/n)[x^{n−1}] H′(x)(x/f)ⁿ. Dá árvores enraizadas (nⁿ⁻¹), Catalan; série inversa composicional: por coeficiente com (x/f)ⁿ via ln/exp custa O(n² log n) no total — para O(n log² n), use Newton + composição rápida.
+- **Lagrange inversion.** Se f(g(x)) = x, [xⁿ]g = (1/n)[x^{n−1}](x/f(x))ⁿ; mais geral: [xⁿ]H(g) = (1/n)[x^{n−1}] H′(x)(x/f)ⁿ. Dá árvores enraizadas (nⁿ⁻¹), Catalan, e série inversa composicional em O(n log n) quando (x/f)ⁿ sai por ln/exp.
 - **Composição e power projection.** f(g(x)) mod xⁿ em O(n log² n) (Kinoshita–Li); a transposta é "power projection" [xᵏ] h·gʲ para todo j. Gatilho: "aplique f repetidas vezes", "inversa composicional", "contagem com F(G(x))". Casos especiais são mais baratos: f(eˣ), f(x + c) (shift de Taylor), f(a·x).
 - **Taylor shift.** P(x + c) em uma convolução: b_j = (1/j!)·Σ_i (a_i·i!)·c^{i−j}/(i−j)!. Usos: converter base de potências ↔ falling factorials, Stirling de primeira espécie por dobra (x(x+1)…(x+n−1) → duplicar n usando shift).
 - **Multipoint evaluation.** Avaliar P (grau n) em n pontos: árvore de produtos ∏(x − x_i), remainder tree descendo — O(n log² n) com divisão por série inversa. Gatilho: "avalie f em x₁..x_m" para m ≈ 10⁵.
@@ -2026,11 +1991,11 @@ Quando a contagem vira produto de polinômios, recorrência linear ou sistema li
 - **Newton–Girard.** k·e_k = Σ_{i=1}^k (−1)^{i−1}e_{k−i}p_i; em série: Σ e_k xᵏ = exp(Σ (−1)^{k−1}p_k xᵏ/k). Converte somas de potências ↔ coeficientes do polinômio com raízes dadas; p_k de raízes de uma recorrência = traço de Mᵏ.
 - **Convolução online (relaxed).** f_n = Σ_{i<n} f_i·g_{n−i} (+ termo): CDQ — resolva [l, m), contribua [l, m) × g[0..r−l) em [m, r) — O(n log² n). Quando ambos f e g são online, contribua nos dois sentidos com cuidado no bloco inicial. Cobre exp, inverso e DPs "dp[n] = Σ dp[i]·w[n−i]".
 - **Berlekamp–Massey.** De 2L termos de uma recorrência linear de ordem L (mod p primo) recupera os coeficientes em O(L²). Gatilho: "n-ésimo termo de algo definido por DP de estado pequeno" → calcule ~2·(estados) termos, BM, depois Kitamasa. Também recupera polinômio mínimo de matriz esparsa (Wiedemann).
-- **Kitamasa / Bostan–Mori.** [xⁿ]P(x)/Q(x) (exige Q(0) ≠ 0; fatore x^d antes): multiplique por Q(−x); denominador vira par, numerador seleciona paridade de n; O(k log k log n) com FFT (O(k² log n) ingênuo). Vence matriz k×k (k³ log n) quando k ≥ 50.
+- **Kitamasa / Bostan–Mori.** [xⁿ]P(x)/Q(x): multiplique por Q(−x); denominador vira par, numerador seleciona paridade de n; O(k log k log n) com FFT (O(k² log n) ingênuo). Vence matriz k×k (k³ log n) quando k ≥ 50.
 - **Recorrência linear ↔ matriz.** Termo n de recorrência de ordem k: xⁿ mod (xᵏ − c₁xᵏ⁻¹ − … − c_k), depois combine com os primeiros k termos. Ordem k pequena e várias queries n: precompute x^{2^j} mod f.
 - **Polinômio característico.** det(xI − A) por Hessenberg em O(n³) mod p. Cayley–Hamilton: Aⁿ = polinômio de grau < n em A; permite Aⁿ·v com Kitamasa em O(n² log n) usando só produtos matriz-vetor (matriz esparsa).
-- **Matriz de adjacência e passeios.** (Aᵏ)_{uv} = nº de passeios de comprimento k; tr(Aᵏ) = passeios fechados. Soma de comprimentos 0..k: matriz aumentada [[A, I],[0, I]] elevada a k+1. Contar ciclos de comprimento 3 = tr(A³)/6; ≤ 4 por Mᵏ com estado (anterior).
-- **Exponenciação min-plus / semi-anel.** Mesmo princípio em (min, +) ou (max, ×) para caminhos mínimos com exatamente k arestas; custo n³ log k. Se a matriz é circulante, o produto vira convolução (min,+) — não há FFT para esses semi-anéis; continue O(n²) por produto (ou explore estrutura especial).
+- **Matriz de adjacência e passeios.** (Aᵏ)_{uv} = nº de passeios de comprimento k; tr(Aᵏ) = passeios fechados. Soma de comprimentos 0..k: matriz aumentada [[A, I],[0, I]]. Contar ciclos de comprimento 3 = tr(A³)/6; ≤ 4 por Mᵏ com estado (anterior).
+- **Exponenciação min-plus / semi-anel.** Mesmo princípio em (min, +) ou (max, ×) para caminhos mínimos com exatamente k arestas; custo n³ log k. Se a matriz é circulante, use FFT: n² → n log n por produto.
 - **Gauss mod p.** Sistema Ax = b, determinante, posto, inversa em O(n³) com pivô por busca de não-zero (mod primo sempre vale). Det = produto dos pivôs × (−1)^{trocas}. Mod composto: use Euclides entre linhas (como gcd).
 - **Gauss em GF(2) com bitset.** n ≤ 2000–5000 variáveis: O(n³/64). Número de soluções = 2^{n − posto} (se consistente). Lights-Out, "xor de subconjunto = alvo", "quantos xors distintos" (2^posto) são o mesmo problema.
 - **Sistema com módulo composto ou reais.** Reais: pivô parcial (maior |a|) e eps; módulo m composto: Gauss com troca por gcd; módulo 2ᵏ: pivô de menor valuação 2-ádica.
@@ -2042,11 +2007,11 @@ Quando a contagem vira produto de polinômios, recorrência linear ou sistema li
 - **Atualização de posto 1.** det(A + uvᵀ) = det A·(1 + vᵀA⁻¹u); Sherman–Morrison: (A + uvᵀ)⁻¹ = A⁻¹ − A⁻¹uvᵀA⁻¹/(1 + vᵀA⁻¹u). Troca de uma linha/coluna → O(n²) por atualização em vez de O(n³).
 - **Cauchy–Binet.** det(AB) = Σ_S det(A_{·,S})·det(B_{S,·}) (A é n×m, B m×n, m ≥ n). Prova Kirchhoff e converte "soma sobre subconjuntos de colunas de determinantes" em um único determinante.
 - **Base de espaço vetorial (xor basis) generalizada.** Inserir vetores mod p numa base escalonada: dependência = reduz a 0; mantenha os "mais recentes" (base com timestamp) para consultas em janela [l, r] (prefix linear basis). Também vale para matroide linear.
-- **Resultante.** Res(f,g) = a_n^m ∏ g(α_i) é 0 sse há raiz comum; discriminante = (−1)^{n(n−1)/2}·a_n^{−1}·Res(f,f′). Em competições: eliminar uma variável de duas equações polinomiais, número de raízes comuns, "f e g têm fator comum?" (gcd de polinômios) — gcd rápido por half-gcd O(n log² n); Euclides O(n²) basta para n ≤ 5000.
+- **Resultante.** Res(f,g) = a_n^m ∏ g(α_i) é 0 sse há raiz comum; discriminante = Res(f,f′). Em competições: eliminar uma variável de duas equações polinomiais, número de raízes comuns, "f e g têm fator comum?" (gcd de polinômios) — gcd rápido por half-gcd O(n log² n); Euclides O(n²) basta para n ≤ 5000.
 - **Zeta/Möbius de subconjuntos.** Soma sobre subconjuntos (ou superconjuntos) em O(2ⁿ n); Möbius é a inversa (troca + por −). OR-convolução = zeta → produto ponto a ponto → Möbius; AND-convolução = zeta de superconjuntos.
-- **Walsh–Hadamard (XOR-convolução).** Transformada H de tamanho 2ⁿ em O(2ⁿ n); produto ponto a ponto; inversa divide por 2ⁿ. k-ésima potência (nº de maneiras de escolher k valores ordenados, com repetição, com xor x): eleve cada ponto à k (k grande). Mod p ímpar: divisão por 2ⁿ ok.
+- **Walsh–Hadamard (XOR-convolução).** Transformada H de tamanho 2ⁿ em O(2ⁿ n); produto ponto a ponto; inversa divide por 2ⁿ. k-ésima potência (nº de maneiras de escolher k valores com xor x): eleve cada ponto à k (k grande). Mod p ímpar: divisão por 2ⁿ ok.
 - **Convolução de gcd/lcm e Dirichlet.** h(n) = Σ_{gcd(a,b)=n} f(a)g(b): zeta sobre múltiplos, produto, Möbius sobre múltiplos; lcm: sobre divisores. "Soma sobre divisores/múltiplos" em O(N log log N) fazendo uma passada por primo.
-- **Coloração por IE de subconjuntos.** Cobertura de V por k conjuntos independentes = Σ_S (−1)^{n−|S|}·i(S)ᵏ onde i(S) = nº de subconjuntos independentes de S (zeta de [independente]); a soma conta coberturas com sobreposição, não k-colorações próprias, mas χ(G) ≤ k iff o valor é > 0. Para #k-colorações próprias, use subset convolution de [independente] ou IE sobre arestas: Σ_{F⊆E} (−1)^{|F|}·k^{c(F)} (c(F) = nº de componentes de (V, F)). n ≤ 20–23.
+- **Coloração por IE de subconjuntos.** #k-colorações próprias de um conjunto de vértices = Σ_S (−1)^{n−|S|}·i(S)ᵏ onde i(S) = nº de subconjuntos independentes de S (zeta de [independente]); χ(G) ≤ k iff o valor é > 0. n ≤ 20–23.
 - **Polinômio cromático e de grafos.** P(G, k) tem grau n; calcule em n+1 valores de k (DP exponencial ou IE) e interpole; contagem de orientações acíclicas = |P(G, −1)|. Polinômio de Tutte é #P-difícil, mas é fácil em largura de árvore pequena.
 - **Holonômico (P-recursivo).** Sequências com recorrência de coeficientes polinomiais (Catalan, desarranjos, Motzkin): "adivinhe" a recorrência com álgebra linear em ~poucos termos e rode em O(n); para n ≈ 10¹² mod p use passos de √n (n! mod p em O(√p log p) por avaliação deslocada de ∏(x + i)).
 - **Hash de polinômios / verificação.** Dois polinômios de grau ≤ d iguais se coincidem em d+1 pontos; teste de identidade por avaliação em ponto aleatório mod p grande (erro ≤ d/p). Serve para "produto de matrizes está certo?" (Freivalds) e "duas expressões são iguais?".
@@ -2058,14 +2023,14 @@ Quando a contagem vira produto de polinômios, recorrência linear ou sistema li
 - **Fatorar polinômio mod p.** Raízes em F_p: gcd(f, x^p − x) e Cantor–Zassenhaus aleatório (gcd com (x + a)^{(p−1)/2} − 1); gatilho: "ache x tal que f(x) ≡ 0 (mod p)" com f de grau pequeno, ou raiz quadrada/k-ésima mod p (Tonelli–Shanks, Cipolla).
 - **Logaritmo e raiz discreta.** BSGS para a^x ≡ b em O(√m); k-ésima raiz módulo primo: ache gerador g, resolva log, divida por gcd(k, p−1). Gatilho: "resolva x^k ≡ a mod p".
 - **Matriz diagonalizável e Fibonacci.** F_n por dobra: F_{2k} = F_k(2F_{k+1} − F_k), F_{2k+1} = F_{k+1}² + F_k²; gcd(F_a, F_b) = F_{gcd(a,b)}; Pisano π(10ᵏ) = 15·10^{k−1} (k ≥ 3).
-- **Sparse + Wiedemann.** Det, posto ou solução de sistema esparso n ≈ 10⁵ com nnz pequeno: BM em u·Aⁱ·v (2n termos, cada um é um produto matriz-vetor de custo nnz) → O(n·nnz); BM escalar só dá o polinômio mínimo da projeção — det/posto exigem pré-condicionamento aleatório ou block Wiedemann.
+- **Sparse + Wiedemann.** Det, posto ou solução de sistema esparso n ≈ 10⁵ com nnz pequeno: BM em u·Aⁱ·v (2n termos, cada um é um produto matriz-vetor de custo nnz) → O(n·nnz).
 
 ## Matemática de olimpíada e math.stackexchange
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
 Muita prova de olimpíada é, no fundo, um algoritmo ou uma garantia de existência: ache o argumento extremal, o invariante ou a desigualdade que corta a busca.
-- **Princípio extremal.** Pegue o elemento máximo/mínimo/mais longo/mais à esquerda: ele é forçado e reduz o caso a n − 1. Ex.: torneio sempre tem caminho hamiltoniano (Rédei) — insira vértices por varredura linear na ordem (O(n) por inserção, O(n²)); Sylvester–Gallai; "o pior vértice não pode piorar".
+- **Princípio extremal.** Pegue o elemento máximo/mínimo/mais longo/mais à esquerda: ele é forçado e reduz o caso a n − 1. Ex.: torneio sempre tem caminho hamiltoniano (Rédei) — insira vértices por busca binária na ordem; Sylvester–Gallai; "o pior vértice não pode piorar".
 - **Menor contraexemplo.** Para provar P(n) para todo n, assuma o menor n que falha e derive contradição; algoritmicamente: o primeiro erro de um guloso é o contraexemplo mínimo, e vira uma checagem local.
 - **Pombal (pigeonhole).** n+1 prefixos módulo n → algum bloco contíguo tem soma ≡ 0 (mod n); Erdős–Ginzburg–Ziv: em 2n − 1 inteiros há n com soma ≡ 0 (mod n). Gatilho: "sempre existe" → a resposta é só construir (DP em restos).
 - **Pombal por limiar.** Se há mais de k·m itens em m categorias, alguma tem > k; se Σ ≥ T então max ≥ T/m. Usado para limitar o número de iterações ("resposta ≤ √n" ou "≤ log n").
@@ -2077,7 +2042,7 @@ Muita prova de olimpíada é, no fundo, um algoritmo ou uma garantia de existên
 - **Indução forte e estrutura recursiva.** Se o problema para n sai de n/2, n − 1 ou "tirar um vértice extremal", a construção/DP tem forma recursiva; ótimo para provar que um guloso ou construção funciona (e dá o algoritmo).
 - **AM-GM para otimizar.** Σ x_i fixa, ∏ x_i máximo quando todos iguais; inteiros: iguais ±1. Partir n em parcelas para maximizar produto → use 3s (com resto 4 = 2 + 2 ou 2): n mod 3 = 0: 3^{n/3}; 1: 4·3^{(n−4)/3}; 2: 2·3^{(n−2)/3}.
 - **Cauchy–Schwarz e Engel.** (Σ a_i b_i)² ≤ Σa_i²·Σb_i²; Σ a_i²/b_i ≥ (Σ a_i)²/Σ b_i. Minimizar Σ c_i/x_i com Σ x_i = S → x_i ∝ √c_i (igualdade da desigualdade); aloca recursos com retornos decrescentes.
-- **Rearrangement e Chebyshev.** Σ a_i b_{σ(i)} é máximo com ordens iguais e mínimo com ordens opostas; para f convexa, Σ f(a_i − b_σ(i)) é mínimo com ordens iguais e máximo com ordens opostas (direção oposta à do produto). Gatilho: "emparelhe dois arrays minimizando Σ|a_i − b_σ(i)|" → ordene ambos.
+- **Rearrangement e Chebyshev.** Σ a_i b_{σ(i)} é máximo com ordens iguais e mínimo com ordens opostas; vale também para Σ f(a_i − b_σ(i)) com f convexa. Gatilho: "emparelhe dois arrays minimizando Σ|a_i − b_σ(i)|" → ordene ambos.
 - **Jensen e distribuição igual.** f convexa: Σ f(x_i) com Σ x_i fixa é mínima quando todos iguais (inteiros: ⌊S/k⌋ ou ⌈S/k⌉). Ex.: minimizar pares Σ C(g_i, 2) ao dividir n em k grupos; Mantel/Turán por convexidade.
 - **Telescopia.** 1/(i(i+1)) = 1/i − 1/(i+1); Σ i·i! = (n+1)! − 1; Σ (i³ − (i−1)³); produtos ∏(1 + 1/i) = n + 1. Gatilho: termo que "cancela com o vizinho": procure f(i+1) − f(i).
 - **Vieta e Newton.** Raízes de um polinômio mônico: soma = −a_{n−1}, produto = (−1)ⁿa₀; relações simétricas se escrevem por e_k; p_k satisfaz a recorrência linear do polinômio, logo p_k de raízes algébricas = tr(Mᵏ) da matriz companheira.
@@ -2097,31 +2062,31 @@ Muita prova de olimpíada é, no fundo, um algoritmo ou uma garantia de existên
 - **Cadeias e martingais.** Ache potencial Φ com E[Φ(próximo) − Φ(atual)] = −1 por passo: então E[tempo] = Φ(início) − Φ(fim). Passeio aleatório em linha de 0..n: E[tempo] = i(n − i); ruína do jogador: P(chegar a n) = i/n (caso justo). Gatilho: "esperança de passos até terminar" com estrutura linear.
 - **Independência: Caro–Wei.** α(G) ≥ Σ_v 1/(deg(v) + 1) — guloso (tire o vértice de menor grau e seus vizinhos) alcança. Turán: α ≥ n/(d̄ + 1). Gatilho: "achar conjunto independente de tamanho ≥ n/(d+1)" ou "ache vértices sem arestas entre si".
 - **Mantel / Turán e limites de m.** Sem triângulo ⇒ m ≤ ⌊n²/4⌋; sem K_{r+1} ⇒ m ≤ (1 − 1/r)n²/2. Sem C₄ (ou: dois vértices têm ≤ 1 vizinho comum) ⇒ m = O(n√n) e Σ_v C(deg v, 2) ≤ C(n, 2): iterar pares de vizinhos é O(n²). Gatilho: "grafo sem ciclo de comprimento 4".
-- **Grafos planares.** m ≤ 3n − 6 e há vértice de grau ≤ 5 (degenerescência ≤ 5): triângulos/K₄ em O(n), orientação com grau de saída ≤ 5, coloração com 6 cores em O(n). Euler: V − E + F = 1 + C. Fluxo s–t = corte mínimo; no planar, corte mínimo ↔ ciclo mínimo no dual que separa s e t. Se s, t estão na mesma face, divida a face com uma aresta st e o corte vira o caminho mínimo no dual entre as duas faces novas (sem usar a aresta dual de st).
+- **Grafos planares.** m ≤ 3n − 6 e há vértice de grau ≤ 5 (degenerescência ≤ 5): triângulos/K₄ em O(n), orientação com grau de saída ≤ 5, coloração com 6 cores em O(n). Euler: V − E + F = 1 + C. Fluxo s–t com s, t na mesma face = caminho mínimo no dual; corte mínimo ↔ ciclo mínimo no dual.
 - **Euler em mapas.** V − E + F = 1 + C: contar componentes/buracos de uma figura em grid pelas células, arestas e vértices (ou pelo número de Euler local por 2×2) dispensa BFS; vale para qualquer desenho planar.
 - **Ramsey.** R(3,3) = 6: em qualquer 2-coloração de K₆ há triângulo monocromático; R(4,4) = 18. Se n é ≥ ~6 a resposta "existe" é sempre sim; também, um grafo ou seu complemento é conexo — gatilho de construção em duas cores.
 - **Dirac / Ore.** Grau mínimo ≥ n/2 ⇒ hamiltoniano; Ore: deg u + deg v ≥ n para não adjacentes. Construção O(n²) por rotações de Pósa. Gatilho: "grafo denso, ache ciclo hamiltoniano" → sempre existe, só constrói.
-- **Hall e König.** Perfeito bipartido existe iff |L| = |R| e |N(S)| ≥ |S| para todo S ⊆ L (ou Hall nos dois lados); deficiência: ν = |L| − max_S(|S| − |N(S)|). König: cobertura mínima = emparelhamento máximo; indep. máximo = n − ν. Grafo bipartido k-regular decompõe-se em k emparelhamentos perfeitos; arestas colorem-se com Δ cores (König).
+- **Hall e König.** Perfeito bipartido existe iff |N(S)| ≥ |S| para todo S; deficiência: ν = |L| − max_S(|S| − |N(S)|). König: cobertura mínima = emparelhamento máximo; indep. máximo = n − ν. Grafo bipartido k-regular decompõe-se em k emparelhamentos perfeitos; arestas colorem-se com Δ cores (König).
 - **Tutte / Tutte–Berge.** Perfeito iff para todo S, componentes ímpares de G − S ≤ |S|; ν = (n − max_S(odd(G − S) − |S|))/2. Gatilhos: árvore tem perfeito iff, removido cada vértice, sobra exatamente uma componente de tamanho ímpar (greedy a partir das folhas); grafo conexo com número par de arestas decompõe-se em caminhos de 2 arestas.
 - **Gallai e coberturas.** α + τ = n (indep. + cobertura de vértices); ν + ρ = n (emparelhamento + cobertura de arestas, sem isolados). Cobertura de caminhos disjuntos em DAG = n − ν da bipartição entrada/saída.
 - **Sequências gráficas.** Erdős–Gallai: d₁ ≥ … ≥ d_n é gráfica iff Σ par e Σ_{i≤k}d_i ≤ k(k − 1) + Σ_{i>k} min(d_i, k); construção por Havel–Hakimi (ligue o maior aos próximos maiores). Torneios: Landau — ordenadas s₁ ≤ … ≤ s_n, Σ_{i≤k}s_i ≥ C(k,2) com igualdade em k = n. Bipartido: Gale–Ryser.
-- **Helly (1D e geral).** Intervalos que se intersectam dois a dois têm ponto comum: max(l_i) ≤ min(r_i). Em R^d convexos: basta d + 1. Gatilho: "todos os pares de intervalos se cruzam" ⇒ existe um ponto comum; verifique só max(l_i) ≤ min(r_i). No plano, segmentos que se cruzam dois a dois não têm ponto comum em geral.
+- **Helly (1D e geral).** Intervalos que se intersectam dois a dois têm ponto comum: max(l_i) ≤ min(r_i). Em R^d convexos: basta d + 1. Gatilho: "todos os pares de segmentos se cruzam" ⇒ existe um ponto/reta comum; verifique só 1 condição.
 - **Extremal / Sperner / EKR.** Antichain de subconjuntos de [n] tem ≤ C(n, ⌊n/2⌋) (Sperner); k-subconjuntos que se intersectam par a par têm ≤ C(n−1, k−1) (Erdős–Ko–Rado, n ≥ 2k). Gatilho: "família máxima sem inclusão / com interseção" → resposta fechada.
 - **Hipergrafos de intervalos e grafos de intervalo.** Cor mínima = clique máxima = máxima sobreposição (grafo de intervalos é perfeito); cordal e perfeito; ordem de eliminação simplicial. Escalonamento de k máquinas = sweep com heap.
 - **Teorema de Pick e variantes.** A = I + B/2 − 1 com B = Σ gcd(|Δx|, |Δy|) sobre arestas do polígono. Triângulo de rede sem pontos internos nem de fronteira (além dos vértices) tem área 1/2; contagem de I a partir de A e B dispensa varredura.
-- **Geometria analítica útil.** Reta ax + by = c com gcd(a, b) = 1; distância ponto–reta |ax₀ + by₀ − c|/√(a² + b²); pontos de rede em segmento = gcd(|Δx|, |Δy|) + 1; área = (1/2)|cross|; compare quadrados (inteiros) em vez de distâncias.
-- **Desigualdade triangular como poda.** d(u, w) ≤ d(u, v) + d(v, w) ⇒ em árvore, o ponto mais distante de qualquer v é um dos extremos do diâmetro (exato); em métrica geral isso falha, mas ecc(v) ≤ 2·max(d(v, a), d(v, b)) para a, b extremos de um diâmetro (2-aprox). Em Manhattan, soma de distâncias é separável por coordenada; mediana minimiza.
+- **Geometria analítica útil.** Reta ax + by = c com gcd(a, b) = 1; distância ponto–reta |ax₀ + by₀ + c|/√(a² + b²); pontos de rede em segmento = gcd(|Δx|, |Δy|) + 1; área = (1/2)|cross|; compare quadrados (inteiros) em vez de distâncias.
+- **Desigualdade triangular como poda.** d(u, w) ≤ d(u, v) + d(v, w) ⇒ em métrica, o ponto mais distante de qualquer v está num dos extremos do "diâmetro" (árvores: exato; geral: 2-aprox). Em Manhattan, soma de distâncias é separável por coordenada; mediana minimiza.
 - **Schwartz–Zippel e grau ≤ d.** Polinômio não nulo de grau d em n variáveis tem raiz em S^n com probabilidade ≤ d/|S| (teste de identidade); em 1 variável, ≤ d raízes: dois polinômios de grau ≤ d concordantes em d + 1 pontos são iguais. Fundamento de hashing de polinômio e verificação de matrizes.
-- **Ordem de grandeza.** H_n ≈ ln n + 0,5772; n! ≈ √(2πn)(n/e)ⁿ; log₂(n!) ≈ n log₂ n − 1,44n (cota inferior de comparações/queries); C(2n,n) ≈ 4ⁿ/√(πn); Catalan ≈ 4ⁿ/(n^{3/2}√π); π(x) ≈ x/ln x (π(10⁶) = 78 498, π(10⁹) = 50 847 534); p(100) = 190 569 292; lcm(1..43) ≈ 9,42·10¹⁸ (estoura int64 com sinal; cabe em uint64).
+- **Ordem de grandeza.** H_n ≈ ln n + 0,5772; n! ≈ √(2πn)(n/e)ⁿ; log₂(n!) ≈ n log₂ n − 1,44n (cota inferior de comparações/queries); C(2n,n) ≈ 4ⁿ/√(πn); Catalan ≈ 4ⁿ/(n^{3/2}√π); π(x) ≈ x/ln x (π(10⁶) = 78 498, π(10⁹) = 50 847 534); p(100) = 190 569 292; lcm(1..43) > 9·10¹⁸ (estoura 64 bits).
 - **Cota de informação.** Se há M respostas possíveis e cada query tem b respostas, são necessárias ≥ ⌈log_b M⌉ queries; em interativos o limite do enunciado é quase sempre isso — descubra a estratégia que divide M igualmente.
 - **Limites de crescimento.** Σ_{i≤n} 1/i gera n·H_n ≈ n ln n para laços "para cada i, múltiplos de i"; soma de divisores σ(n) ≤ n·H_n; nº de divisores de n é O(n^{ε}); Σ τ(i) para i ≤ 10⁷ ≈ 1,6·10⁸.
-- **Ponto flutuante.** Evite subtrair números próximos (use fórmulas alternativas: hypot, atan2, log1p, expm1); compare por razão cruzada em inteiros (__int128 para até 10¹⁸ × 10¹⁸); binária em reais: itere 60–100 vezes em vez de usar eps; √ inteira: s = sqrtl(x) e ajuste nos dois sentidos (s++ enquanto (s+1)² ≤ x; s−− enquanto s² > x), com s² em __int128; soma de muitos termos: Kahan ou ordene por magnitude.
+- **Ponto flutuante.** Evite subtrair números próximos (use fórmulas alternativas: hypot, atan2, log1p, expm1); compare por razão cruzada em inteiros (__int128 para até 10¹⁸ × 10¹⁸); binária em reais: itere 60–100 vezes em vez de usar eps; √ inteira: s = sqrtl(x) e ajuste while s·s > x; soma de muitos termos: Kahan ou ordene por magnitude.
 - **Provar guloso por desigualdade.** Para checar uma ordem: escreva custo de trocar adjacentes i, j e reduza a uma comparação de pares (ex.: a_i·b_j vs a_j·b_i → ordene por a/b; a+b vs b+a em strings). Se a comparação é transitiva e total, ordenar é correto.
 - **Truques de somatório.** Troque a ordem Σ_i Σ_{j|i} = Σ_j Σ_{k ≤ n/j}; use Σ_{i<j} f = (1/2)(Σ_{i,j} − Σ_i f(i,i)) para simetria; (Σ x)² = Σ x² + 2Σ_{i<j} x_i x_j para tirar pares; expanda produtos e agrupe por potência (Σ_i Σ_j (a_i − a_j)² = 2n·Σ a² − 2(Σ a)²).
 - **Variância e pares.** Σ_{i<j}(a_i − a_j)² = n·Σ a_i² − (Σ a_i)²: soma de quadrados das diferenças em O(n); para absoluta |a_i − a_j|, ordene e use prefixos.
 - **Convexidade e extremos.** Máximo de função convexa sobre politopo ocorre num vértice; mínimo de função côncava idem. Gatilho: "função convexa em intervalo fechado, ache o máx" → só extremos; minimizar côncava = testar vértices.
 - **Subseqüências e somas de 2 classes.** Sempre que uma operação preserva "soma mod k" e o alvo exige outro resto → impossível; se a operação gera mod k × restos de uma base, procure classes de equivalência por gcd (ex.: valores alcançáveis = múltiplos de gcd dentro dos limites).
-- **Moedas / Frobenius.** Com a, b coprimos, o maior valor não representável é ab − a − b e há (a − 1)(b − 1)/2 não representáveis. Muitas moedas: Dijkstra nos restos módulo a menor moeda (O(a_min·n log)); valores acima de max_r dist[r] (o maior dos menores representáveis por resíduo) são todos alcançáveis; com gcd > 1, só múltiplos do gcd.
+- **Moedas / Frobenius.** Com a, b coprimos, o maior valor não representável é ab − a − b e há (a − 1)(b − 1)/2 não representáveis. Muitas moedas: Dijkstra nos restos módulo a menor moeda (O(a_min·n log)); valores acima do maior resíduo são todos alcançáveis.
 - **Prova por colorir.** Dominós em tabuleiro: cobertura perfeita exige #brancas = #pretas; coloração 2×2 ou por linhas mostra impossibilidade de L-triominós/tetraminós. Gatilho: "cobrir com peças de forma fixa" → teste invariantes de coloração antes de procurar construção.
 - **Contagem dupla.** Conte pares (a, b) de duas formas: Σ_v deg(v) = 2m; Σ_v C(deg(v), 2) = #caminhos de comprimento 2; Σ_S |S ∩ T|. Útil para limites (existe v com grau ≥ média) e para identidades.
 - **Pareamento de somas e simetria (Gauss).** Σ_{i=0}^{n−1} f(i) + f(n−1−i) em pares; função simétrica f(x) = f(n − x) → metade dos casos. Gatilho: P(x) com simetria → dobre e use combinatória central.
@@ -2136,7 +2101,7 @@ Quando o problema pede "o melhor de uma família enorme", pergunte se é LP/flux
 - **Dualidade em LP.** max cᵀx s.t. Ax ≤ b, x ≥ 0 ↔ min bᵀy s.t. Aᵀy ≥ c, y ≥ 0; valores iguais no ótimo; folga complementar: x_j > 0 ⇒ restrição dual j justa. Gatilho: provar otimalidade com um certificado (corte = fluxo, cobertura = emparelhamento, potenciais = Hungarian).
 - **Fluxo e corte como LP.** Max flow = min cut; emparelhamento máximo = cobertura mínima (bipartido); matrizes totalmente unimodulares (incidência de grafo bipartido, intervalos consecutivos, redes) fazem o LP ter ótimo inteiro — então relaxação resolve o problema inteiro.
 - **Simplex.** Para variáveis/restrições ≲ 100–300 em double: use Bland ou maior coeficiente com eps 1e-9; problemas de mistura, dieta, jogos de soma zero, max flow pequeno. Cuidado com degenerescência (ciclo) e inviabilidade inicial (fase 1).
-- **Jogo de soma zero.** Valor do jogo matricial (estratégias mistas) = LP: max v s.t. Σ_i p_i A_ij ≥ v ∀j, Σ p_i = 1; minimax de von Neumann. Antes: elimine linhas/colunas dominadas; 2×2 tem fórmula fechada.
+- **Jogo de soma zero.** Valor do jogo matricial (estratégias mistas) = LP: min v s.t. Σ_i p_i A_ij ≤ v ∀j, Σ p_i = 1; minimax de von Neumann. Antes: elimine linhas/colunas dominadas; 2×2 tem fórmula fechada.
 - **LP em poucas variáveis.** 2 variáveis e n restrições → interseção de semiplanos O(n log n); d fixo → Seidel aleatório O(d!·n). Gatilho: "maximize ax + by sujeito a n desigualdades".
 - **Lema de Farkas.** Ax = b, x ≥ 0 tem solução OU ∃y: Aᵀy ≥ 0, bᵀy < 0 (exatamente um). Em grafos: restrições de diferença inviáveis ⇔ ciclo negativo (o certificado é o ciclo); Hall ⇔ Farkas para emparelhamento.
 - **Problema de atribuição (Hungarian).** n ≤ 500 (O(n³)): potenciais u_i + v_j ≤ c_ij são exatamente a dual. Para "atribuir k tarefas a pessoas com custo" também min-cost flow. Para n ≤ 20 DP em máscara.
@@ -2147,9 +2112,9 @@ Quando o problema pede "o melhor de uma família enorme", pergunte se é LP/flux
 - **Custo negativo e ciclos.** Para min-cost com ciclos negativos: sature as arestas negativas (empurre fluxo, corrija demanda) ou use Bellman-Ford/SPFA com potenciais iniciais; no DAG basta DP para potenciais iniciais.
 - **Dinic em redes especiais.** Capacidades unitárias: O(E·min(V^{2/3}, E^{1/2})); bipartido unitário: Hopcroft–Karp O(E√V). Gatilho: "n = 10⁵ emparelhamento bipartido" → HK, não Kuhn simples.
 - **Fecho máximo (project selection).** max Σ w(S) com S fechado por dependências → fonte→v (w > 0), v→sink (−w), v→u de ∞; resposta = Σ positivos − min cut. Densidade máxima (Goldberg): binária em λ + fluxo.
-- **Rotulagem convexa (Ishikawa / min-cost tension).** min Σ f_i(x_i) + Σ w_ij·g(x_i − x_j) com f_i convexas, g convexa, w_ij ≥ 0 e rótulos ordenados x_i ∈ {0, …, k−1} → corte mínimo em camadas (cada x_i em k níveis) ou dual de min-cost flow. Caso g = |·|: a dual é fluxo de custo mínimo (potenciais).
+- **Rotulagem convexa (Ishikawa / min-cost tension).** min Σ f_i(x_i) + Σ w_ij·g(x_i − x_j) com f_i convexas e g convexa → corte mínimo em camadas (cada x_i em k níveis) ou dual de min-cost flow. Caso g = |·|: a dual é fluxo de custo mínimo (potenciais).
 - **Binário submodular.** Termo θ(x_i, x_j) binário é representável por corte iff θ(0,1) + θ(1,0) ≥ θ(0,0) + θ(1,1) (submodular); tudo o que não é, precisa inverter alguns rótulos (grafos bipartidos). Gatilho: "escolher 0/1 por vértice com custos por par".
-- **Funções submodulares.** f(A) + f(B) ≥ f(A ∪ B) + f(A ∩ B) (retornos decrescentes). Exemplos: cobertura, cortes, rank de matroide, concavidade de |A|. Maximização monótona com cardinalidade k: guloso dá (1 − 1/e); minimização é polinomial para n arbitrário (Lovász/Fujishige); os algoritmos genéricos é que só são viáveis na prática para instâncias pequenas.
+- **Funções submodulares.** f(A) + f(B) ≥ f(A ∪ B) + f(A ∩ B) (retornos decrescentes). Exemplos: cobertura, cortes, rank de matroide, concavidade de |A|. Maximização monótona com cardinalidade k: guloso dá (1 − 1/e); minimização é polinomial (Lovász/ Fujishige) mas só para tamanhos pequenos.
 - **Guloso em matroide.** Se os conjuntos viáveis formam matroide, ordenar por peso e adicionar quando mantém independência dá ótimo (inclusive "menor peso" e "maior peso"). Gatilho: "escolher itens com restrição de independência (sem ciclo, ≤ c por cor, linearmente independentes)".
 - **Matroides do dia a dia.** Gráfica (florestas) → Kruskal; linear (vetores independentes, base xor) → insira por peso decrescente numa base linear; uniforme (≤ k itens); de partição (≤ c_i do grupo i); transversal (emparelhável); de escalonamento (jobs unitários com deadline, via DSU/heap).
 - **Escalonamento com prazos.** Jobs unitários com deadline e lucro: ordene por lucro e coloque no último slot livre (DSU) — é matroide. Moore–Hodgson: minimizar nº de atrasados com tempos p_i e prazos d_i: ordene por prazo, mantenha heap de p, remova o maior quando estoura. Smith: min Σ w_iC_i → ordene por p_i/w_i; EDD: min lateness máxima.
@@ -2165,7 +2130,7 @@ Quando o problema pede "o melhor de uma família enorme", pergunte se é LP/flux
 - **Ternária 2D.** Minimizar convexa g(x, y): min_x min_y g é convexa (minimização parcial preserva convexidade) → ternária aninhada O(log²) avaliações; ou descida coordenada/gradiente/Newton em R^d suave. Conferir convexidade (Hessiana semi-definida) antes.
 - **Gradiente e hill climbing.** Para convexa suave em poucas dimensões: passo decrescente ("anel": tente 4–8 direções, reduza o passo pela metade se não melhora) converge em ~100 iterações; funções não convexas → vários inícios aleatórios.
 - **Otimização inteira pequena.** ≤ 3–5 variáveis limitadas → enumere as duas menores e resolva o resto por fórmula; ax + by = c com minimização → Euclides estendido + deslocamentos; "melhor inteiro perto do ótimo real" → teste ⌊x*⌋ e ⌈x*⌉.
-- **Mochila: LP e poucos fracionários.** Relaxação linear da mochila 0/1 tem no máximo 1 item fracionário (guloso por v/w); o ótimo inteiro não é "quase" o guloso — o guloso puro pode ser arbitrariamente ruim e max(guloso, melhor item) é só 1/2-aproximação; use branch & bound ou DP só ao redor do ponto de corte (O(n·W_max)).
+- **Mochila: LP e poucos fracionários.** Relaxação linear da mochila 0/1 tem no máximo 1 item fracionário (guloso por v/w); ótimo inteiro é "quase" o guloso: troque poucos itens perto do ponto de corte (branch & bound, ou DP só ao redor — O(n·W_max)).
 - **Mochila por valor pequeno / peso pequeno.** Se peso ≤ W: DP [peso]; se valor total ≤ V: DP [valor] = menor peso; ambos grandes → meet in the middle. Itens com muitos pesos iguais: agrupe e use mochila limitada por deque monotônico (mod w) ou binária.
 - **Mochila 2D / com conflitos.** Conflitos formam floresta/árvore → DP em árvore; conflitos bipartidos de peso → corte mínimo.
 - **Monge e SMAWK.** Custo Monge: w(a,c) + w(b,d) ≤ w(a,d) + w(b,c) ⇒ opt monótono: D&C DP O(n log n); Knuth em intervalos O(n²); SMAWK mínimo de linhas O(n); LARSCH para DP 1D/1D online. Monge côncavo ⇒ f(k) convexa ⇒ Aliens.
@@ -2182,7 +2147,7 @@ Quando o problema pede "o melhor de uma família enorme", pergunte se é LP/flux
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
 ICPC raramente cobra uma técnica sozinha: o problema médio combina 2–3 estruturas conhecidas, então aprenda os pares que se encaixam.
-- **Binária + fluxo.** "Minimizar a carga máxima / maximizar o mínimo" em atribuição ou transporte → binária no limite e checagem por max flow; minimizar a carga máxima usa capacidade = limite, mas maximizar o mínimo exige lower bounds/demandas (circulação com limites inferiores); o grafo é sempre o mesmo, só mudam capacidades e limites.
+- **Binária + fluxo.** "Minimizar a carga máxima / maximizar o mínimo" em atribuição ou transporte → binária no limite e checagem por max flow (capacidade = limite); o grafo é sempre o mesmo, só mudam as capacidades.
 - **Binária + 2-SAT.** Escolher 1 de 2 posições/cores por item, todo par escolhido deve estar a distância ≥ D → binária em D e 2-SAT onde cada par proibido vira cláusula (O(n²) cláusulas se n pequeno ou segtree de arestas se grande).
 - **Binária + MST/Kruskal.** Caminho que minimiza o máximo → MST mínimo (bottleneck); com consultas, árvore de reconstrução de Kruskal + LCA; com condição extra (conjunto de vértices conectado) → binária no peso + DSU.
 - **Binária + Dijkstra.** "Maximize o mínimo/limite de combustível/ruído em caminho" → binária no limite e BFS/Dijkstra só em arestas permitidas; se o limite é do vértice, remova vértices no check.
@@ -2208,20 +2173,20 @@ ICPC raramente cobra uma técnica sozinha: o problema médio combina 2–3 estru
 - **DP + CHT + persistência.** dp[v] = min_{u ancestral} dp[u] + b_u·a_v (DP em caminho raiz→folha): CHT persistente (Li Chao persistente ou pilha com rollback + busca binária no hull) para voltar ao pai; O(n log n).
 - **CDQ + CHT / DP 1D/1D online.** dp[i] depende de dp[j], j < i, mas o hull precisa de ordem: CDQ — resolva esquerda, construa o hull de [l, m], contribua para [m, r] ordenando queries; O(n log² n) ou log com merge.
 - **DP + segtree + pilha monotônica.** dp[i] = min_j dp[j] + max(a[j+1..i]) (ou soma de máximos): a pilha monotônica diz quais j têm o mesmo máximo → atualizações de intervalo (+ constante) na segtree sobre dp + consulta de min em [l, i−1].
-- **DP + SOS + máscara.** DP[mask] com transição sobre submáscaras por soma/condição → SOS; "escolher k de n ≤ 20 com restrição de pares" → DP[mask] com popcount; n ≤ 40 → meet in the middle (item seguinte).
+- **DP + SOS + máscara.** DP[mask] com transição sobre submáscaras por soma/condição → SOS; "escolher k de n ≤ 20 com restrição de pares" → DP[mask] com popcount; meet in the middle para n ≤ 40.
 - **Meet in the middle + ordenação.** n ≤ 40 em subset sum / contar subconjuntos com soma ≤ T / maximizar soma ≤ T: duas metades, ordenar e two pointers; com restrição extra de xor ou paridade → mapa por classe.
 - **Persistent segtree + árvore.** k-ésimo na caminho u–v: versão em cada nó = pai + valor; resposta com versões ver[u] + ver[v] − ver[lca] − ver[parent(lca)] e descida simultânea.
 - **Wavelet / persistente + binária.** Contar valores em [x, y] no subarray [l, r], k-ésimo, mediana: wavelet tree em O(log σ) por query; com updates → BIT de segtrees ou sqrt; offline → BIT + varredura.
-- **Offline varredura + BIT.** "Quantos pares (i, j) em [l, r] com a_i < a_j" é contagem de pares em subarray (inversões/não inversões): use Mo + BIT, D&C offline (CDQ) ou estrutura 2D/wavelet; já "soma de max/min em subarrays" usa pilha monotônica para definir intervalos de contribuição e varredura por r com a segtree histórica do item seguinte.
+- **Offline varredura + BIT.** "Quantos pares (i, j) em [l, r] com a_i < a_j"; "soma de max/min em subarrays": pilha monotônica define intervalos de contribuição; varredura por r com árvore que guarda "soma × tempo" (histórica).
 - **Segtree histórica.** Soma de f(l..r) para todos os subarrays dentro de [L, R], "versão do array a cada tempo": segtree com lazy de "soma acumulada ao longo do tempo" (histórico), usada com varredura por r e pilha monotônica.
 - **Sweep angular + BIT/two pointers.** Contar triângulos que contêm a origem ou que não contêm: ordene por ângulo e some C(k, 2) por ponto (complemento); fecho convexo + pontos dentro: binária no hull.
 - **Fecho convexo + binária/CHT.** Queries de reta extrema, tangente a partir de ponto, maior produto escalar com direção → hull + busca binária; muitas direções ofensivas → rotating calipers.
-- **Geometria + sweep + segtree.** Área da união de retângulos (segtree com contagem de cobertura + comprimento coberto, ou min da cobertura + contagem do mínimo), pontos em círculos/retângulos (sweep + BIT), interseção de segmentos (sweep com set ordenado por y).
+- **Geometria + sweep + segtree.** Área da união de retângulos (segtree com contagem de cobertura + min), pontos em círculos/retângulos (sweep + BIT), interseção de segmentos (sweep com set ordenado por y).
 - **Geometria + DSU/flow.** Discos que se tocam → grafo de interseção + DSU; "cortar caminho com círculos" → caminho mínimo no dual ou componentes conexas; fluxo planar ↔ dual.
-- **Dijkstra + segtree de arestas.** Vértice → intervalo de vértices com custo: segtree de grafo com duas árvores (in/out) e arestas dirigidas de custo 0 (uma para cima, outra para baixo) permite Dijkstra com O(n log n) arestas; uma única árvore com arestas 0 bidirecionais colapsa as distâncias.
+- **Dijkstra + segtree de arestas.** Vértice → intervalo de vértices com custo: segtree de grafo (nós internos, arestas de custo 0 para cima/baixo) permite Dijkstra com O(n log n) arestas.
 - **Dijkstra em camadas.** (vértice, k usos de bônus, paridade, tempo mod c) como estado; K ≤ 20 → n·K estados; muitas arestas com peso 0/1 → deque.
 - **Floyd incremental / reverso.** Remoções de vértices em sequência, "soma de todas as distâncias após cada remoção" → inverta: adicione vértices e atualize O(n²) cada: O(n³) total.
-- **Fluxo em grid (xadrez).** Paridade de i + j faz bipartição para dominós e para "escolher células sem vizinhas" → matching/max independent set (n − ν); com custos → min-cost; corte mínimo para cercar/separar. Torres que não se atacam → matching entre linhas e colunas (células proibidas viram arestas ausentes); rainhas com bloqueios é NP-difícil.
+- **Fluxo em grid (xadrez).** Paridade de i + j faz bipartição: dominós, "colocar torres/rainhas sem se atacar", escolher células sem vizinhas → matching/max independent set (n − ν); com custos → min-cost; corte mínimo para cercar/separar.
 - **Cobertura mínima por caminhos / cadeias.** Min path cover em DAG vértice-disjunto = n − ν; com sobreposição, feche transitivamente primeiro. Min antichains/ chains → Dilworth via matching; "mínimo de guardas".
 - **Euler tour + flow/matching.** Decompor arestas de multigrafo euleriano em caminhos/ciclos, ou orientar aresta a aresta: circuito euleriano; "pintar arestas com 2 cores balanceadas" → Euler tour alternando cores (grafo bipartido regular em potência de 2 → colorir por D&C).
 - **Postman chinês.** Percorrer toda aresta custo mínimo: adicione emparelhamento perfeito mínimo entre vértices de grau ímpar (≤ 20 → DP em máscara sobre distâncias de Floyd).
@@ -2231,16 +2196,16 @@ ICPC raramente cobra uma técnica sozinha: o problema médio combina 2–3 estru
 - **Circular: corte e duplicação.** Estrutura em círculo → fixe um ponto de corte (teste as 2–3 candidatas), ou duplique o array e use janela de tamanho n; DP circular: fixe o primeiro estado e rode DP linear.
 - **Geradores de problemas "somas de produtos".** Σ_{i<j} a_i a_j f(i, j) com f polinomial/exponencial em i − j → convolução (FFT/NTT) ou prefixos com potências; f = gcd → Möbius + múltiplos.
 - **Contagem em árvores com FFT.** DP de árvore com polinômio por vértice (nº de maneiras como função do tamanho/grau): produto de filhos por D&C + NTT: O(n log² n); com peso por profundidade, long-path decomposition.
-- **Enumerar caminhos curtos em árvores/grafos esparsos.** Caminhos de comprimento ≤ k em grafo com grau limitado: BFS limitado; ciclos de comprimento ≤ 6 em grafo planar usam a 5-degenerescência: oriente as arestas do menor para o maior rank para limitar o out-degree a 5 na enumeração — grau médio < 6 sozinho não limita Σ C(grau, 2), como na estrela.
+- **Enumerar caminhos curtos em árvores/grafos esparsos.** Caminhos de comprimento ≤ k em grafo com grau limitado: BFS limitado; ciclos de comprimento ≤ 6 em grafo planar (grau médio < 6) → iterar sobre pares de vizinhos.
 - **Jogos em ICPC.** Soma de jogos independentes → Grundy: calcule pequeno por brute force, ache período; jogos em grafo/árvore → Grundy com DP; "primeiro ou segundo vence" geralmente é uma condição local (xor ≠ 0 ou paridade de profundidade).
 - **Simulação com estruturas.** "Ordem de eventos com tempo contínuo" → heap de eventos com cancelamento preguiçoso; "fila de impressão/CPU" → heap + sort por tempo; "elevador" → simulação com map; não faça passo a passo se T é grande — pule para o próximo evento.
 - **Grafos funcionais + estrutura.** Cada vértice aponta para um só → ciclos com árvores penduradas: binary lifting para k passos, ciclo + prefixo de somas para aplicar f^k; "colorir a menor quantidade" → ciclos independentes.
 - **Árvores de sufixo e DSU.** Contagem de substrings distintas em intervalo [l, r] (queries) → SA + segtree/BIT offline, ou SAM com LCT (heavy) — se a questão é mais simples, prefira hash com restrição.
 - **Raiz quadrada de queries.** Rebuild a cada B updates: queries de menor caminho com poucas arestas modificadas (Dijkstra a cada √q) ou contagem de coisas com updates em lote; combine com "pesado/leve por grau".
 - **Reconstrução da resposta.** Em ICPC, conferir o formato: se o problema exige "uma solução qualquer", rode o DP/fluxo e extraia os escolhidos (reverso de predecessores / arestas saturadas); teste o checker próprio no brute force.
-- **Ler como grafo de dependências.** Pré-requisitos, "A deve vir antes de B" → ordenação topológica (lexicograficamente menor = heap; contagem de ordens = DP em máscara ou fórmula do gancho em floresta, no item seguinte).
+- **Ler como grafo de dependências.** Pré-requisitos, "A deve vir antes de B" → ordenação topológica (lexicograficamente menor = heap; contagem de ordens = DP em máscara ou fórmula em floresta n!/∏sz).
 - **Contagem de linearizações de floresta.** Nº de ordens topológicas de uma floresta enraizada = n!/∏_v sz(v) (fórmula do gancho para árvores); com condições extras → DP de intercalação com C(a+b, a).
-- **Ranges + conjuntos de intervalos.** Atribuição em intervalo (range assign) e "conte valores distintos": ODT (set de intervalos) com amortização; já range add/consultas de soma podem ser O(nq) no ODT — use segtree com lazy (ou ODT só para decompor quando houver assigns frequentes).
+- **Ranges + conjuntos de intervalos.** Atribuição em intervalo e "conte valores distintos": ODT (set de intervalos) com amortização; com operações de soma/consulta → ODT para decompor + BIT/segtree.
 - **Escaneamento duplo (two-pointer em estrutura).** Subarrays com "max − min ≤ k" ou "k distintos" → janela + deque/multiset; contagem de subarrays ótimos → número de janelas × saídas por início (soma n − L).
 - **Meet in the middle em grafo.** Caminhos de comprimento 2k → conecte metades em vértice do meio (k passos de cada lado), contagem por mapa; caminho de soma S em subconjunto.
 - **Fluxo + DP.** Primeiro DP calcula quais pares são compatíveis (ex.: janelas de tempo), depois fluxo/matching sobre o grafo resultante; ou fluxo dá estrutura e DP otimiza custos (redes em camadas por tempo).
@@ -2264,7 +2229,7 @@ Depois de cada problema, escreva uma linha nova aqui: o gatilho que você deveri
 
 *(adicionado em 2026-11-10 por agentes; revisado)*
 
-- **Diagnóstico por veredito.** WA 1: leitura/formato/sample. WA em teste médio: caso de borda ou guloso errado. WA em grande: overflow, precisão ou lógica errada. TLE: complexidade alta (n×n em vez de n log n), pior caso (estrela, caminho, todos iguais), recursão profunda, constante. RE: índice, stack, divisão por 0. MLE: arrays em 2D de tamanho cheio.
+- **Diagnóstico por veredito.** WA 1: leitura/formato/sample. WA em teste médio: caso de borda ou guloso errado. WA em grande: overflow, precisão, ou n×n em vez de n log n travado. TLE: pior caso (estrela, caminho, todos iguais), recursão profunda, constante. RE: índice, stack, divisão por 0. MLE: arrays em 2D de tamanho cheio.
 - **Casos de borda padrão.** n = 1, n = 2, todos iguais, já ordenado, ordenado ao contrário, valores máximos/mínimos, 0 e negativos, árvore caminho e estrela, grafo completo, componente isolada, resposta 0 / −1.
 - **Gerador de testes.** Escreva um gerador com seed e parâmetros (n, valor máx); 1000 testes pequenos contra o brute force acham 95% dos bugs; reduza o contraexemplo (menor n, menor valor) até caber à mão.
 - **Overflow.** a·b com a, b ≤ 10⁹ em long long; produto mod p: multiplique em ll antes do %; INF perto de 9·10¹⁸ estoura em INF + INF (use 1e18 ou 4e18 e cheque antes de somar); 1 << 40 precisa de 1LL; __int128 para produto de 10¹⁸ × 10¹⁸ mod m.
@@ -2274,9 +2239,9 @@ Depois de cada problema, escreva uma linha nova aqui: o gatilho que você deveri
 - **Ordem de leitura.** Ao dar `return` cedo (n = 1, caso trivial), leia primeiro o resto do teste; senão os testes seguintes viram lixo.
 - **Recursão profunda.** DFS em caminho de 2·10⁵ → stack overflow; faça iterativo ou aumente stack (ulimit/#pragma); BFS/ordem topológica quando possível.
 - **Comparador inválido.** `<=` em sort/set derruba o programa ou dá resultado errado; deve ser ordem fraca estrita. Em set/map de pares com ordem customizada, igualdade = nenhum menor que o outro.
-- **Armadilhas do C++.** map[x] insere; multiset.erase(valor) apaga todos (use erase(find)); iterador invalidado ao inserir em vector; ponto flutuante igual com `==`; char com sinal; endl misturado com printf; uso de variável não inicializada (use -fsanitize=memory ou Valgrind; ASan/UBSan/_GLIBCXX_DEBUG não detectam).
+- **Armadilhas do C++.** map[x] insere; multiset.erase(valor) apaga todos (use erase(find)); iterador invalidado ao inserir em vector; ponto flutuante igual com `==`; char com sinal; endl misturado com printf; uso de variável não inicializada (compile com -fsanitize=address,undefined e -D_GLIBCXX_DEBUG).
 - **Conferir leitura e saída.** Imprima o que leu; confira 0/1-indexado; confirme que a resposta é a pedida (índice? valor? quantidade?). Muitos WA são problema bem resolvido com a pergunta errada.
-- **Cheque a hipótese do guloso.** Escreva o contraexemplo de pelo menos 3 tentativas de ordem; se nenhuma falha, enumere exaustivamente instâncias pequenas (n ≤ 6–7, valores pequenos) — 1000 testes aleatórios não validam o guloso — e ainda assim exija um argumento de troca.
+- **Cheque a hipótese do guloso.** Escreva o contraexemplo de pelo menos 3 tentativas de ordem; se nenhuma falha em 1000 testes aleatórios, o guloso provavelmente está certo, só falta provar.
 - **Se o brute force é muito lento.** Faça brute force em duas camadas: um exponencial pequeno (n ≤ 8) para testar WA e um polinomial lento para testar TLE de ideias.
 - **Se não acha a recorrência.** Calcule 2d termos por brute force e rode Berlekamp–Massey (ordem ≤ d); funciona para recorrências lineares, e confirme com termos extras.
 - **Se a estrutura é grande demais.** Imprima o estado ótimo para n = 5, 6, 7 e desenhe; procure uma bijeção com algo contável ou um padrão de bits/paridade.
