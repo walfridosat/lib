@@ -21,6 +21,7 @@ documentação de quando usar cada técnica.
 | `docs/lib-index.md` | Índice dos 206 trechos: nome, descrição, seção do catálogo e status |
 | `docs/catalogo-completo.md` | Catálogo de técnicas e fórmulas (23 seções) |
 | `docs/mapa-rapido.md` | Gatilho → técnica, em uma linha por salto |
+| `docs/frequencias-cf.md` | Técnicas mais frequentes em A–D de CF Div. 2/3/4 (351 problemas), por letra e divisão |
 | `docs/PLANO_LIB.md` | Convenções, como testar, correções aplicadas e o que falta |
 | `docs/AUDITORIA-2026-11-11.md` | Auditoria dos documentos e do código, com achados e status |
 | `docs/catalogo.pdf` | Versão impressa do mapa + catálogo + índice |
