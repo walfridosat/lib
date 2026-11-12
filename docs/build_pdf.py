@@ -57,6 +57,8 @@ a { color: var(--acc); }
 def md(text):
     # Python-Markdown exige linha em branco antes de lista/tabela; o catalogo nem sempre tem.
     out = []
+    # sub-listas com 2 espacos -> 4 (Python-Markdown so aninha com 4)
+    text = re.sub(r"(?m)^( +)", lambda m: m.group(1) * 2, text)
     for line in text.split("\n"):
         starts_block = re.match(r"\s*([-*]|\d+\.) ", line) or line.startswith("|")
         if starts_block and out and out[-1].strip() and not (

@@ -1,0 +1,209 @@
+# Relatorio de digitabilidade (ICPC presencial)
+
+- code/algebra/berlekamp_massey.cpp | 48 linhas de codigo | dificil | extraia pw para um util comum, repetido em varios arquivos de algebra
+- code/algebra/bostan_mori.cpp | 69 linhas de codigo | dificil | ntt/mul/pw duplicam ntt.cpp; inclua ntt.cpp em vez de recopiar
+- code/algebra/conv_mod.cpp | 55 linhas de codigo | dificil | para M primo NTT-amigavel, um caso especial com 1 NTT em vez de 3 primos
+- code/algebra/fft.cpp | 56 linhas de codigo | dificil | conv (double puro) e opcional; separe-o de convMod em outro arquivo
+- code/algebra/lagrange.cpp | 24 linhas de codigo | media | o bloco de fatoriais/inversos repete em power_sum e poly; extraia helper
+- code/algebra/ntt.cpp | 52 linhas de codigo | media | ntt e multiply sao copiados em poly.cpp e bostan_mori.cpp; unifique num header
+- code/algebra/poly.cpp | 224 linhas de codigo | dificil | ntt/mul duplicam ntt.cpp (~50 linhas); bernoulli e taylor_shift sao opcionais
+- code/algebra/power_sum.cpp | 48 linhas de codigo | dificil | lagrange duplica lagrange.cpp; inclua-o; crivo de potencias e opcional
+- code/combinatorics/binom_general.cpp | 56 linhas de codigo | dificil | egcd/inv locais duplicam exgcd.cpp
+- code/combinatorics/binom_mod.cpp | 60 linhas de codigo | media | C e P repetem a checagem de intervalo; helper comum
+- code/combinatorics/burnside.cpp | 43 linhas de codigo | media | phi_/mobius_/divisors_ duplicam divisores.cpp
+- code/combinatorics/catalan_family.cpp | 48 linhas de codigo | media | use inv_ de binom_mod em vez de pw(a, MOD-2)
+- code/combinatorics/counting_misc.cpp | 79 linhas de codigo | dificil | erdos_gallai e gale_ryser repetem somas parciais; helper comum
+- code/combinatorics/grid_paths.cpp | 34 linhas de codigo | media | paths() e so C(dx+dy,dx); pode ser inline
+- code/combinatorics/inclusion_exclusion.cpp | 53 linhas de codigo | media | ie_subsets e minmax_expect repetem o laco por mascara
+- code/combinatorics/lgv.cpp | 26 linhas de codigo | facil | lgv_det e igual a det_mod de matrix_tree.cpp
+- code/combinatorics/lucas.cpp | 31 linhas de codigo | facil | pw local pode vir de inv_lote/mod
+- code/combinatorics/matrix_tree.cpp | 79 linhas de codigo | dificil | det_mod e lgv_det sao iguais; manter uma copia
+- code/combinatorics/partitions.cpp | 36 linhas de codigo | facil | part_exact_k e part_distinct compartilham a DP; unificar
+- code/combinatorics/perm_counts.cpp | 49 linhas de codigo | media | derangements/involutions/indecomposable repetem alocacao de vetor
+- code/combinatorics/prob_expect.cpp | 66 linhas de codigo | dificil | as formulas repetem pw(...,MOD-2); guardar inversos
+- code/combinatorics/stirling_bell.cpp | 38 linhas de codigo | media | ok
+- code/combinatorics/tree_counting.cpp | 54 linhas de codigo | media | ok
+- code/dp/DontCares.cpp | 20 linhas de codigo | media | ok
+- code/dp/bitset_subset_sum.cpp | 26 linhas de codigo | media | ss_count e a versao lenta; separe-o, deixando ss_bitset sozinho
+- code/dp/broken_profile.cpp | 25 linhas de codigo | media | ok
+- code/dp/coins.cpp | 10 linhas de codigo | facil | ok
+- code/dp/comb.cpp | 19 linhas de codigo | facil | invFact pode ser preenchido de tras para frente com um unico inverso (remove MAXN modExp)
+- code/dp/dc_opt.cpp | 26 linhas de codigo | media | separe o exemplo (S_dc/C) da estrutura; o caso best == -1 e dispensavel
+- code/dp/digitdp.cpp | 20 linhas de codigo | media | o estado soma <= 170 e especifico; separe o exemplo do template generico
+- code/dp/edit_distance.cpp | 42 linhas de codigo | media | edit_band e independente de edit_dist; separe em duas secoes/arquivos
+- code/dp/frog.cpp | 11 linhas de codigo | facil | ok
+- code/dp/frog3_cht.cpp | 68 linhas de codigo | dificil | leitura/main e CHT sao separaveis; use cht_monotono.cpp para a parte reutilizavel
+- code/dp/interval_dp.cpp | 39 linhas de codigo | media | as tres funcoes sao independentes; cada uma pode ser secao propria (opcional)
+- code/dp/knapsack.cpp | 7 linhas de codigo | facil | ok
+- code/dp/knapsack_bounded.cpp | 33 linhas de codigo | media | knap_split e um caso particular; com log c aceitavel, dispense knap_deque
+- code/dp/knuth.cpp | 20 linhas de codigo | media | ok
+- code/dp/lcs.cpp | 13 linhas de codigo | facil | ok
+- code/dp/lcs_bitset.cpp | 22 linhas de codigo | media | ok
+- code/dp/lis.cpp | 9 linhas de codigo | facil | ok
+- code/dp/slope_trick.cpp | 24 linhas de codigo | media | topL/topR/popL/popR sao wrappers; use acesso direto nos callers (opcional)
+- code/dp/sosdp.cpp | 18 linhas de codigo | media | troque a versao recursiva pela iterativa (3 linhas de laco, mais curta e rapida)
+- code/dp/subsetsum.cpp | 20 linhas de codigo | dificil | para t pequeno, separe o caso bitset e mantenha so a versao Pisinger
+- code/dp/tree_knapsack.cpp | 53 linhas de codigo | media | tk_dfs e tk_out sao codigo morto (nao chamados); remova-os (~6 linhas)
+- code/dp/tsp_bitmask.cpp | 38 linhas de codigo | media | as tres funcoes sao independentes; separe em secoes/arquivos
+- code/ds/aliens.cpp | 8 linhas de codigo | media | se nao houver empate, eval pode devolver ll e remover a comparacao (valor,-cnt)
+- code/ds/bit.cpp | 24 linhas de codigo | facil | o build O(n) pode virar um laco de add O(n log n), que e mais curto
+- code/ds/bit2d.cpp | 17 linhas de codigo | facil | ok
+- code/ds/bit_rr.cpp | 15 linhas de codigo | media | ok
+- code/ds/busca_binaria.cpp | 70 linhas de codigo | media | bs_last pode ser bs_first(lo,hi,negacao de ok)-1, eliminando a segunda busca
+- code/ds/busca_binaria_paralela.cpp | 17 linhas de codigo | media | ok
+- code/ds/busca_ternaria.cpp | 27 linhas de codigo | media | ok
+- code/ds/cdq.cpp | 24 linhas de codigo | dificil | ok
+- code/ds/cht_dinamico.cpp | 25 linhas de codigo | dificil | ok
+- code/ds/cht_monotono.cpp | 30 linhas de codigo | media | se todas as consultas sao em x crescente, remover query binaria e usar so query_mono
+- code/ds/conectividade_dinamica.cpp | 42 linhas de codigo | dificil | reaproveitar DSUR de dsu_rollback.cpp em vez de duplicar join/rollback
+- code/ds/disjoint_sparse.cpp | 23 linhas de codigo | media | ok
+- code/ds/distinct_range.cpp | 22 linhas de codigo | media | juntar as duas BITs em uma BIT de pair<ll,ll>
+- code/ds/dsu_paridade.cpp | 23 linhas de codigo | media | ok
+- code/ds/dsu_potencial.cpp | 23 linhas de codigo | media | ok
+- code/ds/dsu_proximo_livre.cpp | 11 linhas de codigo | facil | ok
+- code/ds/dsu_rollback.cpp | 23 linhas de codigo | media | ok
+- code/ds/fila_monotonica.cpp | 26 linhas de codigo | media | ok
+- code/ds/heap_lazy.cpp | 13 linhas de codigo | facil | ok
+- code/ds/heap_mergeavel.cpp | 19 linhas de codigo | media | trocar typedef ll T por template<class T> para nao reescrever com pares
+- code/ds/kdtree.cpp | 55 linhas de codigo | dificil | ok
+- code/ds/lichao.cpp | 54 linhas de codigo | media | empty() pode ser inline t[i].ln.b == INF
+- code/ds/merge_sort_tree.cpp | 19 linhas de codigo | facil | ok
+- code/ds/odt.cpp | 20 linhas de codigo | media | assign e apply repetem split(r)/split(l); helper range()
+- code/ds/ordered_set.cpp | 5 linhas de codigo | facil | ok
+- code/ds/ps2d.cpp | 21 linhas de codigo | facil | ok
+- code/ds/seg2d.cpp | 33 linhas de codigo | media | addY/sumY repetem o padrao de seg_dyn; helper de descida
+- code/ds/seg_beats.cpp | 70 linhas de codigo | dificil | ap/push podem receber struct Tag (am, ao)
+- code/ds/seg_descent.cpp | 32 linhas de codigo | media | SegMax e SegSum repetem N potencia de 2; helper comum
+- code/ds/seg_dyn.cpp | 43 linhas de codigo | media | ok
+- code/ds/seg_iter.cpp | 16 linhas de codigo | facil | ok
+- code/ds/seg_lazy.cpp | 68 linhas de codigo | dificil | ok
+- code/ds/seg_nodes.cpp | 28 linhas de codigo | facil | ok
+- code/ds/seg_persist.cpp | 46 linhas de codigo | media | kth e cnt_le repetem a descida; helper de passo
+- code/ds/seg_t.cpp | 24 linhas de codigo | facil | ok
+- code/ds/segtree.cpp | 59 linhas de codigo | media | tree e lazy podem virar vetor de struct Node
+- code/ds/sparse_min.cpp | 19 linhas de codigo | facil | ok
+- code/ds/sparse_table.cpp | 32 linhas de codigo | media | SparseOp com indices cobriria SparseIdx num so build
+- code/ds/sqrt_decomp.cpp | 33 linhas de codigo | media | add e count_ge repetem as pontas; helper de pontas
+- code/ds/treap_implicito.cpp | 54 linhas de codigo | dificil | sum/get repetem lambdas; on pode devolver o agregado
+- code/ds/wavelet.cpp | 37 linhas de codigo | media | less e kth repetem o remapeamento; helper de passo
+- code/flow/blossom.cpp | 52 linhas de codigo | dificil | unir lca e markPath numa contrai() unica (menos linhas, porem mais dificil de depurar)
+- code/flow/dag_path_cover.cpp | 33 linhas de codigo | media | o matching interno repete kuhn.cpp; chamar a struct de la economiza ~10 linhas
+- code/flow/dinic.cpp | 50 linhas de codigo | media | cut(s) e dispensavel: apos flow(), o lado S e lvl[u] >= 0
+- code/flow/flow_lower_bounds.cpp | 63 linhas de codigo | media | reusar a struct Dinic de dinic.cpp em vez de reimplementar bfs/dfs (~20 linhas)
+- code/flow/gale_shapley.cpp | 17 linhas de codigo | facil | ok
+- code/flow/gomory_hu.cpp | 56 linhas de codigo | dificil | reusar Dinic de dinic.cpp; bfs/dfs internos ocupam ~20 linhas
+- code/flow/hopcroft_karp.cpp | 33 linhas de codigo | media | compartilhar a struct com konig.cpp e so acrescentar a BFS da cobertura
+- code/flow/hungarian.cpp | 24 linhas de codigo | dificil | ok
+- code/flow/konig.cpp | 46 linhas de codigo | media | unificar com hopcroft_karp.cpp, que tem o mesmo matching
+- code/flow/kuhn.cpp | 21 linhas de codigo | facil | ok
+- code/flow/matroid_intersection.cpp | 68 linhas de codigo | dificil | extrair o SPFA/relaxacao do grafo de trocas para um helper, hoje repetido no laco
+- code/flow/mcmf.cpp | 48 linhas de codigo | media | Bellman-Ford inicial pode ser opcional quando os custos sao >= 0; costs[] pode ser opcional
+- code/flow/mcmf_spfa.cpp | 29 linhas de codigo | media | unificar com mcmf.cpp ou extrair a saturacao do caminho em helper
+- code/flow/project_selection.cpp | 54 linhas de codigo | media | reusar a struct Dinic de dinic.cpp (~25 linhas a menos)
+- code/flow/push_relabel.cpp | 40 linhas de codigo | dificil | ok
+- code/flow/simplex.cpp | 58 linhas de codigo | dificil | ok
+- code/general/annealing.cpp | 36 linhas de codigo | media | separe hillClimb2D em arquivo proprio (parte opcional)
+- code/general/buscaternaria.cpp | 35 linhas de codigo | facil | ok
+- code/general/compressao.cpp | 16 linhas de codigo | facil | Comp::id pode chamar lb (mesmo corpo)
+- code/general/debruijn.cpp | 12 linhas de codigo | media | ok
+- code/general/debug.cpp | 12 linhas de codigo | facil | ok
+- code/general/diff2d.cpp | 48 linhas de codigo | media | Pref2D, Diff2D e maxSubmatrix sao independentes; separe em arquivos
+- code/general/fastio.cpp | 26 linhas de codigo | facil | ok
+- code/general/gale_ryser.cpp | 24 linhas de codigo | media | northWest e galeRyser independentes; separe o transporte
+- code/general/gen_exemplo.cpp | 13 linhas de codigo | facil | ok
+- code/general/grau_seq.cpp | 44 linhas de codigo | media | havelHakimi: priority_queue evita reordenar a cada iteracao
+- code/general/gray_code.cpp | 11 linhas de codigo | facil | ok
+- code/general/guloso_heap.cpp | 65 linhas de codigo | media | 5 rotinas independentes; separe em arquivos por problema
+- code/general/hash_anti.cpp | 19 linhas de codigo | facil | ok
+- code/general/int128_io.cpp | 15 linhas de codigo | facil | ok
+- code/general/interativo.cpp | 43 linhas de codigo | media | mova o esqueleto do interator local para arquivo separado
+- code/general/intervalos.cpp | 66 linhas de codigo | media | assignRooms, kMachines e coverMin sao independentes; separe
+- code/general/inversoes.cpp | 29 linhas de codigo | media | ok
+- code/general/maioria.cpp | 25 linhas de codigo | facil | heavyHitters e majorityRandom sao opcionais; separe
+- code/general/mediana_janela.cpp | 32 linhas de codigo | media | dispense shi: shi = soma total - slo
+- code/general/meet_middle.cpp | 39 linhas de codigo | media | extraia helper que devolve as metades A e B (repete em 3 funcoes)
+- code/general/perm_ciclos.cpp | 36 linhas de codigo | media | parity pode usar (n - cycles(p).size()) & 1 sem chamar minSwaps
+- code/general/permutacoes.cpp | 23 linhas de codigo | facil | ok
+- code/general/pilha_monotonica.cpp | 62 linhas de codigo | media | nextGreater e prevGreaterEq sao simetricos; use um helper parametrizado
+- code/general/rng.cpp | 17 linhas de codigo | facil | ok
+- code/general/subsets.cpp | 15 linhas de codigo | facil | ok
+- code/general/template.cpp | 19 linhas de codigo | facil | ok
+- code/general/torneio_landau.cpp | 23 linhas de codigo | media | use priority_queue por pontuacao em vez de sort a cada remocao
+- code/general/two_pointers.cpp | 38 linhas de codigo | media | atMostK pode usar vetor de contagem apos compressao em vez de map
+- code/geometry/angle_sort.cpp | 44 linhas de codigo | media | d, c e grp repetem a mesma informacao; agrupar em um unico vetor de grupos
+- code/geometry/calipers.cpp | 51 linhas de codigo | dificil | os tres lacos repetem o avanco do ponteiro antipodal; extrair helper
+- code/geometry/circles.cpp | 137 linhas de codigo | dificil | o bloco Pd/cross/dot/len/perp/rot repete point_dbl.cpp; incluir aquele arquivo e apagar
+- code/geometry/closest_pair.cpp | 29 linhas de codigo | media | recalcular d (ceil sqrt) so quando best diminui
+- code/geometry/convex_extreme.cpp | 38 linhas de codigo | dificil | a variavel right e atribuida duas vezes seguidas; consolidar em uma expressao
+- code/geometry/convex_layers.cpp | 51 linhas de codigo | dificil | as duas cadeias do hull repetem o mesmo while; extrair helper de cadeia
+- code/geometry/convexhull.cpp | 23 linhas de codigo | facil | duplica hull_andrew.cpp; manter so a versao de la e remover este arquivo
+- code/geometry/geometry3d.cpp | 67 linhas de codigo | dificil | PR pode virar array<int,2> com helpers estaticos, sem ins/rem/cnt
+- code/geometry/half_plane.cpp | 44 linhas de codigo | dificil | hpInter e chamado 4 vezes com pares do deque; extrair helper
+- code/geometry/hull_andrew.cpp | 32 linhas de codigo | media | as duas cadeias repetem o mesmo while; extrair helper de cadeia
+- code/geometry/min_circle.cpp | 38 linhas de codigo | media | comparar distancias ao quadrado nos lacos e tirar sqrt so no final
+- code/geometry/minkowski.cpp | 45 linhas de codigo | media | negPoly, originIn e convexInter sao opcionais; separar em arquivo proprio
+- code/geometry/point_dbl.cpp | 51 linhas de codigo | media | cross/dot/norm2/len/cr repetem em circles/half_plane/min_circle; centralizar
+- code/geometry/point_int.cpp | 49 linhas de codigo | facil | distPointSeg e lineInter sao opcionais e podem sair
+- code/geometry/polygon.cpp | 83 linhas de codigo | dificil | o teste de borda de inPoly repete onSeg; usar o mesmo helper
+- code/geometry/polygon_cut.cpp | 26 linhas de codigo | facil | ok
+- code/geometry/rect_union.cpp | 67 linhas de codigo | dificil | CovTree.upd e recursiva; versao iterativa encurta
+- code/geometry/seg_any_inter.cpp | 54 linhas de codigo | dificil | operator< chama gety duas vezes; cachear a altura no evento
+- code/graph/bcc_block_cut.cpp | 39 linhas de codigo | media | montar T ao fechar cada bloco em vez de varrer blocks[]
+- code/graph/bellman_ford.cpp | 43 linhas de codigo | media | extrair o laco de relaxamento comum a bellman e neg_cycle
+- code/graph/bfs.cpp | 18 linhas de codigo | facil | usar int em n/visited/queue no lugar de ll
+- code/graph/bfs01.cpp | 36 linhas de codigo | media | extrair a relaxacao (v,w) comum a bfs01 e dial
+- code/graph/bipartite.cpp | 30 linhas de codigo | media | ok
+- code/graph/bridges_2ecc.cpp | 68 linhas de codigo | dificil | obter csz em uma DFS propria em vez da varredura separada
+- code/graph/ciclos.cpp | 62 linhas de codigo | dificil | extrair a reconstrucao u->v compartilhada pelas duas DFS
+- code/graph/dijkstra.cpp | 19 linhas de codigo | facil | ok
+- code/graph/dijkstra_estados.cpp | 30 linhas de codigo | media | mover dij_k_gratis (exemplo) para comentario e deixar so o template
+- code/graph/dijkstra_variantes.cpp | 61 linhas de codigo | dificil | unir dij_minimax com o Dijkstra basico via parametro de relaxacao
+- code/graph/dsu.cpp | 14 linhas de codigo | facil | ok
+- code/graph/euler.cpp | 53 linhas de codigo | media | unir euler_und e euler_dir com uma flag (laco de pilha identico)
+- code/graph/floyd.cpp | 42 linhas de codigo | media | ok
+- code/graph/grafo_funcional.cpp | 48 linhas de codigo | dificil | ok
+- code/graph/johnson.cpp | 29 linhas de codigo | media | chamar o Dijkstra comum dentro do laco s
+- code/graph/kruskal.cpp | 23 linhas de codigo | facil | ok
+- code/graph/kth_walks.cpp | 15 linhas de codigo | facil | ok
+- code/graph/range_graph.cpp | 43 linhas de codigo | dificil | unir a construcao das arvores out/in com um offset
+- code/graph/scc_kosaraju.cpp | 30 linhas de codigo | media | ok
+- code/graph/scc_tarjan.cpp | 49 linhas de codigo | dificil | extrair o Tarjan para reutilizar em two_sat
+- code/graph/spfa.cpp | 19 linhas de codigo | facil | ok
+- code/graph/toposort.cpp | 32 linhas de codigo | facil | usar int no lugar de ll
+- code/graph/two_sat.cpp | 61 linhas de codigo | dificil | reutilizar a funcao de SCC de scc_tarjan no solve
+- code/math/bsgs.cpp | 28 linhas de codigo | media | ok
+- code/math/crt.cpp | 45 linhas de codigo | media | exg local pode ser substituido por exgcd de exgcd.cpp
+- code/math/divisores.cpp | 70 linhas de codigo | media | tau_f pode ser um loop de uma linha; geo e opcional
+- code/math/exgcd.cpp | 47 linhas de codigo | media | dioph e count_dioph repetem a solucao base; extrair helper
+- code/math/floor_sum.cpp | 59 linhas de codigo | media | floor_sum3 (parte opcional) pode ir para arquivo separado
+- code/math/inv_lote.cpp | 29 linhas de codigo | facil | fact_tab/ifact_tab podem ser locais de binom_mod.cpp
+- code/math/miller_rabin.cpp | 22 linhas de codigo | facil | a lista de 12 bases aparece duas vezes; guardar em array
+- code/math/mint.cpp | 24 linhas de codigo | facil | operator!= pode ser !(a == b)
+- code/math/mod.cpp | 28 linhas de codigo | facil | mod_add/mod_sub/mod_mul podem virar uma linha cada
+- code/math/ntt.cpp | 68 linhas de codigo | dificil | funcao inversa explicita evita o reverse manual em convolution
+- code/math/pollard_rho.cpp | 64 linhas de codigo | dificil | incluir miller_rabin.cpp em vez de duplicar mulmod/powmod/is_prime
+- code/math/primitive_root.cpp | 55 linhas de codigo | media | trial_fact duplica divisores.cpp; incluir em vez de repetir
+- code/math/sieve.cpp | 14 linhas de codigo | facil | ok
+- code/math/sieve_linear.cpp | 29 linhas de codigo | media | manter so lp/pr e gerar as outras tabelas sob demanda
+- code/math/sieve_seg.cpp | 38 linhas de codigo | media | small_primes pode vir de sieve.cpp
+- code/math/tonelli.cpp | 41 linhas de codigo | media | pmod duplica pw/pw_mod de outros arquivos
+- code/string/aho_corasick.cpp | 58 linhas de codigo | media | ok
+- code/string/bitset_match.cpp | 37 linhas de codigo | media | ok
+- code/string/eertree.cpp | 68 linhas de codigo | dificil | part repete o laco de series; extrair para metodo da struct
+- code/string/hash.cpp | 23 linhas de codigo | facil | ok
+- code/string/hash2d.cpp | 37 linhas de codigo | media | ok
+- code/string/hash61.cpp | 56 linhas de codigo | media | ok
+- code/string/kmp.cpp | 51 linhas de codigo | facil | ok
+- code/string/lyndon.cpp | 25 linhas de codigo | facil | ok
+- code/string/manacher.cpp | 39 linhas de codigo | media | ok
+- code/string/suffix_array.cpp | 66 linhas de codigo | dificil | trocar a sparse table por segment tree (mais linhas) ou query O(log n) (menos linhas)
+- code/string/suffix_automaton.cpp | 107 linhas de codigo | dificil | os tres sorts por len (calc_cnt/kth/min_not_sub) podem compartilhar uma ordem topologica unica
+- code/string/trie.cpp | 32 linhas de codigo | facil | ok
+- code/string/zfunc.cpp | 27 linhas de codigo | facil | ok
+- code/tree/centroid.cpp | 49 linhas de codigo | dificil | unir a BFS de tamanhos e a de distancias numa passada
+- code/tree/centroid_paths.cpp | 48 linhas de codigo | dificil | extrair a decomposicao por centroides comum a centroid.cpp
+- code/tree/hld.cpp | 82 linhas de codigo | dificil | separar uma versao sem rev para monoides comutativos
+- code/tree/hld_bit.cpp | 44 linhas de codigo | media | unir path_add e path_sum via lambda de operacao
+- code/tree/lca_lifting.cpp | 44 linhas de codigo | media | ok
+- code/tree/lca_sparse.cpp | 36 linhas de codigo | media | ok
+- code/tree/lca_tarjan.cpp | 32 linhas de codigo | media | ok

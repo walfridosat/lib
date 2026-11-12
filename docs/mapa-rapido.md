@@ -1,6 +1,6 @@
 # Mapa rápido
 
-Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo.md`; a versão longa antiga deste mapa está em `mapa-rapido-longo.md`.
+Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo.md`.
 
 ## Reduções
 
@@ -14,11 +14,13 @@ Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo
 - Operação reversível → forma canônica dos dois lados
 - "Sempre existe" → pombal / extremo / invariante viram a construção
 - Min difícil → dual (corte = fluxo, König, Dilworth)
+- Atingíveis mudam de 2 em 2 → só mín, máx e paridade
+- Operação em todos menos um → em todos + desfaz um
 
 **Arrays e guloso**
 - Soma = 0 → prefixos iguais; média ≥ k → subtraia k; mediana ≥ x → ±1
 - Op. em intervalo → 2 pontos no array de diferenças
-- Ordem ótima de tarefas → exchange argument (t/w, prazo)
+- Ordem ótima de tarefas → exchange argument (t/w, prazo); jobs com prazo e lucro → heap por prazo; código de Huffman → heap
 - Estritamente crescente → a_i − i não decrescente
 - Minimizar Σ|a_i − b_i| com b monótono → slope trick (heap)
 - Escolher k não adjacentes → heap + lista ligada (arrependimento)
@@ -26,6 +28,11 @@ Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo
 - Pares i < j com condição → ordene + BIT; 3 dimensões → CDQ
 - Cíclico → duplique; n ≤ 40 → meet in the middle
 - Cobertura mínima por crescentes → maior não crescente (Dilworth)
+- Intervalos ocupados → olhe as k + 1 lacunas
+- Prefixo vira mín / sufixo vira máx → sobrevivem os recordes
+- Equilibrar por transferências → Σ excessos
+- a\_i + a\_{i+1} constante → período 2
+- f(i) = Σ w·|i − x| dado → 2ª diferença = 2w
 
 **Busca**
 - k-ésimo de conjunto implícito → binária + contar ≤ x
@@ -44,7 +51,7 @@ Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo
 - Estado = profundidade em árvore → long-path decomposition
 - Permutação com restrição de adjacência → connected components DP / insertion DP
 - Esperança com ciclos → sistema linear ou E[i] = a_i·E[0] + b_i
-- Grid estreito → broken profile; n ≤ 20 → máscara / SOS / IE + SOS
+- Grid estreito → broken profile; com conectividade → plug DP; n ≤ 20 → máscara / SOS / IE + SOS
 - Custos ≥ 0 com ciclos nos estados → Dijkstra em vez de DP
 - Mochila com remoção ou itens com validade → dp inversa (modular) ou segtree no tempo
 
@@ -52,20 +59,24 @@ Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo
 - Pares com gcd = g, Σ gcd(i, j) → Möbius/φ + blocos de ⌊n/d⌋
 - Soma de multiplicativa até 10¹¹ → Dirichlet sieve / Lucy / Min_25
 - Σ ⌊(ai+b)/m⌋, pontos sob reta → floor sum
-- Congruências → CRT (não coprimo: g | diferença); a^x ≡ b → BSGS; x² ≡ a → Tonelli–Shanks
-- a^b^c… mod m → cadeia φ(φ(·)); v_p(xⁿ ± yⁿ) → LTE
+- Congruências → CRT (não coprimo: g | diferença); a^x ≡ b → BSGS (se gcd(a,m) > 1, exBSGS); x² ≡ a → Tonelli–Shanks
+- a^b^c… mod m → cadeia φ(φ(·)) (não coprimos: use b mod φ(m) + φ(m)); v_p(xⁿ ± yⁿ) → LTE
 - Muitas moedas, menor pequena → Dijkstra nos restos
+- Precisa de primo novo → Bertrand (primo em (n, 2n])
+- x·(10^d + 1) = x concatenado
+- Trocas a distância a ou b → classes mod gcd (se n ≥ a + b − gcd)
+- Mais próximo com dígitos permitidos → prefixo comum + desvio + extremos
 
 **Contagem**
 - "Exatamente k defeitos" → inversão binomial de "pelo menos k"
 - Rotações/reflexões → Burnside
 - Conexos rotulados → total − componente do vértice 1 (ln de EGF)
 - Árvores rotuladas → Prüfer/Cayley; geradoras → Matrix-Tree; circuitos eulerianos → BEST
-- Caminhos disjuntos em DAG/grid → LGV (determinante)
+- Caminhos disjuntos em DAG/grid → LGV (determinante; exige fontes/sumidouros compatíveis, senão há sinais)
 - Extensões lineares de floresta → n!/∏ sz
 - Caminhos que não cruzam uma linha → reflexão / Catalan
-- Tempo esperado até padrão → Σ q^k sobre as bordas
-- Subconjuntos com soma ≡ r (mod m) → (1+x)ⁿ mod (xᵐ − 1)
+- Tempo esperado até padrão → Σ q^k sobre as bordas, incluindo o padrão inteiro
+- Subconjuntos com soma ≡ r (mod m) → ∏(1+x^{a_i}) mod (xᵐ − 1)
 
 **Bits**
 - Soma/contagem com AND/OR/XOR → bit a bit
@@ -84,27 +95,33 @@ Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo
 - Casamento com erros/curinga → FFT por letra ou kangaroo (LCE)
 - Período d → DSU em classes i mod d
 - Árvore ↔ parênteses → subárvore = intervalo, LCA = RMQ do balanço
+- Troca todas as ocorrências de um símbolo → mapeamento tem de ser função
+- Palíndromo com mudanças pontuais → pares (i, n − 1 − i) independentes
 
 **Grafos**
 - Grafo direcionado → DAG (SCC); 2 opções por item + conflitos → 2-SAT
-- Restrições x_j − x_i ≤ c → caminho mínimo (ciclo negativo = inviável)
+- Restrições x_j − x_i ≤ c → caminho mínimo com Bellman-Ford (ciclo negativo = inviável)
 - Atribuir/emparelhar → matching/fluxo; lucro com dependências → corte mínimo (closure)
 - Rótulo 0/1 com custo por par submodular → corte mínimo
 - Bipartido: independente máximo = n − matching; cobertura de caminhos em DAG = n − matching
 - Antichain máxima = cadeias mínimas (Dilworth) → matching no fecho transitivo
-- Caminhos disjuntos → fluxo com v_in/v_out; custo convexo → arestas unitárias marginais
+- Caminhos disjuntos em vértices → fluxo com v_in/v_out; em arestas → capacidade 1 na aresta; custo convexo → arestas unitárias marginais
+- Matching geral (não bipartido) → Blossom; dominadores → Lengauer–Tarjan; árvore dinâmica → link-cut
+- Corte mínimo global → Stoer–Wagner; com limites inferiores → circulação viável; interseção de 2 matroides → matroid intersection
+- Carteiro chinês → Euler + matching nos vértices ímpares
 - Minimax de caminho → MST + LCA / árvore de Kruskal
 - Árvore + poucas arestas extras → Dijkstra dos extremos + LCA
 - Orientar/decompor arestas, de Bruijn → circuito euleriano (vértice fantasma para ímpares)
 - Vizinhos = intervalo de vértices → segtree de arestas; "todos os não visitados" → set/DSU
-- Corte mínimo planar → caminho mínimo no dual
+- Corte mínimo planar s–t → adicione a aresta st e ache o caminho mínimo entre as duas faces novas no dual (sem usar o dual de st)
 - Grafo funcional → ciclos + árvores; k passos → binary lifting
+- Reconstruir de alcançabilidade → redução transitiva (pai = ancestral de menor fecho)
 
 **Árvores**
-- Subárvore → intervalo (Euler tour); caminho → HLD ou prefixos da raiz + LCA
+- Subárvore → intervalo (Euler tour); caminho → HLD ou prefixos da raiz + LCA (prefixos só para operações inversíveis)
 - Todos os caminhos com condição → centroide; resposta para toda raiz → rerooting
-- Update em caminho, leitura no fim → diferenças com lca e pai(lca)
-- Soma sobre pares de vértices → aresta contribui sz·(n − sz)
+- Update de vértice em caminho, leitura no fim → diff[u]++, diff[v]++, diff[lca]−−, diff[pai(lca)]−−; update de aresta → diff[lca] −= 2
+- Soma de distâncias sobre pares de vértices → cada aresta contribui sz·(n − sz)
 - Query com k vértices → virtual tree; cores na subárvore → small-to-large
 - Isomorfismo → hash AHU a partir dos centros
 
@@ -124,6 +141,8 @@ Uma linha por salto: gatilho → técnica. O porquê está em `catalogo-completo
 - União de retângulos → sweep + segtree; retângulo → 4 prefixos + BIT
 - Interseção de convexos → origem ∈ Minkowski(A, −B); LP 2D → semiplanos
 - Espelhos/bilhar → refletir o mundo; bolas idênticas colidindo → atravessam
+- Grade → diagonais i + j e i − j; camada = min(i, j, n − 1 − i, m − 1 − j)
+- Cortes que separam origem e destino → cota = nº de cortes
 
 **Jogos**
 - Configuração simétrica → espelho / pareamento
